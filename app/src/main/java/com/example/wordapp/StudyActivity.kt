@@ -1,5 +1,6 @@
 package com.example.wordapp
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -7,8 +8,13 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.File
+import java.io.FileOutputStream
+
+
 
 data class WordResponse(
     val total: Int,
@@ -23,13 +29,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.study_activity)
         val WordText:TextView=findViewById(R.id.Word_text)
         val Studybutton:Button=findViewById(R.id.nextWord)
+        val Voicebutton:Button=findViewById(R.id.play_voice)
         Studybutton.setOnClickListener{
 
 
-           /* sendRequestWithOkHttp()*///一劳永逸
+
+            //sendRequestWithOkHttp()一劳永逸
             val dbHelper=WordDatabaseHelper(applicationContext)
             val word=dbHelper.getWordById(wordId)
             WordText.setText(word)
+
+
+                OKHttpRequestVoice(word)
 
             /*if (word != null) {
                 Log.d("Word", "The word with ID $wordId is: $word")
@@ -37,31 +48,60 @@ class MainActivity : AppCompatActivity() {
                 Log.d("Word", "No word found with ID $wordId")
             }*/
             wordId+=1
+
         }
+
+
 
 
         /*sendRequestWithOkHttp()*/
     }
-    private fun OKHttpRequestVoice(Word:String?){
-        Thread{
+    //请求单词音频并播放
+    private fun OKHttpRequestVoice(Word: String?) {
+        Thread {
             try {
-                val client=OkHttpClient()
-                val request= Request.Builder()
+                val client = OkHttpClient()
+                val request = Request.Builder()
                     .url("http://dict.youdao.com/dictvoice?audio=${Word}")
                     .build()
-                val response=client.newCall(request).execute()
-                val responseData=response.body?.string()
-                val gson=Gson()
-                val voiceResponse=gson.fromJson(responseData,WordResponse::class.java)
+                val response = client.newCall(request).execute()
 
+                val responseData = response.body?.byteStream()// 获取音频
 
-            }catch (e:Exception){
+                // 将音频流写入临时文件
+                if (responseData != null) {
+                    val tempFile = File.createTempFile("audio", ".mp3", this.cacheDir)
+                    val outputStream = FileOutputStream(tempFile)
+                    responseData.copyTo(outputStream)
+                    outputStream.close()
+
+                    runOnUiThread {
+                        if (responseData != null) {
+                            try {
+                                val mediaPlayer = MediaPlayer()
+
+                                // 直接使用 InputStream 作为数据源
+                                mediaPlayer.setDataSource(tempFile.absolutePath)
+                                mediaPlayer.prepare()
+                                mediaPlayer.start()
+
+                            } catch (e: Exception) {
+                                Log.e("http", "Error playing audio: ${e.message}")
+                            }
+                        } else {
+                            Log.e("http", "Failed to get audio stream")
+                        }
+                    }
+                }
+
+            } catch (e: Exception) {
                 runOnUiThread {
                     Log.e("http", "Request failed: ${e.message}")
                 }
             }
         }.start()
     }
+    //录入数据
     private fun sendRequestWithOkHttp() {
 
         Thread {
