@@ -7,19 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical">
-    <FrameLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="650dp"
-        android:id="@+id/study_word_fragment"/>
+        android:layout_height="100dp"
+        android:textSize="60dp"
+        android:text="word"
+        android:textAlignment="center"
+        android:id="@+id/Word_text"/>
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="70dp">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/redenglu"
-        android:text="开始学习"/>
+
 
     <Button
         android:layout_width="wrap_content"
