@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -22,7 +23,7 @@ data class WordResponse(
 )
 
 class MainActivity : AppCompatActivity() {
-    private var wordId=3
+    private var wordId=1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,6 +31,12 @@ class MainActivity : AppCompatActivity() {
         val WordText:TextView=findViewById(R.id.Word_text)
         val Studybutton:Button=findViewById(R.id.nextWord)
         val Voicebutton:Button=findViewById(R.id.play_voice)
+        Voicebutton.setOnClickListener{
+
+            val dbHelper=WordDatabaseHelper(applicationContext)
+            val word1=dbHelper.getWordById(3)
+            Log.d("w",word1.toString())
+        }
         Studybutton.setOnClickListener{
 
 
@@ -148,6 +155,62 @@ class MainActivity : AppCompatActivity() {
             }
         }.start() // 启动线程
     }
+    //给单词添加翻译
+    private fun OkHttpRequestTranslate() {
+
+        Thread {
+            try {
+
+                /*db.beginTransaction()*/
+                val dbHelper = WordDatabaseHelper(applicationContext)
+
+                // 使用事务来批量插入数据，提高效率
+                val db = dbHelper.writableDatabase
+
+                try {
+                    var id=1
+                    while (id<=10927){
+                        var word=dbHelper.getWordById(id)
+                        val client = OkHttpClient()
+                        val request = Request.Builder()
+                            .url("http://dict.youdao.com/suggest?num=1&doctype=json&q=${word}")
+                            .build()
+
+                        val response = client.newCall(request).execute()
+                        // 使用response.body?.string()获取返回的内容
+                        val responseData = response.body?.string()
+
+                        val gson=Gson()
+                        val wordResponse =gson.fromJson(responseData,WordResponse::class.java)
+
+                        // 存储数据到数据库
+
+
+                        dbHelper.updateTranslationById(id,responseData.toString())
+
+                        Log.d("id",id.toString())
+                        if(id==10927){
+                            Toast.makeText(this,"翻译成功",Toast.LENGTH_SHORT).show()
+                        }
+                        id+=1
+                    }
+
+                    /*db.setTransactionSuccessful()*/  // 提交事务
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    /*db.endTransaction()*/  // 结束事务
+                    db.close()
+                }
+            } catch (e: Exception) {
+                // 错误处理
+                runOnUiThread {
+                    Log.e("http", "Request failed: ${e.message}")
+                }
+            }
+        }.start() // 启动线程
+    }
+
 
 }
 
