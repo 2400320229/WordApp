@@ -3,6 +3,7 @@ package com.example.wordapp
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
+import android.util.Pair
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -29,12 +30,13 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.study_activity)
         val WordText:TextView=findViewById(R.id.Word_text)
+        val TransText:TextView=findViewById(R.id.transition)
         val Studybutton:Button=findViewById(R.id.nextWord)
         val Voicebutton:Button=findViewById(R.id.play_voice)
         Voicebutton.setOnClickListener{
 
             val dbHelper=WordDatabaseHelper(applicationContext)
-            val word1=dbHelper.getWordById(3)
+            val word1=dbHelper.getTranslationById(3)
             Log.d("w",word1.toString())
         }
         Studybutton.setOnClickListener{
@@ -44,7 +46,14 @@ class MainActivity : AppCompatActivity() {
             //sendRequestWithOkHttp()一劳永逸
             val dbHelper=WordDatabaseHelper(applicationContext)
             val word=dbHelper.getWordById(wordId)
+            val translation=dbHelper.getTranslationById(wordId)
             WordText.setText(word)
+
+            if (translation != null) {
+                val chinese=obtainChinese(translation)
+                TransText.setText(chinese.toString())
+            }
+
 
 
                 OKHttpRequestVoice(word)
@@ -210,7 +219,37 @@ class MainActivity : AppCompatActivity() {
             }
         }.start() // 启动线程
     }
+    //解析翻译得到的JSON字符串，获取中文翻译
+    private fun obtainChinese(jsonString: String): List<String> {
+        val gson=Gson()
+        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
+        return jsonResponse.data.entries.map { it.explain }
+
+    }
 
 
 }
+
+
+data class JsonResponse(
+    val result: Result,
+    val data: Data
+)
+
+data class Result(
+    val msg: String,
+    val code: Int
+)
+
+data class Data(
+    val entries: List<Entry>,
+    val query: String,
+    val language: String,
+    val type: String
+)
+
+data class Entry(
+    val explain: String,
+    val entry: String
+)
 

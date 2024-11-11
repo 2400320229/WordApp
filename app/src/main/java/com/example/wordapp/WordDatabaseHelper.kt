@@ -82,21 +82,40 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         val db = this.readableDatabase
         val cursor = db.query(
             TABLE_NAME, // 表名
-            arrayOf(COLUMN_WORD, COLUMN_TRANSLATION), // 查询字段
+            arrayOf(COLUMN_WORD), // 查询字段
             "$COLUMN_ID = ?", // 查询条件
             arrayOf(id.toString()), // 查询参数
             null, null, null // 不使用分组、排序、限制
         )
 
         var word: String? = null
-        var translation:String?=null
+
         if (cursor != null && cursor.moveToFirst()) {
             word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+            cursor.close()
+        }
+        db.close()
+        return word
+    }
+    // 根据ID获取单个单词和翻译
+    fun getTranslationById(id: Int): String? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            TABLE_NAME, // 表名
+            arrayOf(COLUMN_TRANSLATION), // 查询字段
+            "$COLUMN_ID = ?", // 查询条件
+            arrayOf(id.toString()), // 查询参数
+            null, null, null // 不使用分组、排序、限制
+        )
+
+
+        var translation:String?=null
+        if (cursor != null && cursor.moveToFirst()) {
             translation=cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
             cursor.close()
         }
         db.close()
-        return Pair(word,translation).toString()
+        return translation
     }
 
     // 获取所有单词
