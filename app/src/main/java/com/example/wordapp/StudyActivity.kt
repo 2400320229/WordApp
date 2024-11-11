@@ -1,7 +1,9 @@
 package com.example.wordapp
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.provider.Telephony.Mms.Intents
 import android.util.Log
 import android.util.Pair
 import android.widget.Button
@@ -30,14 +32,14 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.study_activity)
         val WordText:TextView=findViewById(R.id.Word_text)
-        val TransText:TextView=findViewById(R.id.transition)
-        val Studybutton:Button=findViewById(R.id.nextWord)
-        val Voicebutton:Button=findViewById(R.id.play_voice)
-        Voicebutton.setOnClickListener{
 
-            val dbHelper=WordDatabaseHelper(applicationContext)
-            val word1=dbHelper.getTranslationById(3)
-            Log.d("w",word1.toString())
+        val Studybutton:Button=findViewById(R.id.nextWord)
+        val WordDatabutton:Button=findViewById(R.id.ShowWordDate)
+        WordDatabutton.setOnClickListener{
+
+            val intent= Intent(this,WordData::class.java)
+            intent.putExtra("key",wordId)
+            startActivity(intent)
         }
         Studybutton.setOnClickListener{
 
@@ -48,15 +50,7 @@ class MainActivity : AppCompatActivity() {
             val word=dbHelper.getWordById(wordId)
             val translation=dbHelper.getTranslationById(wordId)
             WordText.setText(word)
-
-            if (translation != null) {
-                val chinese=obtainChinese(translation)
-                TransText.setText(chinese.toString())
-            }
-
-
-
-                OKHttpRequestVoice(word)
+            OKHttpRequestVoice(word)
 
             /*if (word != null) {
                 Log.d("Word", "The word with ID $wordId is: $word")

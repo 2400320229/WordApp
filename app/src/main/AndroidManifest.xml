@@ -17,6 +17,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".WordData"
+            android:exported="false" />
+        <activity
             android:name=".Study_Word"
             android:exported="false" />
         <activity
@@ -25,7 +28,7 @@
             android:label="注册账号" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".FirstActivity"
             android:exported="true"
