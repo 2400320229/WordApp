@@ -31,6 +31,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="读音"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加至单词本"
+        android:id="@+id/add_mistake_word"/>
 
 
 

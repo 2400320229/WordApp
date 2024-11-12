@@ -30,7 +30,7 @@ class zhu_ce : AppCompatActivity() {
             val inputText3 = editText3.text.toString().trim()
 
 
-            //比较，如果都不为空则进行下一步
+            //比较，是否存在相同用户名
             if(sharedPreferences.contains(inputText1)){
                 Toast.makeText(this, "用户名已存在，请选择其他用户名！", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener

@@ -33,13 +33,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.study_activity)
         val WordText:TextView=findViewById(R.id.Word_text)
 
+        val Trybutton:Button=findViewById(R.id.Try)
         val Studybutton:Button=findViewById(R.id.nextWord)
         val WordDatabutton:Button=findViewById(R.id.ShowWordDate)
+        Trybutton.setOnClickListener{
+            val intent=Intent(this,Watch_Mistake_Word::class.java)
+            startActivity(intent)
+        }
         WordDatabutton.setOnClickListener{
 
             val intent= Intent(this,WordData::class.java)
             intent.putExtra("key",wordId)
             startActivity(intent)
+            val dbHelper=WordDatabaseHelper(applicationContext)
+            val word=dbHelper.getWordById(wordId-1)
+            OKHttpRequestVoice(word)
+
         }
         Studybutton.setOnClickListener{
 

@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -23,6 +22,7 @@ class WordData : AppCompatActivity() {
         setContentView(R.layout.activity_word_data)
         val KnowButton:Button=findViewById(R.id.well_know)
         val VoiceButton:Button=findViewById(R.id.play_voice)
+        val addButton:Button=findViewById(R.id.add_mistake_word)
 
         val WordText:TextView=findViewById(R.id.Word)
         val TranslateText:TextView=findViewById(R.id.Chinese)
@@ -34,7 +34,17 @@ class WordData : AppCompatActivity() {
         val chinese=obtainChinese(Translation.toString())
         TranslateText.setText(chinese.toString())
 
-
+        addButton.setOnClickListener{
+            try {
+                val dbHelper=MistakeWordDatabaseHelper(applicationContext)
+                if (Word != null) {
+                    dbHelper.insertWordAndTranslation(Word, chinese.toString())
+                }
+                Toast.makeText(this,"添加成功",Toast.LENGTH_SHORT).show()
+            }catch (e:Exception){
+                Log.e("addWord", e.toString())
+            }
+        }
         VoiceButton.setOnClickListener{
             OKHttpRequestVoice(Word)
         }

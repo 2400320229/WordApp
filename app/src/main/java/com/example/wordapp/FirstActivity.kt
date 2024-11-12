@@ -30,24 +30,19 @@ class FirstActivity : AppCompatActivity() {
         if(check){
             val intent0 = Intent(this,MainActivity::class.java)
             startActivity(intent0)
+            finish()
         }
         val button2: Button =findViewById(R.id.button2)
         button2.setOnClickListener {
 
             val intent1 = Intent(this, zhu_ce::class.java)
             startActivity(intent1)
+
         }
 
         val button1:Button=findViewById(R.id.button1)
         val editText1: EditText =findViewById(R.id.e1)
         val editText2: EditText =findViewById(R.id.e2)
-
-
-
-        
-
-
-
 
         button1.setOnClickListener {
             val sharedPreferences1 = getSharedPreferences("User", Context.MODE_PRIVATE)
