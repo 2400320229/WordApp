@@ -22,16 +22,25 @@ class FirstActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.frist_layout)
+        val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
+        val editor_id = sharedPreferences3.edit()
+        editor_id.putInt("Id",1)
+        editor_id.apply()
+
+
         val checkBox=findViewById<CheckBox?>(R.id.checkbox)
         val sharedPreferences2 = getSharedPreferences("Check", Context.MODE_PRIVATE )
-        val editor = sharedPreferences2.edit()
+        val editor_check = sharedPreferences2.edit()
         val check=sharedPreferences2.getBoolean("auto_login",false)
         Log.d("Check", check.toString())
+
+
         if(check){
-            val intent0 = Intent(this,MainActivity::class.java)
+            val intent0 = Intent(this,FragmentActivity::class.java)
             startActivity(intent0)
             finish()
         }
+
         val button2: Button =findViewById(R.id.button2)
         button2.setOnClickListener {
 
@@ -58,8 +67,8 @@ class FirstActivity : AppCompatActivity() {
                 startActivity(intent0)
 
                 if(checkBox.isChecked) {
-                    editor.putBoolean("auto_login", true)
-                    editor.apply()
+                    editor_check.putBoolean("auto_login", true)
+                    editor_check.apply()
                 }
 
                 Toast.makeText(

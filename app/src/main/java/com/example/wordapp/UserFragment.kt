@@ -1,0 +1,41 @@
+package com.example.wordapp
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import kotlin.math.E
+
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
+
+/**
+ * A simple [Fragment] subclass.
+ * Use the [UserFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class UserFragment : Fragment() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+         val view=inflater.inflate(R.layout.fragment_user, container, false)
+        val Exit:Button=view.findViewById(R.id.Exit)
+        Exit.setOnClickListener{
+
+        }
+        return view
+    }
+
+
+}

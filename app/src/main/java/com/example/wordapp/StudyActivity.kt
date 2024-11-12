@@ -1,5 +1,6 @@
 package com.example.wordapp
 
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -26,13 +27,13 @@ data class WordResponse(
 )
 
 class MainActivity : AppCompatActivity() {
-    private var wordId=1
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.study_activity)
         val WordText:TextView=findViewById(R.id.Word_text)
-
         val Trybutton:Button=findViewById(R.id.Try)
         val Studybutton:Button=findViewById(R.id.nextWord)
         val WordDatabutton:Button=findViewById(R.id.ShowWordDate)
@@ -41,6 +42,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         WordDatabutton.setOnClickListener{
+            val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
+            val editor_id = sharedPreferences3.edit()
+            val wordId=sharedPreferences3.getInt("id",1)
 
             val intent= Intent(this,WordData::class.java)
             intent.putExtra("key",wordId)
@@ -52,6 +56,10 @@ class MainActivity : AppCompatActivity() {
         }
         Studybutton.setOnClickListener{
 
+            val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
+            val editor_id = sharedPreferences3.edit()
+            val wordId=sharedPreferences3.getInt("id",1)
+            Log.d("id",wordId.toString())
 
 
             //sendRequestWithOkHttp()一劳永逸
@@ -66,7 +74,9 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Log.d("Word", "No word found with ID $wordId")
             }*/
-            wordId+=1
+            editor_id.putInt("id",wordId+1)
+            editor_id.apply()
+
 
         }
 
