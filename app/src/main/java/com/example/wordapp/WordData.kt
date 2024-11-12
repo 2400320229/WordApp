@@ -3,6 +3,7 @@ package com.example.wordapp
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -16,7 +17,9 @@ import java.io.FileOutputStream
 
 class WordData : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val wordId=intent.getIntExtra("key",0)-1
+        var Word="word"
+        var chinese="chinese"
+        val dbHelper = WordDatabaseHelper(applicationContext)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_word_data)
@@ -27,13 +30,21 @@ class WordData : AppCompatActivity() {
         val WordText:TextView=findViewById(R.id.Word)
         val TranslateText:TextView=findViewById(R.id.Chinese)
 
-        val dbHelper=WordDatabaseHelper(applicationContext)
-        val Word=dbHelper.getWordById(wordId)
-        WordText.setText(Word)
-        val Translation=dbHelper.getTranslationById(wordId)
-        val chinese=obtainChinese(Translation.toString())
-        TranslateText.setText(chinese.toString())
 
+        val wordId=intent.getIntExtra("key",0)-1
+        if(wordId!=-1) {
+            Word = dbHelper.getWordById(wordId).toString()
+            val Translation = dbHelper.getTranslationById(wordId)
+            chinese = obtainChinese(Translation.toString()).toString()
+        }else{
+            addButton.setVisibility(View.GONE)
+            Word = intent.getStringExtra("word").toString()
+            chinese=intent.getStringExtra("chinese").toString()
+        }
+        //显示数据
+        WordText.setText(Word)
+        TranslateText.setText(chinese.toString())
+        //监听按钮
         addButton.setOnClickListener{
             try {
                 val dbHelper=MistakeWordDatabaseHelper(applicationContext)

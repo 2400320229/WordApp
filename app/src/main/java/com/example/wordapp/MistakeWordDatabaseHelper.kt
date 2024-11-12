@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 //这个数据库里的单词id是从1开始的
+data class Word(val id: Long, val word: String, val translation: String?)
 class MistakeWordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
     DATABASE_VERSION) {
 
@@ -118,6 +119,11 @@ class MistakeWordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATA
         cursor?.close()
         db.close()
         return wordList
+    }
+     fun deleteWord(id: Long){
+        val db=writableDatabase
+        db.delete(TABLE_NAME,"$COLUMN_ID =?", arrayOf(id.toString()))
+        db.close()
     }
 
 }
