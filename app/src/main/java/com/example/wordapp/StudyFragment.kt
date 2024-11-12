@@ -31,9 +31,14 @@ class StudyFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
        val view=inflater.inflate(R.layout.fragment_study, container, false)
-        val Button:Button=view.findViewById(R.id.StarStudy)
-        Button.setOnClickListener{
+        val StudyButton:Button=view.findViewById(R.id.StarStudy)
+        StudyButton.setOnClickListener{
             val intent=Intent(requireContext(),MainActivity::class.java)
+            startActivity(intent)
+        }
+        val ReviewButton:Button=view.findViewById(R.id.ReviewWord)
+        ReviewButton.setOnClickListener{
+            val intent=Intent(requireContext(),ReviewActivity::class.java)
             startActivity(intent)
         }
         return view

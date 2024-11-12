@@ -33,7 +33,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.study_activity)
+        val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
+        val editor_id = sharedPreferences3.edit()
+        /*var mistakeId=getSharedPreferences("mistake",0)*/
+        var mistakeId=0
+
         val WordText:TextView=findViewById(R.id.Word_text)
+        val NUM:TextView=findViewById(R.id.NUM)
         val Trybutton:Button=findViewById(R.id.Try)
         val Studybutton:Button=findViewById(R.id.nextWord)
         val WordDatabutton:Button=findViewById(R.id.ShowWordDate)
@@ -42,8 +48,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         WordDatabutton.setOnClickListener{
-            val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
-            val editor_id = sharedPreferences3.edit()
+
             val wordId=sharedPreferences3.getInt("id",1)
 
             val intent= Intent(this,WordData::class.java)
@@ -52,6 +57,11 @@ class MainActivity : AppCompatActivity() {
             val dbHelper=WordDatabaseHelper(applicationContext)
             val word=dbHelper.getWordById(wordId-1)
             OKHttpRequestVoice(word)
+            editor_id.putInt("${mistakeId}",wordId)
+            editor_id.apply()
+            Log.d("mistakeId",mistakeId.toString())
+            Log.d("wordId",(wordId-1).toString())
+            mistakeId+=1
 
         }
         Studybutton.setOnClickListener{
@@ -74,11 +84,18 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Log.d("Word", "No word found with ID $wordId")
             }*/
-            editor_id.putInt("id",wordId+1)
-            editor_id.apply()
+            if(wordId<=20) {
+                editor_id.putInt("id", wordId + 1)
+                editor_id.apply()
+            }
+            else{
+                editor_id.putInt("id",1)
+                editor_id.apply()
+            }
 
-
+            NUM.setText(wordId.toString())
         }
+
 
 
 

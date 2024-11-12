@@ -38,4 +38,11 @@
           android:layout_height="35dp"
           android:text="try"/>
   </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:textSize="60dp"
+        android:text="NUM"
+        android:textAlignment="center"
+        android:id="@+id/NUM"/>
 </LinearLayout>

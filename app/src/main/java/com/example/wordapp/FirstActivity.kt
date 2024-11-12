@@ -25,6 +25,7 @@ class FirstActivity : AppCompatActivity() {
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
         editor_id.putInt("Id",1)
+        editor_id.putInt("mistakeId",1)
         editor_id.apply()
 
 
