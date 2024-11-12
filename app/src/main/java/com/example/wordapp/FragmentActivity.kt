@@ -15,6 +15,11 @@ class FragmentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_fragment)
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.fragment,StudyFragment())
+
+        transaction.show(StudyFragment())
+        transaction.commit()
 
         var selectIndex = R.id.tab1 // 默认选中的按钮ID
         val toggleGroup:MaterialButtonToggleGroup=findViewById(R.id.ToggleGroup)
@@ -55,6 +60,7 @@ class FragmentActivity : AppCompatActivity() {
     private fun showOrHideFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment)
+        transaction.add(R.id.fragment,fragment)
 
             if(currentFragment!=null) {
                 transaction.replace(R.id.fragment, fragment)
