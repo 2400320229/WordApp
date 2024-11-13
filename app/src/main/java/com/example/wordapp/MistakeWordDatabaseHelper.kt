@@ -93,20 +93,5 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
         db.close()
         return wordList
     }
-    /* fun deleteAllData(){
-         val db = writableDatabase
-
-// 执行删除所有数据的 SQL 语句
-db.execSQL("DELETE FROM your_table_name") // 清空某个表的数据
-// 或者清空所有表的所有数据
-val cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null)
-while (cursor.moveToNext()) {
-    val tableName = cursor.getString(0)
-    if (tableName != "android_metadata" && tableName != "sqlite_sequence") {
-        db.execSQL("DELETE FROM $tableName")
-    }
-}
-cursor.close()
-    }*/
 
 }

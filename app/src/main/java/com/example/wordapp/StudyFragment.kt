@@ -46,7 +46,7 @@ class StudyFragment : Fragment() {
         DeleteButton.setOnClickListener{
             val dbHelper1=MistakeWordIDDatabaseHelper(requireContext())
             val dbHelper2=StarWordDatabaseHelper(requireContext())
-            dbHelper1.deleteAllData()
+
             dbHelper2.deleteAllData()
             Log.d("Delete","delete")
         }

@@ -1,5 +1,7 @@
 package com.example.wordapp
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -15,6 +17,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.util.Calendar
 
 class FirstActivity : AppCompatActivity() {
 
@@ -24,8 +27,11 @@ class FirstActivity : AppCompatActivity() {
         setContentView(R.layout.frist_layout)
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
-        editor_id.putInt("Id",1)
-        editor_id.apply()
+       /* editor_id.putInt("Id",1)
+        editor_id.apply()*/
+        setupDailyAlarm()
+        var id=sharedPreferences3.getInt("Id",0)
+        Log.d("Id","${id}")
 
 
         val checkBox=findViewById<CheckBox?>(R.id.checkbox)
@@ -82,7 +88,42 @@ class FirstActivity : AppCompatActivity() {
             }
         }
 
+    }private fun setupDailyAlarm() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        // 设置触发时间为今天的 0:00
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 1)
+        calendar.set(Calendar.MINUTE, 54)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        Log.d("FirstActivity", "Alarm will trigger at: ${calendar.time}")
+
+// 如果设置的时间已经过去，则设置为第二天的 1:29
+        if (calendar.timeInMillis <= System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        Log.d("FirstActivity", "Alarm will trigger at: ${calendar.time}")
+
+        // 创建一个 Intent 指向广播接收器
+        val intent = Intent(this, IdUpdateReceiver::class.java)
+
+        // 创建一个 PendingIntent，用于触发广播
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        // 设置 AlarmManager 每天 0:00 触发广播
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP, // 使用 RTC_WAKEUP，确保即使设备休眠时也能触发
+            calendar.timeInMillis,   // 初始触发时间
+            AlarmManager.INTERVAL_DAY, // 每天间隔
+            pendingIntent            // 触发时要执行的 PendingIntent
+        )
+
+        Log.d("FirstActivity", "AlarmManager set for daily update at 1:00")
+        Log.d("FirstActivity", "Alarm will trigger at: ${System.currentTimeMillis()}")
     }
+
 
    /* override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main,menu)
