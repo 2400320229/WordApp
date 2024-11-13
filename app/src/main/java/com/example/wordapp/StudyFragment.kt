@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +35,9 @@ class StudyFragment : Fragment() {
        val view=inflater.inflate(R.layout.fragment_study, container, false)
         val StudyButton:Button=view.findViewById(R.id.StarStudy)
         val DeleteButton:Button=view.findViewById(R.id.DeleteWord)
+        val GoalText:TextView=view.findViewById(R.id.goal)
+        val StudyText:TextView=view.findViewById(R.id.Study)
+
         StudyButton.setOnClickListener{
             val intent=Intent(requireContext(),MainActivity::class.java)
             startActivity(intent)

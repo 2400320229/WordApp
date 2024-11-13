@@ -93,8 +93,8 @@ class FirstActivity : AppCompatActivity() {
 
         // 设置触发时间为今天的 0:00
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 1)
-        calendar.set(Calendar.MINUTE, 54)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         Log.d("FirstActivity", "Alarm will trigger at: ${calendar.time}")

@@ -47,14 +47,13 @@ class MainActivity : AppCompatActivity() {
         }
         WordDatabutton.setOnClickListener{
             val dbHelper1=MistakeWordIDDatabaseHelper(applicationContext)
-
-            val wordId=sharedPreferences3.getInt("id",1)
-            val mistakeId=dbHelper1.insertWordId(wordId)
+            val wordId=sharedPreferences3.getInt("id",1)-1
+            dbHelper1.insertWordId(wordId)//将不认识的单词加入Mistake数据库中，可以复习
             val intent= Intent(this,WordData::class.java)
             intent.putExtra("key",wordId)
             startActivity(intent)
             val dbHelper=WordDatabaseHelper(applicationContext)
-            val word=dbHelper.getWordById((wordId-1).toString())
+            val word=dbHelper.getWordById((wordId).toString())
             OKHttpRequestVoice(word)
 
 
@@ -70,23 +69,19 @@ class MainActivity : AppCompatActivity() {
             //sendRequestWithOkHttp()一劳永逸
             val dbHelper=WordDatabaseHelper(applicationContext)
             val word=dbHelper.getWordById(wordId.toString())
-            val translation=dbHelper.getTranslationById(wordId.toString())
             WordText.setText(word)
             OKHttpRequestVoice(word)
+            editor_id.putInt("id", wordId + 1)
+            editor_id.apply()
+            /*if(wordId<=20) {
 
-            /*if (word != null) {
-                Log.d("Word", "The word with ID $wordId is: $word")
-            } else {
-                Log.d("Word", "No word found with ID $wordId")
+            }else if(wordId==21){
+                finish()
             }*/
-            if(wordId<=20) {
-                editor_id.putInt("id", wordId + 1)
-                editor_id.apply()
-            }
-            else{
+            /*else{
                 editor_id.putInt("id",1)
                 editor_id.apply()
-            }
+            }*/
 
             NUM.setText(wordId.toString())
         }

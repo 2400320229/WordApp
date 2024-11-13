@@ -14,7 +14,7 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
 
     companion object {
         private const val DATABASE_NAME = "mistake_id_words.db"
-        private const val DATABASE_VERSION = 3
+        private const val DATABASE_VERSION = 4
         private const val TABLE_NAME = "words"
         private const val COLUMN_ID = "id"
         private const val COLUMN_WORDID = "word_id"
@@ -22,16 +22,16 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
 
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_TABLE = """
-            CREATE TABLE $TABLE_NAME (
-                $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                $COLUMN_WORDID TEXT NOT NULL
-            );
-        """
+        CREATE TABLE $TABLE_NAME (
+            $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            $COLUMN_WORDID TEXT NOT NULL UNIQUE
+        );
+    """
         db?.execSQL(CREATE_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        if (oldVersion < 3) {
+        if (oldVersion < 4) {
             if (db != null) {
                 db.execSQL("DROP TABLE IF EXISTS ${TABLE_NAME}")
             }
@@ -46,8 +46,10 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
             put(COLUMN_WORDID, wordId)
 
         }
-        db.insert(TABLE_NAME, null, contentValues)
+        // 使用 INSERT OR IGNORE 来避免插入重复数据
+        db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
         db.close()
+
     }
     //根据单词的id来更改它的翻译
 
