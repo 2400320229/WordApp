@@ -10,18 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 class Watch_Mistake_Word : AppCompatActivity(),Study_Adapter.OnWordClickListener {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var wordDatabaseHelper: MistakeWordDatabaseHelper
+    private lateinit var wordDatabaseHelper: StarWordDatabaseHelper
     private var wordlist:MutableList<Word> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_mistake_word)
+        setContentView(R.layout.activity_star_word)
 
         // 初始化 recyclerView
         recyclerView = findViewById(R.id.recyclerView)
-        wordDatabaseHelper=MistakeWordDatabaseHelper(this)
+        wordDatabaseHelper=StarWordDatabaseHelper(this)
         wordlist= wordDatabaseHelper.getAllWords().toMutableList()
 
         // 设置布局管理器
@@ -41,14 +41,14 @@ class Watch_Mistake_Word : AppCompatActivity(),Study_Adapter.OnWordClickListener
 
     override fun onDelete(word: Word) {
 
-        val dbHelper=MistakeWordDatabaseHelper(applicationContext)
+        val dbHelper=StarWordDatabaseHelper(applicationContext)
         dbHelper.deleteWord(word.id)
         loadWords()
         recyclerView.adapter?.notifyDataSetChanged()
     }
     private fun loadWords(){
 
-        val dbHelper=MistakeWordDatabaseHelper(applicationContext)
+        val dbHelper=StarWordDatabaseHelper(applicationContext)
         wordlist.clear()
         wordlist.addAll(dbHelper.getAllWords())
 

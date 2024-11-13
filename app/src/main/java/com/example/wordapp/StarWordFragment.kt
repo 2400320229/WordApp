@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class MistakeWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
+class StarWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var wordDatabaseHelper: MistakeWordDatabaseHelper
+    private lateinit var wordDatabaseHelper: StarWordDatabaseHelper
     private var wordlist:MutableList<Word> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,11 +25,11 @@ class MistakeWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view= inflater.inflate(R.layout.fragment_mistake_word, container, false)
+        val view= inflater.inflate(R.layout.fragment_star_word, container, false)
 
         // 初始化 recyclerView
         recyclerView = view.findViewById(R.id.RecyclerView)
-        wordDatabaseHelper=MistakeWordDatabaseHelper(requireContext())
+        wordDatabaseHelper=StarWordDatabaseHelper(requireContext())
         wordlist= wordDatabaseHelper.getAllWords().toMutableList()
 
         // 设置布局管理器

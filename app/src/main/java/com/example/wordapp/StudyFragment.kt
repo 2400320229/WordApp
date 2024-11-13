@@ -2,6 +2,7 @@ package com.example.wordapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,7 @@ class StudyFragment : Fragment() {
         // Inflate the layout for this fragment
        val view=inflater.inflate(R.layout.fragment_study, container, false)
         val StudyButton:Button=view.findViewById(R.id.StarStudy)
+        val DeleteButton:Button=view.findViewById(R.id.DeleteWord)
         StudyButton.setOnClickListener{
             val intent=Intent(requireContext(),MainActivity::class.java)
             startActivity(intent)
@@ -40,6 +42,13 @@ class StudyFragment : Fragment() {
         ReviewButton.setOnClickListener{
             val intent=Intent(requireContext(),ReviewActivity::class.java)
             startActivity(intent)
+        }
+        DeleteButton.setOnClickListener{
+            val dbHelper1=MistakeWordIDDatabaseHelper(requireContext())
+            val dbHelper2=StarWordDatabaseHelper(requireContext())
+            dbHelper1.deleteAllData()
+            dbHelper2.deleteAllData()
+            Log.d("Delete","delete")
         }
         return view
     }

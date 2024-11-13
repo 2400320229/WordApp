@@ -33,8 +33,8 @@ class WordData : AppCompatActivity() {
 
         val wordId=intent.getIntExtra("key",0)-1
         if(wordId!=-1) {
-            Word = dbHelper.getWordById(wordId).toString()
-            val Translation = dbHelper.getTranslationById(wordId)
+            Word = dbHelper.getWordById(wordId.toString()).toString()
+            val Translation = dbHelper.getTranslationById(wordId.toString())
             chinese = obtainChinese(Translation.toString()).toString()
         }else{
             addButton.setVisibility(View.GONE)
@@ -47,7 +47,7 @@ class WordData : AppCompatActivity() {
         //监听按钮
         addButton.setOnClickListener{
             try {
-                val dbHelper=MistakeWordDatabaseHelper(applicationContext)
+                val dbHelper=StarWordDatabaseHelper(applicationContext)
                 if (Word != null) {
                     dbHelper.insertWordAndTranslation(Word, chinese.toString())
                 }

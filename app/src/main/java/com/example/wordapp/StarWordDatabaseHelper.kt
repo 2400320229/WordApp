@@ -4,13 +4,15 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.wordapp.MistakeWordIDDatabaseHelper.Companion
 
 //这个数据库里的单词id是从1开始的
-class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
+data class Word(val id: Long, val word: String, val translation: String?)
+class StarWordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
     DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_NAME = "words.db"
+        private const val DATABASE_NAME = "star_words.db"
         private const val DATABASE_VERSION = 2
         private const val TABLE_NAME = "words"
         private const val COLUMN_ID = "id"
@@ -37,7 +39,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         }
     }
     // 插入单词和翻译
-    fun insertWord(word: String,translation: String?) {
+    fun insertWordAndTranslation(word: String,translation: String?) {
         val db = this.writableDatabase
         val contentValues = ContentValues().apply {
             put(COLUMN_WORD, word)
@@ -57,28 +59,8 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(id.toString()))
         db.close()
     }
-    // 插入多个单词
-    fun insertWords(words: List<String>) {
-        val db = this.writableDatabase
-        db.beginTransaction()  // 开启事务，确保批量插入时性能更好且数据一致性更强
-        try {
-            for (word in words) {
-                val contentValues = ContentValues().apply {
-                    put(COLUMN_WORD, word)
-                }
-                db.insert(TABLE_NAME, null, contentValues)
-            }
-            db.setTransactionSuccessful()  // 提交事务
-        } catch (e: Exception) {
-            // 发生异常时可以打印日志或者进行其他处理
-            e.printStackTrace()
-        } finally {
-            db.endTransaction()  // 结束事务
-            db.close()
-        }
-    }
     // 根据ID获取单个单词和翻译
-    fun getWordById(id: String?): String? {
+    fun getWordById(id: Int): String? {
         val db = this.readableDatabase
         val cursor = db.query(
             TABLE_NAME, // 表名
@@ -98,7 +80,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         return word
     }
     // 根据ID获取单个单词和翻译
-    fun getTranslationById(id: String?): String? {
+    fun getTranslationById(id: Int): String? {
         val db = this.readableDatabase
         val cursor = db.query(
             TABLE_NAME, // 表名
@@ -118,21 +100,45 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         return translation
     }
 
-    // 获取所有单词
-    fun getAllWords(): List<String> {
-        val words = mutableListOf<String>()
+    // 查询所有单词及翻译
+    fun getAllWords(): List<Word> {
+        val wordList = mutableListOf<Word>()
         val db = this.readableDatabase
-        val cursor = db.query(TABLE_NAME, arrayOf(COLUMN_WORD), null, null, null, null, null)
+
+        // 查询数据库中的所有记录
+        val cursor = db.query(TABLE_NAME, arrayOf(COLUMN_ID, COLUMN_WORD, COLUMN_TRANSLATION), null, null, null, null, null)
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
+                val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
                 val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
-                words.add(word)
+                val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+                wordList.add(Word(id, word, translation))
             } while (cursor.moveToNext())
-            cursor.close()
         }
+
+        cursor?.close()
         db.close()
-        return words
+        return wordList
+    }
+     fun deleteWord(id: Long){
+        val db=writableDatabase
+        db.delete(TABLE_NAME,"$COLUMN_ID =?", arrayOf(id.toString()))
+        db.close()
+    }
+    fun deleteAllData(){
+        val db = writableDatabase
+        // 创建 ID 范围的条件
+        val idRange = (1..2000).joinToString(",")  // 生成 ID 列表字符串 "1,2,3,...,2000"
+
+        // 使用 IN 子句删除指定范围的记录
+        val sql = "DELETE FROM $TABLE_NAME WHERE $COLUMN_ID IN ($idRange)"
+
+        // 执行 SQL 删除操作
+        db.execSQL(sql)
+
+        // 关闭数据库
+        db.close()
     }
 
 }

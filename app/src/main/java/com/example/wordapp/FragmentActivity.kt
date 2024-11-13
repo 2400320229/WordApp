@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -50,7 +48,7 @@ class FragmentActivity : AppCompatActivity() {
     private fun switchFragment(selectIndex: Int) {
         val fragment = when (selectIndex) {
             R.id.tab1 -> StudyFragment()
-            R.id.tab2 -> MistakeWordFragment()
+            R.id.tab2 -> StarWordFragment()
             R.id.tab3 -> UserFragment()
             else -> throw IllegalArgumentException("Invalid tab selection")
         }

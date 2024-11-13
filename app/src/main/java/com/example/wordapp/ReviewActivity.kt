@@ -1,6 +1,5 @@
 package com.example.wordapp
 
-import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -9,8 +8,6 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -21,9 +18,9 @@ class ReviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_review)
-        val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE)
-        val editor_id = sharedPreferences3.edit()
-        var mistakeId = 0
+       val dbHelper=MistakeWordIDDatabaseHelper(applicationContext)
+        var mistake_word_id=1
+        val wordId=dbHelper.getWordIdById(mistake_word_id)
 
         val WordText: TextView = findViewById(R.id.Word_text)
         val Trybutton: Button = findViewById(R.id.Try)
@@ -35,32 +32,25 @@ class ReviewActivity : AppCompatActivity() {
         }
         WordDatabutton.setOnClickListener {
 
-            val wordId1 = sharedPreferences3.getInt("${mistakeId-1}", 1)-1
-
-            val wordId2 = sharedPreferences3.getInt("${mistakeId-1}", 1)
             val intent = Intent(this, WordData::class.java)
-            intent.putExtra("key", wordId2)
+            intent.putExtra("key", wordId)
             startActivity(intent)
             val dbHelper = WordDatabaseHelper(applicationContext)
-            val word = dbHelper.getWordById(wordId1)
+            val word = dbHelper.getWordById(wordId)
             Log.d("word",word.toString())
             OKHttpRequestVoice(word)
 
-
         }
         Studybutton.setOnClickListener {
-
-
-
-            var wordId=sharedPreferences3.getInt("${mistakeId}",1)-1
-            Log.d("review",wordId.toString())
-            Log.d("mistakeId",mistakeId.toString())
+            
+            val wordId=dbHelper.getWordIdById(mistake_word_id)
             val dbHelper = WordDatabaseHelper(applicationContext)
             val word = dbHelper.getWordById(wordId)
             val translation = dbHelper.getTranslationById(wordId)
             WordText.setText(word)
             OKHttpRequestVoice(word)
-            mistakeId+=1
+            mistake_word_id++
+
         }
 
     }

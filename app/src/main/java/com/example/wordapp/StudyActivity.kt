@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.provider.Telephony.Mms.Intents
 import android.util.Log
-import android.util.Pair
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -36,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
         /*var mistakeId=getSharedPreferences("mistake",0)*/
-        var mistakeId=0
+
 
         val WordText:TextView=findViewById(R.id.Word_text)
         val NUM:TextView=findViewById(R.id.NUM)
@@ -48,20 +46,17 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         WordDatabutton.setOnClickListener{
+            val dbHelper1=MistakeWordIDDatabaseHelper(applicationContext)
 
             val wordId=sharedPreferences3.getInt("id",1)
-
+            val mistakeId=dbHelper1.insertWordId(wordId)
             val intent= Intent(this,WordData::class.java)
             intent.putExtra("key",wordId)
             startActivity(intent)
             val dbHelper=WordDatabaseHelper(applicationContext)
-            val word=dbHelper.getWordById(wordId-1)
+            val word=dbHelper.getWordById((wordId-1).toString())
             OKHttpRequestVoice(word)
-            editor_id.putInt("${mistakeId}",wordId)
-            editor_id.apply()
-            Log.d("mistakeId",mistakeId.toString())
-            Log.d("wordId",(wordId-1).toString())
-            mistakeId+=1
+
 
         }
         Studybutton.setOnClickListener{
@@ -74,8 +69,8 @@ class MainActivity : AppCompatActivity() {
 
             //sendRequestWithOkHttp()一劳永逸
             val dbHelper=WordDatabaseHelper(applicationContext)
-            val word=dbHelper.getWordById(wordId)
-            val translation=dbHelper.getTranslationById(wordId)
+            val word=dbHelper.getWordById(wordId.toString())
+            val translation=dbHelper.getTranslationById(wordId.toString())
             WordText.setText(word)
             OKHttpRequestVoice(word)
 
@@ -209,7 +204,7 @@ class MainActivity : AppCompatActivity() {
                 try {
                     var id=1
                     while (id<=10927){
-                        var word=dbHelper.getWordById(id)
+                        var word=dbHelper.getWordById(id.toString())
                         val client = OkHttpClient()
                         val request = Request.Builder()
                             .url("http://dict.youdao.com/suggest?num=1&doctype=json&q=${word}")

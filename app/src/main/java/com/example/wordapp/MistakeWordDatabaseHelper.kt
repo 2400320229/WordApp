@@ -4,66 +4,52 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.wordapp.StarWordDatabaseHelper.Companion
 
 //这个数据库里的单词id是从1开始的
-data class Word(val id: Long, val word: String, val translation: String?)
-class MistakeWordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
+data class WordID(val id: Long, val word_id:Long)
+class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
     DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_NAME = "mistake_words.db"
+        private const val DATABASE_NAME = "mistake_id_words.db"
         private const val DATABASE_VERSION = 2
         private const val TABLE_NAME = "words"
         private const val COLUMN_ID = "id"
-        private const val COLUMN_WORD = "word"
-        private const val COLUMN_TRANSLATION = "translation"  // 新增翻译列
+        private const val COLUMN_WORDID = "word_id"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_TABLE = """
             CREATE TABLE $TABLE_NAME (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                $COLUMN_WORD TEXT NOT NULL,
-                $COLUMN_TRANSLATION TEXT  
+                $COLUMN_WORDID TEXT NOT NULL
             );
         """
         db?.execSQL(CREATE_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        if (oldVersion < 2) {
-            // 如果数据库版本小于2，进行升级，增加翻译列
-            val ALTER_TABLE = "ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_TRANSLATION TEXT"
-            db?.execSQL(ALTER_TABLE)
-        }
+
     }
     // 插入单词和翻译
-    fun insertWordAndTranslation(word: String,translation: String?) {
+    fun insertWordId(wordId: Int) {
         val db = this.writableDatabase
         val contentValues = ContentValues().apply {
-            put(COLUMN_WORD, word)
-            put(COLUMN_TRANSLATION,translation)
+            put(COLUMN_WORDID, wordId)
+
         }
         db.insert(TABLE_NAME, null, contentValues)
         db.close()
     }
     //根据单词的id来更改它的翻译
-    fun updateTranslationById(id: Int, translation: String) {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put(COLUMN_TRANSLATION, translation)  // 更新翻译列
-        }
 
-        // 使用ID更新对应单词的翻译
-        db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(id.toString()))
-        db.close()
-    }
-    // 根据ID获取单个单词和翻译
-    fun getWordById(id: Int): String? {
+    // 根据ID获取单个单词的id
+    fun getWordIdById(id: Int): String? {
         val db = this.readableDatabase
         val cursor = db.query(
             TABLE_NAME, // 表名
-            arrayOf(COLUMN_WORD), // 查询字段
+            arrayOf(COLUMN_WORDID), // 查询字段
             "$COLUMN_ID = ?", // 查询条件
             arrayOf(id.toString()), // 查询参数
             null, null, null // 不使用分组、排序、限制
@@ -72,47 +58,27 @@ class MistakeWordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATA
         var word: String? = null
 
         if (cursor != null && cursor.moveToFirst()) {
-            word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+            word = cursor.getString(cursor.getColumnIndex(COLUMN_WORDID))
             cursor.close()
         }
         db.close()
         return word
     }
-    // 根据ID获取单个单词和翻译
-    fun getTranslationById(id: Int): String? {
-        val db = this.readableDatabase
-        val cursor = db.query(
-            TABLE_NAME, // 表名
-            arrayOf(COLUMN_TRANSLATION), // 查询字段
-            "$COLUMN_ID = ?", // 查询条件
-            arrayOf(id.toString()), // 查询参数
-            null, null, null // 不使用分组、排序、限制
-        )
 
-
-        var translation:String?=null
-        if (cursor != null && cursor.moveToFirst()) {
-            translation=cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
-            cursor.close()
-        }
-        db.close()
-        return translation
-    }
 
     // 查询所有单词及翻译
-    fun getAllWords(): List<Word> {
-        val wordList = mutableListOf<Word>()
+    fun getAllWords(): List<WordID> {
+        val wordList = mutableListOf<WordID>()
         val db = this.readableDatabase
 
         // 查询数据库中的所有记录
-        val cursor = db.query(TABLE_NAME, arrayOf(COLUMN_ID, COLUMN_WORD, COLUMN_TRANSLATION), null, null, null, null, null)
+        val cursor = db.query(TABLE_NAME, arrayOf(COLUMN_ID, COLUMN_WORDID), null, null, null, null, null)
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
-                val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
-                val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
-                wordList.add(Word(id, word, translation))
+                val word_id = cursor.getLong(cursor.getColumnIndex(COLUMN_WORDID))
+                wordList.add(WordID(id, word_id))
             } while (cursor.moveToNext())
         }
 
@@ -120,10 +86,19 @@ class MistakeWordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATA
         db.close()
         return wordList
     }
-     fun deleteWord(id: Long){
-        val db=writableDatabase
-        db.delete(TABLE_NAME,"$COLUMN_ID =?", arrayOf(id.toString()))
-        db.close()
+     fun deleteAllData(){
+         val db = writableDatabase
+         // 创建 ID 范围的条件
+         val idRange = (1..2000).joinToString(",")  // 生成 ID 列表字符串 "1,2,3,...,2000"
+
+         // 使用 IN 子句删除指定范围的记录
+         val sql = "DELETE FROM ${TABLE_NAME} WHERE ${COLUMN_ID} IN ($idRange)"
+
+         // 执行 SQL 删除操作
+         db.execSQL(sql)
+
+         // 关闭数据库
+         db.close()
     }
 
 }
