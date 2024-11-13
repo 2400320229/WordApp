@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.wordapp.StarWordDatabaseHelper.Companion
 
+
 //这个数据库里的单词id是从1开始的
 data class WordID(val id: Long, val word_id:Long)
 class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
@@ -13,7 +14,7 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
 
     companion object {
         private const val DATABASE_NAME = "mistake_id_words.db"
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 3
         private const val TABLE_NAME = "words"
         private const val COLUMN_ID = "id"
         private const val COLUMN_WORDID = "word_id"
@@ -30,6 +31,12 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 3) {
+            if (db != null) {
+                db.execSQL("DROP TABLE IF EXISTS ${TABLE_NAME}")
+            }
+            onCreate(db)
+        }
 
     }
     // 插入单词和翻译
@@ -86,19 +93,20 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
         db.close()
         return wordList
     }
-     fun deleteAllData(){
+    /* fun deleteAllData(){
          val db = writableDatabase
-         // 创建 ID 范围的条件
-         val idRange = (1..2000).joinToString(",")  // 生成 ID 列表字符串 "1,2,3,...,2000"
 
-         // 使用 IN 子句删除指定范围的记录
-         val sql = "DELETE FROM ${TABLE_NAME} WHERE ${COLUMN_ID} IN ($idRange)"
-
-         // 执行 SQL 删除操作
-         db.execSQL(sql)
-
-         // 关闭数据库
-         db.close()
+// 执行删除所有数据的 SQL 语句
+db.execSQL("DELETE FROM your_table_name") // 清空某个表的数据
+// 或者清空所有表的所有数据
+val cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null)
+while (cursor.moveToNext()) {
+    val tableName = cursor.getString(0)
+    if (tableName != "android_metadata" && tableName != "sqlite_sequence") {
+        db.execSQL("DELETE FROM $tableName")
     }
+}
+cursor.close()
+    }*/
 
 }
