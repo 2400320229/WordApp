@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".StudyFragment">
 
 
@@ -13,7 +14,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="250dp">
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -24,18 +36,33 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/Study"
                 android:text="已学单词"/>
+            </LinearLayout>
 
         </LinearLayout>
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            app:backgroundTint="@color/white"
+            app:cornerRadius="20dp"
+            app:strokeColor="@color/black"
             android:text="开始学习"
             android:id="@+id/StarStudy"/>
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            app:backgroundTint="@color/white"
+            app:cornerRadius="20dp"
+            app:strokeColor="@color/black"
             android:text="复习"
             android:id="@+id/ReviewWord"/>
+        </LinearLayout>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

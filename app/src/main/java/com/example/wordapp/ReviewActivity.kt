@@ -35,6 +35,7 @@ class ReviewActivity : AppCompatActivity() {
             builder.setPositiveButton("去学习！"){dialog,which->
                 val intent=Intent(this,MainActivity::class.java)
                 startActivity(intent)
+                finish()
             }
             builder.setNegativeButton("去看看其他科目把"){dialog,which->
 
@@ -42,16 +43,11 @@ class ReviewActivity : AppCompatActivity() {
             builder.create().show()
         }
         val WordText: TextView = findViewById(R.id.Word_text)
-        val Trybutton: Button = findViewById(R.id.Try)
         val Studybutton: Button = findViewById(R.id.nextWord)
         val WordDatabutton: Button = findViewById(R.id.ShowWordDate)
         while(wordId==null) {
             wordId=dbHelper.getWordIdById(mistake_word_id++)
             Log.d("misId", wordId.toString())
-        }
-        Trybutton.setOnClickListener {
-            val intent = Intent(this, Watch_Mistake_Word::class.java)
-            startActivity(intent)
         }
         WordDatabutton.setOnClickListener {
 
@@ -70,13 +66,28 @@ class ReviewActivity : AppCompatActivity() {
 
         }
         Studybutton.setOnClickListener {
-            val wordId=dbHelper.getWordIdById(mistake_word_id-1)
+            var wordId=dbHelper.getWordIdById(mistake_word_id-1)
+            if(wordId!=null) {
                 val dbHelper = WordDatabaseHelper(applicationContext)
                 val word = dbHelper.getWordById(wordId)
                 val translation = dbHelper.getTranslationById(wordId)
                 WordText.setText(word)
                 OKHttpRequestVoice(word)
                 mistake_word_id++
+            }else{
+                val builder=AlertDialog.Builder(this)
+                builder.setTitle("今天的单词已经复习完了")
+                builder.setMessage("请选择：")
+                builder.setPositiveButton("再去学一些新单词吧"){dialog,which->
+                    val intent=Intent(this,MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+                builder.setNegativeButton("再复习一遍"){dialog,which->
+                     recreate()
+                }
+                builder.create().show()
+            }
 
 
 

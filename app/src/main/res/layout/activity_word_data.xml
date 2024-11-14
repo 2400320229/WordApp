@@ -6,36 +6,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".WordData">
-    <TextView
+    tools:context=".WordData"
+    android:padding="10dp">
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="50dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:text="添加至单词本"
+            android:id="@+id/add_mistake_word"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+    <TextView
+        android:layout_width="300dp"
         android:layout_height="200dp"
         android:text="Word"
         android:textSize="60dp"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:id="@+id/Word"/>
+    <Button
+        android:id="@+id/play_voice"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="读音"/>
+    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:text="Chinese"
-        android:textSize="60dp"
-        android:gravity="center"
+        android:textSize="30dp"
+        android:gravity="center_vertical"
         android:id="@+id/Chinese"/>
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="知道了"
-        android:id="@+id/well_know"/>
-    <Button
-        android:id="@+id/play_voice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="读音"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="添加至单词本"
-        android:id="@+id/add_mistake_word"/>
+        android:layout_height="200dp">
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:text="知道了"
+            android:id="@+id/well_know"/>
+
+
+    </LinearLayout>
 
 
 
