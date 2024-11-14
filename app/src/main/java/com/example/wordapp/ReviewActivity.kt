@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -20,16 +21,34 @@ class ReviewActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_review)
        val dbHelper=MistakeWordIDDatabaseHelper(applicationContext)
-        var mistake_word_id=1
+        var mistake_word_id=2
         var wordId=dbHelper.getWordIdById(mistake_word_id)
-        while(wordId==null) {
-            wordId=dbHelper.getWordIdById(mistake_word_id++)
-            Log.d("misId", wordId.toString())
+        Log.d("mistake_word",mistake_word_id.toString())
+        Log.d("wordId",wordId.toString())
+        if(mistake_word_id==2&&wordId==null){
+
+            wordId= 1.toString()
+            Log.d("wordId",wordId.toString())
+            val builder=AlertDialog.Builder(this)
+            builder.setTitle("今天还没有单词哦")
+            builder.setMessage("请先开始今天的学习")
+            builder.setPositiveButton("去学习！"){dialog,which->
+                val intent=Intent(this,MainActivity::class.java)
+                startActivity(intent)
+            }
+            builder.setNegativeButton("去看看其他科目把"){dialog,which->
+
+            }
+            builder.create().show()
         }
         val WordText: TextView = findViewById(R.id.Word_text)
         val Trybutton: Button = findViewById(R.id.Try)
         val Studybutton: Button = findViewById(R.id.nextWord)
         val WordDatabutton: Button = findViewById(R.id.ShowWordDate)
+        while(wordId==null) {
+            wordId=dbHelper.getWordIdById(mistake_word_id++)
+            Log.d("misId", wordId.toString())
+        }
         Trybutton.setOnClickListener {
             val intent = Intent(this, Watch_Mistake_Word::class.java)
             startActivity(intent)

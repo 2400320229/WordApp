@@ -55,6 +55,11 @@ class StudyFragment : Fragment() {
             editor_id.putInt("goalId",20)
             editor_id.apply()
 
+
+            val dbHelper1= context?.let { MistakeWordIDDatabaseHelper(it) }
+            if (dbHelper1 != null) {
+                dbHelper1.resetDatabase()
+            }
             val dbHelper2=StarWordDatabaseHelper(requireContext())
             dbHelper2.deleteAllData()
             Log.d("Delete","delete")

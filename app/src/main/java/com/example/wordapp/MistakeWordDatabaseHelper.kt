@@ -13,7 +13,7 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
 
     companion object {
         private const val DATABASE_NAME = "mistake_id_words.db"
-        private const val DATABASE_VERSION = 4
+        private const val DATABASE_VERSION = 5
         private const val TABLE_NAME = "words"
         private const val COLUMN_ID = "id"
         private const val COLUMN_WORDID = "word_id"
@@ -39,18 +39,21 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
 
     }
     // 插入单词和翻译
-    fun insertWordId(wordId: Int) {
-        if(wordId!=null) {
+    fun insertWordId(wordId: Int?) {
+        if (wordId != null) {
             val db = this.writableDatabase
-            val contentValues = ContentValues().apply {
-                put(COLUMN_WORDID, wordId)
 
+            // 先检查 wordId 是否有效，避免插入空值
+            if (wordId != 0) {
+                val contentValues = ContentValues().apply {
+                    put(COLUMN_WORDID, wordId)
+                }
+
+                // 使用 INSERT OR IGNORE 来避免插入重复数据
+                db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
             }
-            // 使用 INSERT OR IGNORE 来避免插入重复数据
-            db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
             db.close()
         }
-
     }
     //根据单词的id来更改它的翻译
 
@@ -112,6 +115,13 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
             // 表示没有找到符合条件的记录
             println("没有找到要删除的记录")
         }
+    }
+    //重置数据库
+    fun resetDatabase() {
+        val db = this.writableDatabase
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        onCreate(db)
+        db.close()
     }
 
 }

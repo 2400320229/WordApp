@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         WordDatabutton.setOnClickListener{
-            val studyId=sharedPreferences3.getInt("studiedId",1)?:1
+            val studyId=sharedPreferences3.getInt("studiedId",1)
             val dbHelper1=MistakeWordIDDatabaseHelper(applicationContext)
             val wordId=studyId-1//因为点击下一个单词后，先显示单词再让studiedId+1，所以要对获取的wordId-1
             dbHelper1.insertWordId(wordId)//将不认识的单词加入Mistake数据库中，可以复习

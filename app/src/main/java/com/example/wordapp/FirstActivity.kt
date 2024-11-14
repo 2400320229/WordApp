@@ -102,6 +102,7 @@ class FirstActivity : AppCompatActivity() {
 
 // 如果设置的时间已经过去，则设置为第二天的 1:29
         if (calendar.timeInMillis <= System.currentTimeMillis()) {
+            // 设置为第二天的 0:00
             calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
 
