@@ -1,5 +1,6 @@
 package com.example.wordapp
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -48,9 +49,13 @@ class StudyFragment : Fragment() {
             startActivity(intent)
         }
         DeleteButton.setOnClickListener{
-            val dbHelper1=MistakeWordIDDatabaseHelper(requireContext())
-            val dbHelper2=StarWordDatabaseHelper(requireContext())
+            val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
+            val editor_id = sharedPreferences3.edit()
+            editor_id.putInt("studiedId",1)
+            editor_id.putInt("goalId",20)
+            editor_id.apply()
 
+            val dbHelper2=StarWordDatabaseHelper(requireContext())
             dbHelper2.deleteAllData()
             Log.d("Delete","delete")
         }

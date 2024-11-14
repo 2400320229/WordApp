@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.OkHttpClient
 import okhttp3.Request
+
 import java.io.File
 import java.io.FileOutputStream
 
@@ -20,8 +21,11 @@ class ReviewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_review)
        val dbHelper=MistakeWordIDDatabaseHelper(applicationContext)
         var mistake_word_id=1
-        val wordId=dbHelper.getWordIdById(mistake_word_id)
-
+        var wordId=dbHelper.getWordIdById(mistake_word_id)
+        while(wordId==null) {
+            wordId=dbHelper.getWordIdById(mistake_word_id++)
+            Log.d("misId", wordId.toString())
+        }
         val WordText: TextView = findViewById(R.id.Word_text)
         val Trybutton: Button = findViewById(R.id.Try)
         val Studybutton: Button = findViewById(R.id.nextWord)
@@ -32,24 +36,30 @@ class ReviewActivity : AppCompatActivity() {
         }
         WordDatabutton.setOnClickListener {
 
+            val wordId: String? =dbHelper.getWordIdById(mistake_word_id-2)
+            val wordId1:Int= wordId!!.toInt()
             val intent = Intent(this, WordData::class.java)
-            intent.putExtra("key", wordId)
+            Log.d("DateId",wordId.toString())
+            intent.putExtra("try",-1)
+            intent.putExtra("key", wordId1)
             startActivity(intent)
             val dbHelper = WordDatabaseHelper(applicationContext)
             val word = dbHelper.getWordById(wordId)
             Log.d("word",word.toString())
             OKHttpRequestVoice(word)
 
+
         }
         Studybutton.setOnClickListener {
-            
-            val wordId=dbHelper.getWordIdById(mistake_word_id)
-            val dbHelper = WordDatabaseHelper(applicationContext)
-            val word = dbHelper.getWordById(wordId)
-            val translation = dbHelper.getTranslationById(wordId)
-            WordText.setText(word)
-            OKHttpRequestVoice(word)
-            mistake_word_id++
+            val wordId=dbHelper.getWordIdById(mistake_word_id-1)
+                val dbHelper = WordDatabaseHelper(applicationContext)
+                val word = dbHelper.getWordById(wordId)
+                val translation = dbHelper.getTranslationById(wordId)
+                WordText.setText(word)
+                OKHttpRequestVoice(word)
+                mistake_word_id++
+
+
 
         }
 

@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.wordapp.StarWordDatabaseHelper.Companion
 
 
 //这个数据库里的单词id是从1开始的
@@ -41,14 +40,16 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
     }
     // 插入单词和翻译
     fun insertWordId(wordId: Int) {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put(COLUMN_WORDID, wordId)
+        if(wordId!=null) {
+            val db = this.writableDatabase
+            val contentValues = ContentValues().apply {
+                put(COLUMN_WORDID, wordId)
 
+            }
+            // 使用 INSERT OR IGNORE 来避免插入重复数据
+            db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
+            db.close()
         }
-        // 使用 INSERT OR IGNORE 来避免插入重复数据
-        db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE)
-        db.close()
 
     }
     //根据单词的id来更改它的翻译
@@ -94,6 +95,23 @@ class MistakeWordIDDatabaseHelper(context: Context):SQLiteOpenHelper(context, DA
         cursor?.close()
         db.close()
         return wordList
+    }
+    fun deleteWordId(wordId: Int) {
+        val db = this.writableDatabase
+        val selection = "$COLUMN_WORDID = ?"
+        val selectionArgs = arrayOf(wordId.toString())
+
+        // 删除指定 wordId 的数据
+        val rowsDeleted = db.delete(TABLE_NAME, selection, selectionArgs)
+        db.close()
+
+        if (rowsDeleted > 0) {
+            // 表示删除成功
+            println("删除成功：删除了 $rowsDeleted 条记录")
+        } else {
+            // 表示没有找到符合条件的记录
+            println("没有找到要删除的记录")
+        }
     }
 
 }

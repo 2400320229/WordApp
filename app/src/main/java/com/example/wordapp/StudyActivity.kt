@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 
@@ -33,25 +34,31 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.study_activity)
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
-        /*var mistakeId=getSharedPreferences("mistake",0)*/
-
+        val Goal=sharedPreferences3.getInt("goalId",20)
+        Log.d("goal",Goal.toString())
 
         val WordText:TextView=findViewById(R.id.Word_text)
-        val NUM:TextView=findViewById(R.id.NUM)
+        val GoalNUM:TextView=findViewById(R.id.GoalNUM)
+        val StudyNUM:TextView=findViewById(R.id.StudyNUM)
+        val s1:TextView=findViewById(R.id.s1)
         val Trybutton:Button=findViewById(R.id.Try)
         val Studybutton:Button=findViewById(R.id.nextWord)
         val WordDatabutton:Button=findViewById(R.id.ShowWordDate)
+
+        GoalNUM.setText(Goal.toString())
         Trybutton.setOnClickListener{
             val intent=Intent(this,Watch_Mistake_Word::class.java)
             startActivity(intent)
         }
         WordDatabutton.setOnClickListener{
+            val studyId=sharedPreferences3.getInt("studiedId",1)?:1
             val dbHelper1=MistakeWordIDDatabaseHelper(applicationContext)
-            val wordId=sharedPreferences3.getInt("id",1)-1
+            val wordId=studyId-1//因为点击下一个单词后，先显示单词再让studiedId+1，所以要对获取的wordId-1
             dbHelper1.insertWordId(wordId)//将不认识的单词加入Mistake数据库中，可以复习
             val intent= Intent(this,WordData::class.java)
             intent.putExtra("key",wordId)
             startActivity(intent)
+            Log.d("AllmistakeId",dbHelper1.getAllWords().toString())
             val dbHelper=WordDatabaseHelper(applicationContext)
             val word=dbHelper.getWordById((wordId).toString())
             OKHttpRequestVoice(word)
@@ -60,9 +67,11 @@ class MainActivity : AppCompatActivity() {
         }
         Studybutton.setOnClickListener{
 
+
             val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
             val editor_id = sharedPreferences3.edit()
-            val wordId=sharedPreferences3.getInt("id",1)
+            val studyId=sharedPreferences3.getInt("studiedId",1)?:1
+            val wordId=studyId
             Log.d("id",wordId.toString())
 
 
@@ -71,19 +80,26 @@ class MainActivity : AppCompatActivity() {
             val word=dbHelper.getWordById(wordId.toString())
             WordText.setText(word)
             OKHttpRequestVoice(word)
-            editor_id.putInt("id", wordId + 1)
-            editor_id.apply()
-            /*if(wordId<=20) {
-
-            }else if(wordId==21){
-                finish()
-            }*/
-            /*else{
-                editor_id.putInt("id",1)
+            if(wordId!=Goal+1) {
+                editor_id.putInt("studiedId", wordId + 1)
                 editor_id.apply()
-            }*/
-
-            NUM.setText(wordId.toString())
+                Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
+                StudyNUM.setText(wordId.toString())
+            }else{
+                val builder= AlertDialog.Builder(this)
+                builder.setTitle("恭喜你完成了今天的目标")
+                builder.setMessage("您确定要继续学习吗？")
+                builder.setPositiveButton("继续学") {dialog,which->
+                    editor_id.putInt("studiedId", wordId + 1)
+                    editor_id.apply()
+                    Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
+                    StudyNUM.setText(wordId.toString())
+                }
+                builder.setNegativeButton("去看看其他科目把"){dialog,which->
+                    dialog.dismiss()
+                }
+                builder.create().show()
+            }
         }
 
 

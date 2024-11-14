@@ -38,11 +38,32 @@
           android:layout_height="35dp"
           android:text="try"/>
   </LinearLayout>
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:textSize="60dp"
-        android:text="NUM"
-        android:textAlignment="center"
-        android:id="@+id/NUM"/>
+        android:layout_height="300dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:textSize="20dp"
+            android:text="StudyNUM"
+            android:textAlignment="center"
+            android:id="@+id/StudyNUM"/>
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="40dp"
+            android:textSize="20dp"
+            android:text="/"
+            android:textAlignment="center"
+            android:id="@+id/s1"/>
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:textSize="20dp"
+            android:text="GoalNUM"
+            android:textAlignment="center"
+            android:id="@+id/GoalNUM"/>
+    </LinearLayout>
+
 </LinearLayout>

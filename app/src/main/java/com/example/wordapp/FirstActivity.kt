@@ -27,11 +27,12 @@ class FirstActivity : AppCompatActivity() {
         setContentView(R.layout.frist_layout)
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
-       /* editor_id.putInt("Id",1)
+        /*editor_id.putInt("goalId",1)
+        editor_id.putInt("studiedId",1)
         editor_id.apply()*/
         setupDailyAlarm()
-        var id=sharedPreferences3.getInt("Id",0)
-        Log.d("Id","${id}")
+        var id=sharedPreferences3.getInt("goalId",0)
+        Log.d("goalId","${id}")
 
 
         val checkBox=findViewById<CheckBox?>(R.id.checkbox)

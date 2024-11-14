@@ -30,8 +30,8 @@ class WordData : AppCompatActivity() {
         val WordText:TextView=findViewById(R.id.Word)
         val TranslateText:TextView=findViewById(R.id.Chinese)
 
-
-        val wordId=intent.getIntExtra("key",0)
+        val wordId=intent.getIntExtra("key",-1)
+        Log.d("DataWord",wordId.toString())
         if(wordId!=-1) {
             Word = dbHelper.getWordById(wordId.toString()).toString()
             val Translation = dbHelper.getTranslationById(wordId.toString())
