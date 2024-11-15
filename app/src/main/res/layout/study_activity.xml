@@ -6,13 +6,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:textSize="20dp"
+                android:text="StudyNUM"
+                android:textAlignment="center"
+                android:id="@+id/StudyNUM"/>
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="40dp"
+                android:textSize="20dp"
+                android:text="/"
+                android:textAlignment="center"
+                android:id="@+id/s1"/>
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:textSize="20dp"
+                android:text="GoalNUM"
+                android:textAlignment="center"
+                android:id="@+id/GoalNUM"/>
+        </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上一个单词"
+            android:id="@+id/before"/>
+        <Button
+            android:id="@+id/Try"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:text="try"/>
+    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="400dp"
         android:textSize="60dp"
         android:text="word"
-        android:textAlignment="center"
+        android:gravity="center"
         android:id="@+id/Word_text"/>
 
 
@@ -20,50 +62,20 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="150dp"
-      android:orientation="vertical">
+      android:orientation="horizontal">
 
       <Button
-          android:id="@+id/ShowWordDate"
-          android:layout_width="match_parent"
-          android:layout_height="35dp"
-          android:text="不知道"/>
-      <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
         android:id="@+id/nextWord"
         android:text="下一个"/>
       <Button
-          android:id="@+id/Try"
+          android:id="@+id/ShowWordDate"
           android:layout_width="match_parent"
-          android:layout_height="35dp"
-          android:text="try"/>
-  </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:textSize="20dp"
-            android:text="StudyNUM"
-            android:textAlignment="center"
-            android:id="@+id/StudyNUM"/>
-        <TextView
-            android:layout_width="20dp"
-            android:layout_height="40dp"
-            android:textSize="20dp"
-            android:text="/"
-            android:textAlignment="center"
-            android:id="@+id/s1"/>
+          android:layout_height="60dp"
+          android:text="不知道"/>
 
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:textSize="20dp"
-            android:text="GoalNUM"
-            android:textAlignment="center"
-            android:id="@+id/GoalNUM"/>
-    </LinearLayout>
+  </LinearLayout>
+
 
 </LinearLayout>
