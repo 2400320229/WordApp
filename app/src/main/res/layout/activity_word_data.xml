@@ -29,7 +29,7 @@
         android:layout_width="300dp"
         android:layout_height="200dp"
         android:text="Word"
-        android:textSize="60dp"
+        android:textSize="40dp"
         android:gravity="center_vertical"
         android:id="@+id/Word"/>
     <Button

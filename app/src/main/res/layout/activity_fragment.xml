@@ -15,7 +15,8 @@
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:id="@+id/ToggleGroup">
+        android:id="@+id/ToggleGroup"
+        app:singleSelection="true">
         <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
             android:layout_weight="1"

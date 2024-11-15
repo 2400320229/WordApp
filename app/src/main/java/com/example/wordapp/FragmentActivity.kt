@@ -1,9 +1,12 @@
 package com.example.wordapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -14,35 +17,52 @@ class FragmentActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_fragment)
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.fragment,StudyFragment())
+        transaction.add(R.id.fragment, StudyFragment())
 
         transaction.show(StudyFragment())
         transaction.commit()
 
         var selectIndex = R.id.tab1 // 默认选中的按钮ID
-        val toggleGroup:MaterialButtonToggleGroup=findViewById(R.id.ToggleGroup)
+        val toggleGroup: MaterialButtonToggleGroup = findViewById(R.id.ToggleGroup)
+
         toggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
             val button = findViewById<MaterialButton>(checkedId)
 
             if (isChecked) {
+                Log.d("checked","isChecked")
                 // 如果当前按钮被选中
                 if (selectIndex != checkedId) {
+
                     // 恢复之前选中的按钮的颜色
                     val previousButton = findViewById<MaterialButton>(selectIndex)
                     previousButton.setStrokeColorResource(R.color.white)
-                    previousButton.setTextColor(ContextCompat.getColor(this@FragmentActivity, R.color.black))
+                    previousButton.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.black
+                        )
+                    )
                 }
 
                 // 更新选中的按钮
                 selectIndex = checkedId
                 button.setStrokeColorResource(R.color.black)
-                button.setTextColor(ContextCompat.getColor(this@FragmentActivity, R.color.white))
+                button.setTextColor(ContextCompat.getColor(this, R.color.white))
+
                 switchFragment(selectIndex)
             } else {
                 // 如果按钮被取消选中
                 button.setStrokeColorResource(R.color.white)
-                button.setTextColor(ContextCompat.getColor(this@FragmentActivity, R.color.black))
+                button.setTextColor(ContextCompat.getColor(this, R.color.black))
             }
+        }
+
+
+        toggleGroup.check(R.id.tab1)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
     }
     private fun switchFragment(selectIndex: Int) {

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".StudyFragment">
+    tools:context=".StudyFragment"
+    android:padding="10dp">
 
 
     <LinearLayout
@@ -45,21 +46,26 @@
         <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:textColor="@color/black"
             app:backgroundTint="@color/white"
-            app:cornerRadius="20dp"
+            app:cornerRadius="10dp"
             app:strokeColor="@color/black"
+            app:strokeWidth="2dp"
             android:text="开始学习"
             android:id="@+id/StarStudy"/>
-        <Button
+            <LinearLayout
+                android:layout_width="20dp"
+                android:layout_height="match_parent"/>
+        <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:textColor="@color/black"
             app:backgroundTint="@color/white"
-            app:cornerRadius="20dp"
+            app:cornerRadius="10dp"
             app:strokeColor="@color/black"
+            app:strokeWidth="2dp"
             android:text="复习"
             android:id="@+id/ReviewWord"/>
         </LinearLayout>
