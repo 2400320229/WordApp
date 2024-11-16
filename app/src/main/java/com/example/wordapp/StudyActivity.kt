@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.preference.PreferenceManager.OnActivityStopListener
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -27,11 +28,16 @@ data class WordResponse(
 
 class MainActivity : AppCompatActivity() {
 
+    private var startTime: Long = 0
+    private var endTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.study_activity)
+
+        startTime = System.currentTimeMillis()// 记录应用启动的时间戳
+
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
         val Goal=sharedPreferences3.getInt("goalId",20)
@@ -41,15 +47,12 @@ class MainActivity : AppCompatActivity() {
         val GoalNUM:TextView=findViewById(R.id.GoalNUM)
         val StudyNUM:TextView=findViewById(R.id.StudyNUM)
         val s1:TextView=findViewById(R.id.s1)
-        val Trybutton:Button=findViewById(R.id.Try)
+        val lastWord:Button=findViewById(R.id.last_word)
         val Studybutton:Button=findViewById(R.id.nextWord)
         val WordDatabutton:Button=findViewById(R.id.ShowWordDate)
 
         GoalNUM.setText(Goal.toString())
-        Trybutton.setOnClickListener{
-            val intent=Intent(this,Watch_Mistake_Word::class.java)
-            startActivity(intent)
-        }
+
         WordDatabutton.setOnClickListener{
             val studyId=sharedPreferences3.getInt("studiedId",1)
             val dbHelper1=MistakeWordIDDatabaseHelper(applicationContext)
@@ -74,12 +77,16 @@ class MainActivity : AppCompatActivity() {
             val wordId=studyId
             Log.d("id",wordId.toString())
 
-
             //sendRequestWithOkHttp()一劳永逸
             val dbHelper=WordDatabaseHelper(applicationContext)
+            //让lastWord的文本为last_word
+            val last_word=dbHelper.getWordById((wordId-1).toString())
+            lastWord.setText(last_word)
+
             val word=dbHelper.getWordById(wordId.toString())
             WordText.setText(word)
             OKHttpRequestVoice(word)
+            //如果达成了学习目标
             if(wordId!=Goal+1) {
                 editor_id.putInt("studiedId", wordId + 1)
                 editor_id.apply()
@@ -101,12 +108,30 @@ class MainActivity : AppCompatActivity() {
                 builder.create().show()
             }
         }
-
-
-
-
-
         /*sendRequestWithOkHttp()*/
+        lastWord.setOnClickListener {
+            val studyId=sharedPreferences3.getInt("studiedId",1)?:1
+            val wordId=studyId
+            val dbHelper=WordDatabaseHelper(applicationContext)
+            val last_word=dbHelper.getWordById((wordId-1).toString())
+            val intent= Intent(this,WordData::class.java)
+            intent.putExtra("key",wordId-2)//不知道为什么就减二了
+            startActivity(intent)
+            OKHttpRequestVoice(last_word)
+
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        endTime = System.currentTimeMillis()// 记录应用暂停或退出的时间戳
+        val duration = endTime - startTime// 计算应用的打开时长
+        val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
+        val editor_id = sharedPreferences3.edit()
+        val time=sharedPreferences3.getLong("Time",0)
+        editor_id.putLong("Time",duration+time)
+        editor_id.apply()
     }
     //请求单词音频并播放
     private fun OKHttpRequestVoice(Word: String?) {

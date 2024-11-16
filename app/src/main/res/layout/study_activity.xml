@@ -39,15 +39,12 @@
                 android:id="@+id/GoalNUM"/>
         </LinearLayout>
         <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:text="上一个单词"
-            android:id="@+id/before"/>
-        <Button
-            android:id="@+id/Try"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:text="try"/>
+            android:textColor="@color/black"
+            android:id="@+id/last_word"
+            android:backgroundTint="@color/white"/>
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"

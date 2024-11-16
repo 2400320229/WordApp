@@ -32,6 +32,7 @@ class WordData : AppCompatActivity() {
 
         val wordId=intent.getIntExtra("key",-1)
         Log.d("DataWord",wordId.toString())
+        //如果是从单词本进入的WordData，wordId为-1，就不会显示添加至单词本的按钮
         if(wordId!=-1) {
             Word = dbHelper.getWordById(wordId.toString()).toString()
             val Translation = dbHelper.getTranslationById(wordId.toString())

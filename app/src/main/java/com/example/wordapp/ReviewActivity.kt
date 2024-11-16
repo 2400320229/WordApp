@@ -1,5 +1,6 @@
 package com.example.wordapp
 
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -16,11 +17,16 @@ import java.io.File
 import java.io.FileOutputStream
 
 class ReviewActivity : AppCompatActivity() {
+    private var startTime: Long = 0
+    private var endTime: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_review)
-       val dbHelper=MistakeWordIDDatabaseHelper(applicationContext)
+        startTime = System.currentTimeMillis()// 记录应用启动的时间戳
+
+        val dbHelper=MistakeWordIDDatabaseHelper(applicationContext)
         var mistake_word_id=2
         var wordId=dbHelper.getWordIdById(mistake_word_id)
         Log.d("mistake_word",mistake_word_id.toString())
@@ -93,6 +99,17 @@ class ReviewActivity : AppCompatActivity() {
 
         }
 
+    }
+    override fun onStop() {
+        super.onStop()
+
+        endTime = System.currentTimeMillis()// 记录应用暂停或退出的时间戳
+        val duration = endTime - startTime// 计算应用的打开时长
+        val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
+        val editor_id = sharedPreferences3.edit()
+        val time=sharedPreferences3.getLong("Time",0)
+        editor_id.putLong("Time",duration+time)
+        editor_id.apply()
     }
     private fun OKHttpRequestVoice(Word: String?) {
         Thread {
