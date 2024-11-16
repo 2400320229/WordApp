@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
             val studyId=sharedPreferences3.getInt("studiedId",1)?:1
             val wordId=studyId
             val dbHelper=WordDatabaseHelper(applicationContext)
-            val last_word=dbHelper.getWordById((wordId-1).toString())
+            val last_word=dbHelper.getWordById((wordId-2).toString())
             val intent= Intent(this,WordData::class.java)
             intent.putExtra("key",wordId-2)//不知道为什么就减二了
             startActivity(intent)
