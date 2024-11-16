@@ -1,46 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentActivity"
-    android:orientation="vertical">
-    <FrameLayout
+    tools:context=".FragmentActivity">
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/fragment"/>
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:id="@+id/ToggleGroup"
-        app:singleSelection="true">
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:id="@+id/tab1"
-            android:text="学习"/>
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:id="@+id/tab2"
-            android:text="单词本"/>
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:id="@+id/tab3"
-            android:text="用户"/>
-
-    </com.google.android.material.button.MaterialButtonToggleGroup>
-
+        android:layout_height="match_parent"
+        android:src="@drawable/bakegrand"
+        android:scaleType="centerCrop"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/fragment"/>
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:id="@+id/ToggleGroup"
+            app:singleSelection="true">
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/tab1"
+                app:cornerRadius="5dp"
+                android:backgroundTint="#ff7f50"
+                android:text="学习"/>
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/tab2"
+                android:backgroundTint="#ff7f50"
+                android:text="单词本"/>
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/tab3"
+                android:text="用户"
+                android:backgroundTint="#ff7f50"
+                app:cornerRadius="5dp"/>
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+    </LinearLayout>
 
 
-</LinearLayout>
+</FrameLayout>

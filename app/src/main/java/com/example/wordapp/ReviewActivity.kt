@@ -20,10 +20,16 @@ class ReviewActivity : AppCompatActivity() {
     private var startTime: Long = 0
     private var endTime: Long = 0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_review)
+        val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",false)
+        editor.apply()
         startTime = System.currentTimeMillis()// 记录应用启动的时间戳
 
         val dbHelper=MistakeWordIDDatabaseHelper(applicationContext)
@@ -99,6 +105,13 @@ class ReviewActivity : AppCompatActivity() {
 
         }
 
+    }
+    override fun onPause() {
+        super.onPause()
+        val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",true)
+        editor.apply()
     }
     override fun onStop() {
         super.onStop()

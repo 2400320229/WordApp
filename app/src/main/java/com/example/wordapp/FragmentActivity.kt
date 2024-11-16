@@ -1,5 +1,8 @@
 package com.example.wordapp
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -12,10 +15,18 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 
 class FragmentActivity : AppCompatActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_fragment)
+        val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",false)
+        editor.apply()
+
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.fragment, StudyFragment())
 
@@ -64,6 +75,19 @@ class FragmentActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+
+        val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",true)
+        editor.apply()
+        val intent=Intent(this,MyService::class.java)
+
+        startService(intent)//关闭时启用service，进行通知
     }
     private fun switchFragment(selectIndex: Int) {
         val fragment = when (selectIndex) {

@@ -21,10 +21,18 @@ import java.util.Calendar
 
 class FirstActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
 
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.frist_layout)
+
+        val intent = Intent(this, MyService::class.java)
+        stopService(intent)
+
+        val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",false)
+        editor.apply()
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
         /*editor_id.putInt("goalId",1)
@@ -89,7 +97,18 @@ class FirstActivity : AppCompatActivity() {
             }
         }
 
-    }private fun setupDailyAlarm() {
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",true)
+        editor.apply()
+    }
+
+    private fun setupDailyAlarm() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         // 设置触发时间为今天的 0:00

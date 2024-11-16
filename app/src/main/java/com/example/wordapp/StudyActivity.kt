@@ -31,11 +31,19 @@ class MainActivity : AppCompatActivity() {
     private var startTime: Long = 0
     private var endTime: Long = 0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.study_activity)
+        val intent = Intent(this, MyService::class.java)
+        stopService(intent)
 
+        val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",false)
+        editor.apply()
         startTime = System.currentTimeMillis()// 记录应用启动的时间戳
 
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
@@ -132,6 +140,13 @@ class MainActivity : AppCompatActivity() {
         val time=sharedPreferences3.getLong("Time",0)
         editor_id.putLong("Time",duration+time)
         editor_id.apply()
+
+        val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",true)
+        editor.apply()
+
+
     }
     //请求单词音频并播放
     private fun OKHttpRequestVoice(Word: String?) {

@@ -1,5 +1,6 @@
 package com.example.wordapp
 
+import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +17,15 @@ import java.io.File
 import java.io.FileOutputStream
 
 class WordData : AppCompatActivity() {
+    private var startTime: Long = 0
+    private var endTime: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        startTime = System.currentTimeMillis()
+        val sharedPreferences=getSharedPreferences("service", Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",false)
+        editor.apply()
         var Word="word"
         var chinese="chinese"
         val dbHelper = WordDatabaseHelper(applicationContext)
@@ -64,6 +73,22 @@ class WordData : AppCompatActivity() {
             finish()
 
         }
+    }
+    override fun onPause() {
+        super.onPause()
+
+        endTime = System.currentTimeMillis()// 记录应用暂停或退出的时间戳
+        val duration = endTime - startTime// 计算应用的打开时长
+        val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
+        val editor_id = sharedPreferences3.edit()
+        val time=sharedPreferences3.getLong("Time",0)
+        editor_id.putLong("Time",duration+time)
+        editor_id.apply()
+
+        val sharedPreferences=getSharedPreferences("service", Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",true)
+        editor.apply()
     }
     //解析翻译得到的JSON字符串，获取中文翻译
     private fun obtainChinese(jsonString: String): List<String> {
