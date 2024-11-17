@@ -73,6 +73,8 @@ class MainActivity : AppCompatActivity() {
             val dbHelper=WordDatabaseHelper(applicationContext)
             val word=dbHelper.getWordById((wordId).toString())
             OKHttpRequestVoice(word)
+            dbHelper.incrementErrorCount(wordId)
+            Log.d("error","${word} is ${dbHelper.getErrorCount(wordId)}")
 
 
         }
@@ -87,6 +89,7 @@ class MainActivity : AppCompatActivity() {
 
             //sendRequestWithOkHttp()一劳永逸
             val dbHelper=WordDatabaseHelper(applicationContext)
+
             //让lastWord的文本为last_word
             val last_word=dbHelper.getWordById((wordId-1).toString())
             lastWord.setText(last_word)
@@ -94,6 +97,7 @@ class MainActivity : AppCompatActivity() {
             val word=dbHelper.getWordById(wordId.toString())
             WordText.setText(word)
             OKHttpRequestVoice(word)
+
             //如果达成了学习目标
             if(wordId!=Goal+1) {
                 editor_id.putInt("studiedId", wordId + 1)

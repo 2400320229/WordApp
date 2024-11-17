@@ -78,20 +78,28 @@ class StudyFragment : Fragment() {
         }
         DeleteButton.setOnClickListener{
             val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
-            val editor_id = sharedPreferences3.edit()
-            editor_id.putInt("studiedId",1)
-            editor_id.putInt("goalId",20)
-            editor_id.apply()
-
 
             val dbHelper1= context?.let { MistakeWordIDDatabaseHelper(it) }
             if (dbHelper1 != null) {
                 dbHelper1.resetDatabase()
             }
+            val dbHelper=WordDatabaseHelper(requireContext())
+            var id=0
+            while (id<sharedPreferences3.getInt("studiedId",0)){
+                dbHelper.deleteErrorCount(id)
+
+                Log.d("${id}",dbHelper.getErrorCount(id).toString())
+                id++
+            }
             val dbHelper2=StarWordDatabaseHelper(requireContext())
             dbHelper2.deleteAllData()
             Log.d("Delete","delete")
 
+
+            val editor_id = sharedPreferences3.edit()
+            editor_id.putInt("studiedId",1)
+            editor_id.putInt("goalId",20)
+            editor_id.apply()
         }
         Showf.setOnClickListener {
             showAddFragment()

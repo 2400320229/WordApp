@@ -11,11 +11,12 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
 
     companion object {
         private const val DATABASE_NAME = "words.db"
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 3
         private const val TABLE_NAME = "words"
         private const val COLUMN_ID = "id"
         private const val COLUMN_WORD = "word"
-        private const val COLUMN_TRANSLATION = "translation"  // 新增翻译列
+        private const val COLUMN_TRANSLATION = "translation"
+        private const val COLUMN_ERROR_COUNT = "error_count"  // 新增错误计数列// 新增翻译列
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -23,16 +24,17 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
             CREATE TABLE $TABLE_NAME (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_WORD TEXT NOT NULL,
-                $COLUMN_TRANSLATION TEXT  
+                $COLUMN_TRANSLATION TEXT ,
+                 $COLUMN_ERROR_COUNT INTEGER DEFAULT 0
             );
         """
         db?.execSQL(CREATE_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        if (oldVersion < 2) {
+        if (oldVersion < 3) {
             // 如果数据库版本小于2，进行升级，增加翻译列
-            val ALTER_TABLE = "ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_TRANSLATION TEXT"
+            val ALTER_TABLE = "ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_ERROR_COUNT INTEGER DEFAULT 0"
             db?.execSQL(ALTER_TABLE)
         }
     }
@@ -132,6 +134,41 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
             cursor.close()
         }
         db.close()
+        return words
+    }
+    // 增加错误次数
+    fun incrementErrorCount(wordId: Int) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_ERROR_COUNT, getErrorCount(wordId) + 1)  // 获取当前错误次数并加1
+        db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
+    }
+    // 获取单词的错误次数
+    fun getErrorCount(wordId: Int): Int {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_ERROR_COUNT FROM $TABLE_NAME WHERE $COLUMN_ID = ?", arrayOf(wordId.toString()))
+        var errorCount = 0
+        if (cursor.moveToFirst()) {
+            errorCount = cursor.getInt(cursor.getColumnIndex(COLUMN_ERROR_COUNT))
+        }
+        cursor.close()
+        return errorCount
+    }
+    fun deleteErrorCount(wordId: Int) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_ERROR_COUNT, 0)  // 获取当前错误次数并清零
+        db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
+    }
+    // 获取错误次数最多的单词
+    fun getMostMistakenWords(limit: Int): List<String> {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_WORD FROM $TABLE_NAME ORDER BY $COLUMN_ERROR_COUNT DESC LIMIT ?", arrayOf(limit.toString()))
+        val words = mutableListOf<String>()
+        while (cursor.moveToNext()) {
+            words.add(cursor.getString(cursor.getColumnIndex(COLUMN_WORD)))
+        }
+        cursor.close()
         return words
     }
 
