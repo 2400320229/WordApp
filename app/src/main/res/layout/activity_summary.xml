@@ -14,17 +14,34 @@
        android:layout_height="200dp">
        <ImageView
            android:id="@+id/imageView"
-           android:layout_width="200dp"
+           android:layout_width="100dp"
            android:layout_height="200dp"
 
            app:srcCompat="@drawable/_222" />
        <LinearLayout
            android:layout_width="match_parent"
-           android:layout_height="200dp">
+           android:layout_height="200dp"
+           android:orientation="vertical">
            <TextView
                android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:text="完成"/>
+               android:layout_height="60dp"
+               android:text="你完成了今天的任务！"
+               android:textSize="29dp"/>
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="60dp"
+               android:text="100%"
+               android:id="@+id/word_know"
+               android:textSize="40dp"
+               />
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="60dp"
+               android:text="10"
+               android:id="@+id/word_unknown_number"
+               android:textSize="30dp"
+               />
+
        </LinearLayout>
 
    </LinearLayout>

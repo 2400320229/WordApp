@@ -107,6 +107,8 @@ class MainActivity : AppCompatActivity() {
                 StudyNUM.setText(wordId.toString())
             }else{
 
+                val intent=Intent(this,SummaryActivity::class.java)
+                startActivity(intent)
                 val builder= AlertDialog.Builder(this)
                 builder.setTitle("恭喜你完成了今天的目标")
                 builder.setMessage("您确定要继续学习吗？")
@@ -115,8 +117,6 @@ class MainActivity : AppCompatActivity() {
                     editor_id.apply()
                     Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
                     StudyNUM.setText(wordId.toString())
-                    val intent=Intent(this,SummaryActivity::class.java)
-                    startActivity(intent)
                 }
                 builder.setNegativeButton("去看看其他科目把"){dialog,which->
                     val intent=Intent(this,FragmentActivity::class.java)

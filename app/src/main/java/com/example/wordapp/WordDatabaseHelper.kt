@@ -174,6 +174,30 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         cursor.close()
         return words
     }
+    fun getWordsWithErrorCountGreaterThanZero(): List<Word_s> {
+        val db = this.readableDatabase
+        val wordsList = mutableListOf<Word_s>()
+
+        // SQL 查询语句，获取 error_count > 0 的单词，并按 error_count 降序排列
+        val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ERROR_COUNT > 0 ORDER BY $COLUMN_ERROR_COUNT DESC"
+        val cursor = db.rawQuery(query, null)
+        // 遍历查询结果并转换为Word_s对象
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+                val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+                val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+                val errorCount = cursor.getInt(cursor.getColumnIndex(COLUMN_ERROR_COUNT))
+
+                // 将每个查询到的单词对象添加到列表
+                wordsList.add(Word_s(id, word, translation, errorCount))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+
+        return wordsList
+    }
 
 
 }

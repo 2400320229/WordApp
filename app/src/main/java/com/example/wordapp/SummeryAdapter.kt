@@ -11,7 +11,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
 
-class SummeryAdapter(private val wordList: List<String>) :RecyclerView.Adapter<SummeryAdapter.MyViewHolder>() {
+class SummeryAdapter(private val wordList: List<Word_s>) :RecyclerView.Adapter<SummeryAdapter.MyViewHolder>() {
 
 
 
@@ -22,7 +22,8 @@ class SummeryAdapter(private val wordList: List<String>) :RecyclerView.Adapter<S
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.word.text=wordList[position]
+        holder.word.text=wordList[position].word
+        holder.error.text= wordList[position].error_count.toString()
     }
 
     override fun getItemCount(): Int {
@@ -30,6 +31,7 @@ class SummeryAdapter(private val wordList: List<String>) :RecyclerView.Adapter<S
     }
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
        var word:TextView=view.findViewById(R.id.word_s)
+        var error:TextView=view.findViewById(R.id.error_count)
     }
 
 }
