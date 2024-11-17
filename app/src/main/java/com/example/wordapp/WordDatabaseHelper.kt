@@ -4,8 +4,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.wordapp.StarWordDatabaseHelper.Companion
+import java.lang.Error
 
 //这个数据库里的单词id是从1开始的
+data class Word_s(val id: Long, val word: String, val translation: String?,val error_count:Int)
 class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
     DATABASE_VERSION) {
 
@@ -171,5 +174,6 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         cursor.close()
         return words
     }
+
 
 }
