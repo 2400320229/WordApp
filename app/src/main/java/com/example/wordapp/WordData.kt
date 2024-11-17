@@ -26,6 +26,7 @@ class WordData : AppCompatActivity() {
         val editor=sharedPreferences.edit()
         editor.putBoolean("FA",false)
         editor.apply()
+        Log.d("DataWord",sharedPreferences.getBoolean("FA",true).toString())
         var Word="word"
         var chinese="chinese"
         val dbHelper = WordDatabaseHelper(applicationContext)

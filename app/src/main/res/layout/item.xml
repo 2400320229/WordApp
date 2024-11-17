@@ -2,33 +2,86 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:orientation="vertical">
-    <TextView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    >
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="word"
-        android:textSize="40dp"
-        android:id="@+id/mistake_word_text"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="chinese"
-        android:id="@+id/mistake_word_translation"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="删除"
-        android:id="@+id/delete"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="详情"
-            android:id="@+id/to_wordData"/>
+        android:layout_height="match_parent"
+        android:backgroundTint="#ffffe0"
+        app:cardCornerRadius="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="word"
+                    android:textSize="40dp"
+                    android:id="@+id/mistake_word_text"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="#faf0e6"
+                        android:id="@+id/cardView"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:text="chinese"
+                        android:id="@+id/mistake_word_translation"/>
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:backgroundTint="#ffffe0"
+                    android:textColor="@color/black"
+
+                    app:cornerRadius="15dp"
+
+                    app:icon="@drawable/delete"
+                    android:layout_height="60dp"
+                    app:iconTint="@color/black"
+                    app:iconSize="25dp"
+                    android:id="@+id/delete"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    app:icon="@drawable/detail"
+                    android:backgroundTint="#ffffe0"
+                    android:textColor="@color/black"
+                    app:cornerRadius="15dp"
+
+                    app:iconTint="@color/black"
+                    app:iconSize="25dp"
+                    android:id="@+id/to_wordData"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
 
 </LinearLayout>

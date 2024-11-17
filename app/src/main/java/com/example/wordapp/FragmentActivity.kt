@@ -27,6 +27,7 @@ class FragmentActivity : AppCompatActivity() {
         editor.putBoolean("FA",false)
         editor.apply()
 
+
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.fragment, StudyFragment())
 
@@ -105,6 +106,7 @@ class FragmentActivity : AppCompatActivity() {
         transaction.add(R.id.fragment,fragment)
 
             if(currentFragment!=null) {
+                transaction.remove(currentFragment)
                 transaction.replace(R.id.fragment, fragment)
             }else{
                 transaction.replace(R.id.fragment, fragment)

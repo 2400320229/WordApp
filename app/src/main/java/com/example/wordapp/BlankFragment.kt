@@ -3,6 +3,7 @@ package com.example.wordapp
 import android.content.Context
 import android.os.Bundle
 import android.system.Os.remove
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,15 +35,20 @@ class BlankFragment : Fragment() {
         val Button:Button=view.findViewById(R.id.accomplish)
 
         NewGoal.setText(sharedPreferences.getInt("goalId",0).toString())
-        val newGoal = NewGoal.text.toString()
-        editor.putInt("goalId",toInteger(newGoal))
+
+
         Button.setOnClickListener {
 
+            val newGoal = NewGoal.text.toString().toInt()
+            editor.putInt("goalId",newGoal)
+            editor.apply()
             val transaction: FragmentTransaction =
                 requireActivity().supportFragmentManager.beginTransaction()
             transaction.remove(this) // 移除当前的 Fragment
             transaction.commit()
+            Log.d("f_goal",sharedPreferences.getInt("goalId",0).toString())
         }
+
         return view
     }
     fun toInteger(s: String): Int {

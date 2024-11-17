@@ -14,6 +14,11 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -48,25 +53,18 @@ class StudyFragment : Fragment() {
        val view=inflater.inflate(R.layout.fragment_study, container, false)
         val StudyButton:Button=view.findViewById(R.id.StarStudy)
         val DeleteButton:Button=view.findViewById(R.id.DeleteWord)
-        val GoalText:TextView=view.findViewById(R.id.goal)
-        val StudyText:TextView=view.findViewById(R.id.Study)
+        val StudyInSumText:TextView=view.findViewById(R.id.goal)
+        val StudyInGoalText:TextView=view.findViewById(R.id.Study)
         val Showf:Button=view.findViewById(R.id.edit_new_goal)
-        progressBar = view.findViewById(R.id.progressBar)
-
-
-        // 模拟一个后台任务更新进度条
-        Thread {
-            for (i in 0..100) {
-                Thread.sleep(100)  // 模拟一些耗时操作
-                val msg = Message()
-                msg.what = 0
-                msg.arg1 = i  // 设置进度
-                handler.sendMessage(msg)  // 发送消息更新进度条
-            }
-        }.start()
-
+         progressBar = view.findViewById(R.id.progressBar)
 
         val sharedPreferences = requireActivity().getSharedPreferences("wordId", Context.MODE_PRIVATE )
+
+
+
+        StudyInSumText.setText("${sharedPreferences.getInt("studiedId",0)}/19702")
+        StudyInGoalText.setText("${sharedPreferences.getInt("studiedId",0)}/${sharedPreferences.getInt("goalId",0)}")
+        progressBar.progress=(2000/19702) * 100
 
         StudyButton.setOnClickListener{
             val intent=Intent(requireContext(),MainActivity::class.java)
@@ -76,8 +74,7 @@ class StudyFragment : Fragment() {
         ReviewButton.setOnClickListener{
             val intent=Intent(requireContext(),ReviewActivity::class.java)
             startActivity(intent)
-            GoalText.setText(sharedPreferences.getInt("goalId",0).toString())
-            StudyText.setText(sharedPreferences.getInt("studiedId",0).toString())
+
         }
         DeleteButton.setOnClickListener{
             val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )

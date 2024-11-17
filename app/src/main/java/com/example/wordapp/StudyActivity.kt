@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
-        val Goal=sharedPreferences3.getInt("goalId",20)
+        val Goal=sharedPreferences3.getInt("goalId",10)
         Log.d("goal",Goal.toString())
 
         val WordText:TextView=findViewById(R.id.Word_text)
@@ -111,6 +111,8 @@ class MainActivity : AppCompatActivity() {
                     StudyNUM.setText(wordId.toString())
                 }
                 builder.setNegativeButton("去看看其他科目把"){dialog,which->
+                    val intent=Intent(this,FragmentActivity::class.java)
+                    startActivity(intent)
                     dialog.dismiss()
                 }
                 builder.create().show()

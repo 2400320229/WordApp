@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
 class Study_Adapter (private val wordList: List<Word>, private val listener:OnWordClickListener): RecyclerView.Adapter<Study_Adapter.MyViewHolder>() {
@@ -31,13 +32,16 @@ class Study_Adapter (private val wordList: List<Word>, private val listener:OnWo
         holder.dataButton.setOnClickListener{
             listener.onWordData(word)
         }
+        holder.cardView.setOnClickListener{
+            holder.cardView.visibility=View.GONE
+        }
     }
 
     override fun getItemCount(): Int {
         return wordList.size // 你可以根据实际数据调整返回的数量
     }
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        // 在这里定义 ViewHolder 中的视图组件，例如 TextView, ImageView 等
+        val cardView:CardView=view.findViewById(R.id.cardView)
         val mistake_word_text: TextView =view.findViewById(R.id.mistake_word_text)
         val mistake_word_translation: TextView =view.findViewById(R.id.mistake_word_translation)
         val deleteButton: Button =view.findViewById(R.id.delete)

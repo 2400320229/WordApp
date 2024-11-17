@@ -78,7 +78,7 @@ class FirstActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT).show()
             }else if(inputTextPassWord==sharedPreferences1.getString(inputTextUserName,"")) {
 
-                val intent0 = Intent(this,MainActivity::class.java)
+                val intent0 = Intent(this,FragmentActivity::class.java)
                 startActivity(intent0)
 
                 if(checkBox.isChecked) {
