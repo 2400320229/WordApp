@@ -2,6 +2,7 @@ package com.example.wordapp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +29,12 @@ class SummaryActivity : AppCompatActivity() {
         val WordKnow:TextView=findViewById(R.id.word_know)
         val UnknownNumber:TextView=findViewById(R.id.word_unknown_number)
         val sharedPreferences=getSharedPreferences("wordId",Context.MODE_PRIVATE)
-        WordKnow.text="100%"
+        Log.d("known","${sharedPreferences.getInt("well_known",-1)}")
+        WordKnow.text="第一次就认识${(sharedPreferences.getInt("well_known",0).toDouble()/sharedPreferences.getInt("goalId",1).toDouble()*100)}%"
+        UnknownNumber.text
+        val editor=sharedPreferences.edit()
+        editor.putInt("well_known",-1)
+        editor.apply()
 
 
 

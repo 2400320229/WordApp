@@ -77,10 +77,8 @@ class MainActivity : AppCompatActivity() {
             Log.d("error","${word} is ${dbHelper.getErrorCount(wordId)}")
 
 
-
         }
         Studybutton.setOnClickListener{
-
 
             val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
             val editor_id = sharedPreferences3.edit()
@@ -94,7 +92,12 @@ class MainActivity : AppCompatActivity() {
             //让lastWord的文本为last_word
             val last_word=dbHelper.getWordById((wordId-1).toString())
             lastWord.setText(last_word)
-
+            if(dbHelper.getErrorCount(wordId-1)==0){
+                val wellknown=sharedPreferences3.getInt("well_known",-1)
+                editor_id.putInt("well_known",wellknown+1)
+                editor_id.apply()
+                Log.d("known","${sharedPreferences3.getInt("well_known",-1)}")
+            }
             val word=dbHelper.getWordById(wordId.toString())
             WordText.setText(word)
             OKHttpRequestVoice(word)
@@ -107,7 +110,10 @@ class MainActivity : AppCompatActivity() {
                 StudyNUM.setText(wordId.toString())
             }else{
 
+                endTime = System.currentTimeMillis()// 记录应用暂停或退出的时间戳
+                val duration1 = endTime - startTime
                 val intent=Intent(this,SummaryActivity::class.java)
+                intent.putExtra("Time",duration1)
                 startActivity(intent)
                 val builder= AlertDialog.Builder(this)
                 builder.setTitle("恭喜你完成了今天的目标")

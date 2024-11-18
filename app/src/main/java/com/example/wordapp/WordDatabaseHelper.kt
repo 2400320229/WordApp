@@ -14,7 +14,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
 
     companion object {
         private const val DATABASE_NAME = "words.db"
-        private const val DATABASE_VERSION = 3
+        private const val DATABASE_VERSION = 7
         private const val TABLE_NAME = "words"
         private const val COLUMN_ID = "id"
         private const val COLUMN_WORD = "word"

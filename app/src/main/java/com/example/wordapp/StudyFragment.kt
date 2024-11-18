@@ -98,6 +98,8 @@ class StudyFragment : Fragment() {
 
             val editor_id = sharedPreferences3.edit()
             editor_id.putInt("studiedId",1)
+            editor_id.putInt("well_known",0)
+
             editor_id.putInt("goalId",20)
             editor_id.apply()
         }
