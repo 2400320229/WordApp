@@ -5,11 +5,13 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -57,6 +59,7 @@ class ReviewActivity : AppCompatActivity() {
         val WordText: TextView = findViewById(R.id.Word_text)
         val Studybutton: Button = findViewById(R.id.nextWord)
         val WordDatabutton: Button = findViewById(R.id.ShowWordDate)
+        val lastWordButton:MaterialButton=findViewById(R.id.last_word)
         while(wordId==null) {
             wordId=dbHelper.getWordIdById(mistake_word_id++)
             Log.d("misId", wordId.toString())
@@ -67,7 +70,6 @@ class ReviewActivity : AppCompatActivity() {
             val wordId1:Int= wordId!!.toInt()
             val intent = Intent(this, WordData::class.java)
             Log.d("DateId",wordId.toString())
-            intent.putExtra("try",-1)
             intent.putExtra("key", wordId1)
             startActivity(intent)
             val dbHelper = WordDatabaseHelper(applicationContext)
@@ -79,13 +81,32 @@ class ReviewActivity : AppCompatActivity() {
         }
         Studybutton.setOnClickListener {
             var wordId=dbHelper.getWordIdById(mistake_word_id-1)
+            val last_wordId =dbHelper.getWordIdById(mistake_word_id-2)
             if(wordId!=null) {
                 val dbHelper = WordDatabaseHelper(applicationContext)
                 val word = dbHelper.getWordById(wordId)
-                val translation = dbHelper.getTranslationById(wordId)
+
                 WordText.setText(word)
                 OKHttpRequestVoice(word)
+
+                if(last_wordId.toString()!=null){
+
+                    lastWordButton.setText(dbHelper.getWordById(last_wordId))
+                    lastWordButton.setOnClickListener {
+
+                        Log.d("LastId",last_wordId.toString())
+                        val intent = Intent(this, WordData::class.java)
+                        Log.d("DateId",wordId.toString())
+                        if (last_wordId != null) {
+                            intent.putExtra("key", last_wordId.toInt())
+                        }
+                        startActivity(intent)
+                    }
+                }else{
+                    lastWordButton.setVisibility(View.GONE)
+                }
                 mistake_word_id++
+
             }else{
                 val builder=AlertDialog.Builder(this)
                 builder.setTitle("今天的单词已经复习完了")

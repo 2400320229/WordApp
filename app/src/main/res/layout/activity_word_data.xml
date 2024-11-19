@@ -1,78 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".WordData"
-    android:padding="10dp">
-    <LinearLayout
+    >
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <LinearLayout
-            android:layout_width="250dp"
-            android:layout_height="50dp"/>
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="50dp"
-            android:text="添加至单词本"
-            android:id="@+id/add_mistake_word"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/black"
-            app:cornerRadius="5dp"
-            app:strokeColor="@color/black"
-            app:strokeWidth="2dp"/>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp">
-    <TextView
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:text="Word"
-        android:textSize="40dp"
-        android:gravity="center_vertical"
-        android:id="@+id/Word"/>
-    <ImageButton
-        android:id="@+id/play_voice"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="80dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/bakegrand"
+        android:id="@+id/background"
+        android:scaleType="centerCrop"/>
+    <androidx.cardview.widget.CardView
+        android:layout_width="350dp"
+        android:layout_height="600dp"
         android:layout_gravity="center"
-        android:text="读音"
-        android:src="@drawable/adion"
-        android:scaleType="centerInside"
-        android:backgroundTint="@color/white"/>
-    </LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:text="Chinese"
-        android:textSize="30dp"
-        android:gravity="center_vertical"
-        android:id="@+id/Chinese"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:gravity="center_horizontal">
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="350dp"
-            android:layout_height="50dp"
-            android:text="知道了"
-            android:id="@+id/well_know"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/black"
-            app:cornerRadius="5dp"
-            app:strokeColor="@color/black"
-            app:strokeWidth="2dp"/>
+        app:cardCornerRadius="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="580dp"
+            android:orientation="vertical"
+            android:padding="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+                <LinearLayout
+                    android:layout_width="200dp"
+                    android:layout_height="50dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:textSize="13dp"
+                    android:text="添加至单词本"
+                    android:id="@+id/add_mistake_word"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/black"
+                    app:strokeWidth="2dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+                <TextView
+                    android:layout_width="330dp"
+                    android:layout_height="200dp"
+                    android:text="Word"
+                    android:textSize="30dp"
+                    android:gravity="center_vertical"
+                    android:id="@+id/Word"/>
+                <ImageButton
+                    android:id="@+id/play_voice"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:text="读音"
+                    android:src="@drawable/noice"
+                    android:scaleType="centerInside"
+                    android:backgroundTint="@color/white"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:text="Chinese"
+                android:textSize="20dp"
+                android:gravity="center_vertical"
+                android:id="@+id/Chinese"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:gravity="center_horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="270dp"
+                    android:layout_height="70dp"
+                    android:text="知道了"
+                    android:id="@+id/well_know"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/black"
+                    app:strokeWidth="2dp"/>
 
 
-    </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 
 
-</LinearLayout>
+
+
+</FrameLayout>

@@ -26,7 +26,8 @@
                android:layout_width="match_parent"
                android:layout_height="60dp"
                android:text="你完成了今天的任务！"
-               android:textSize="29dp"/>
+               android:textSize="25dp"
+               android:gravity="center"/>
            <TextView
                android:layout_width="match_parent"
                android:layout_height="60dp"

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="155dp"
     android:orientation="vertical"
-    android:backgroundTint="#ffdab9">
+    android:backgroundTint="@color/white">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,17 +14,17 @@
             android:layout_height="80dp"
             android:id="@+id/search_word"
             android:text="word"
-            android:textSize="40dp"/>
+            android:textSize="30dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:id="@+id/search_translation"
             android:text="chinese"
-            android:textSize="30dp"/>
+            android:textSize="20dp"/>
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:backgroundTint="#00ff00"/>
+            android:backgroundTint="#dfdfdf"/>
     </LinearLayout>
 
 

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -34,7 +35,7 @@ class WordData : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_word_data)
         val KnowButton:Button=findViewById(R.id.well_know)
-        val VoiceButton:Button=findViewById(R.id.play_voice)
+        val VoiceButton: ImageButton =findViewById(R.id.play_voice)
         val addButton:Button=findViewById(R.id.add_mistake_word)
 
         val WordText:TextView=findViewById(R.id.Word)
