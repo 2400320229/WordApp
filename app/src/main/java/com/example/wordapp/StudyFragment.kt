@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 
@@ -56,6 +57,7 @@ class StudyFragment : Fragment() {
         val StudyInSumText:TextView=view.findViewById(R.id.goal)
         val StudyInGoalText:TextView=view.findViewById(R.id.Study)
         val Showf:Button=view.findViewById(R.id.edit_new_goal)
+        val SearchButtom:ImageButton=view.findViewById(R.id.search)
          progressBar = view.findViewById(R.id.progressBar)
 
         val sharedPreferences = requireActivity().getSharedPreferences("wordId", Context.MODE_PRIVATE )
@@ -105,6 +107,11 @@ class StudyFragment : Fragment() {
         }
         Showf.setOnClickListener {
             showAddFragment()
+        }
+        SearchButtom.setOnClickListener {
+            val intent=Intent(requireContext(),SearchActivity::class.java)
+            startActivity(intent)
+
         }
         return view
     }

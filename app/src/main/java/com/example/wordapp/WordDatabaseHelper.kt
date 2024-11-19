@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.example.wordapp.StarWordDatabaseHelper.Companion
 import java.lang.Error
 
@@ -197,6 +198,48 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         db.close()
 
         return wordsList
+    }
+    // 根据查询条件搜索单词
+    fun searchWords(query: String): MutableList<Word_s> {
+        val wordList = mutableListOf<Word_s>()
+        val db = readableDatabase
+
+        // 使用 try-catch 以确保资源能被正确关闭
+        db.use {
+            val cursor = it.query(
+                TABLE_NAME,
+                arrayOf(COLUMN_ID, COLUMN_WORD, COLUMN_TRANSLATION, COLUMN_ERROR_COUNT),
+                "$COLUMN_WORD LIKE ?",
+                arrayOf("$query%"),//$query%可以从首字母开始匹配
+                null, null, null
+            )
+
+            // 游标不为 null 且有数据时，才进行遍历
+            cursor?.use {
+                while (it.moveToNext()) {
+                    val idIndex = it.getColumnIndex(COLUMN_ID)
+                    val wordIndex = it.getColumnIndex(COLUMN_WORD)
+                    val translationIndex = it.getColumnIndex(COLUMN_TRANSLATION)
+                    val errorCountIndex = it.getColumnIndex(COLUMN_ERROR_COUNT)
+
+                    // 检查列索引是否有效
+                    if (idIndex != -1 && wordIndex != -1 && translationIndex != -1 && errorCountIndex != -1) {
+                        val id = it.getLong(idIndex)
+                        val word = it.getString(wordIndex)
+                        val translation = it.getString(translationIndex)
+                        val errorCount = it.getInt(errorCountIndex)
+
+                        // 将每个查询到的单词对象添加到列表
+                        wordList.add(Word_s(id, word, translation, errorCount))
+                    } else {
+                        // 如果某些列索引无效，输出错误日志
+                        Log.e("WordDatabase", "Invalid column index found in query result.")
+                    }
+                }
+            }
+        }
+
+        return wordList
     }
 
 
