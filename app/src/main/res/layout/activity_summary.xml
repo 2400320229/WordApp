@@ -32,14 +32,15 @@
                android:layout_height="60dp"
                android:text="100%"
                android:id="@+id/word_know"
-               android:textSize="40dp"
+               android:textSize="30dp"
                />
            <TextView
                android:layout_width="match_parent"
                android:layout_height="60dp"
                android:text="10"
                android:id="@+id/word_unknown_number"
-               android:textSize="30dp"
+               android:textSize="25dp"
+               android:gravity="bottom"
                />
 
        </LinearLayout>

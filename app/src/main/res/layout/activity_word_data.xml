@@ -14,12 +14,17 @@
         <LinearLayout
             android:layout_width="250dp"
             android:layout_height="50dp"/>
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="50dp"
             android:text="添加至单词本"
-            android:id="@+id/add_mistake_word"/>
+            android:id="@+id/add_mistake_word"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            app:cornerRadius="5dp"
+            app:strokeColor="@color/black"
+            app:strokeWidth="2dp"/>
 
     </LinearLayout>
     <LinearLayout
@@ -32,12 +37,16 @@
         android:textSize="40dp"
         android:gravity="center_vertical"
         android:id="@+id/Word"/>
-    <Button
+    <ImageButton
         android:id="@+id/play_voice"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:text="读音"/>
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:text="读音"
+        android:src="@drawable/adion"
+        android:scaleType="centerInside"
+        android:backgroundTint="@color/white"/>
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"
@@ -48,13 +57,18 @@
         android:id="@+id/Chinese"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp">
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        android:layout_height="200dp"
+        android:gravity="center_horizontal">
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="350dp"
             android:layout_height="50dp"
             android:text="知道了"
-            android:id="@+id/well_know"/>
+            android:id="@+id/well_know"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            app:cornerRadius="5dp"
+            app:strokeColor="@color/black"
+            app:strokeWidth="2dp"/>
 
 
     </LinearLayout>

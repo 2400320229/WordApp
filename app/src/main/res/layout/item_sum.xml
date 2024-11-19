@@ -1,17 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="110dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="word"
-        android:id="@+id/word_s"/>
-    <TextView
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textSize="30dp"
+                android:text="word"
+                android:id="@+id/word_s"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="word"
+                android:maxLines="1"
+                android:id="@+id/translation_s"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="error"
+            android:id="@+id/error_count"
+            android:gravity="center_vertical"/>
+
+    </LinearLayout>
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="error"
-        android:id="@+id/error_count"/>
+        android:layout_height="5dp"
+        android:backgroundTint="#696969"/>
 
 </LinearLayout>

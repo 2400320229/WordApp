@@ -9,11 +9,15 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wordapp.SearchAdapter.OnSearchClickListener
 
 
-class SummeryAdapter(private val wordList: List<Word_s>) :RecyclerView.Adapter<SummeryAdapter.MyViewHolder>() {
+class SummeryAdapter(private val wordList: List<Word_s>,private val listener: com.example.wordapp.SearchAdapter.OnSearchClickListener) :RecyclerView.Adapter<SummeryAdapter.MyViewHolder>() {
 
 
+    interface OnSearchClickListener{
+        fun onWordData(word_s:Word_s)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemview: View =
@@ -24,6 +28,9 @@ class SummeryAdapter(private val wordList: List<Word_s>) :RecyclerView.Adapter<S
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.word.text=wordList[position].word
         holder.error.text= wordList[position].error_count.toString()
+        holder.word.setOnClickListener {
+            listener.onWordData(wordList[position])
+        }
     }
 
     override fun getItemCount(): Int {

@@ -1,20 +1,19 @@
 package com.example.wordapp
 
-import android.os.Parcel
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 
 
-class SearchAdapter(private val wordList: List<Word_s>) :RecyclerView.Adapter<SearchAdapter.MyViewHolder>() {
+class SearchAdapter(private val wordList: List<Word_s>,private val listener:OnSearchClickListener) :RecyclerView.Adapter<SearchAdapter.MyViewHolder>() {
 
 
+    interface OnSearchClickListener{
+        fun onWordData(word_s:Word_s)
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -26,6 +25,9 @@ class SearchAdapter(private val wordList: List<Word_s>) :RecyclerView.Adapter<Se
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.word.text=wordList[position].word
         holder.transaction.text= obtainChinese(wordList[position].translation.toString()).toString()
+        holder.word.setOnClickListener {
+            listener.onWordData(wordList[position])
+        }
     }
 
     override fun getItemCount(): Int {

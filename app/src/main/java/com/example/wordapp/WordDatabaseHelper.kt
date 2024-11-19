@@ -103,7 +103,27 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         db.close()
         return word
     }
-    // 根据ID获取单个单词和翻译
+    // 根据单个单词获取ID
+    fun getIdByWord(id: String?): Long? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            TABLE_NAME, // 表名
+            arrayOf(COLUMN_ID,COLUMN_WORD), // 查询字段
+            "$COLUMN_WORD = ?", // 查询条件
+            arrayOf(id.toString()), // 查询参数
+            null, null, null // 不使用分组、排序、限制
+        )
+
+        var word: Long? = null
+
+        if (cursor != null && cursor.moveToFirst()) {
+            word = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+            cursor.close()
+        }
+        db.close()
+        return word
+    }
+    // 根据ID获取单个翻译
     fun getTranslationById(id: String?): String? {
         val db = this.readableDatabase
         val cursor = db.query(

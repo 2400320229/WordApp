@@ -80,8 +80,6 @@ class MainActivity : AppCompatActivity() {
         }
         Studybutton.setOnClickListener{
 
-            val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
-            val editor_id = sharedPreferences3.edit()
             val studyId=sharedPreferences3.getInt("studiedId",1)?:1
             val wordId=studyId
             Log.d("id",wordId.toString())
