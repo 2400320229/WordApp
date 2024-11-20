@@ -93,8 +93,7 @@ class StudyFragment : Fragment() {
                 Log.d("${id}",dbHelper.getErrorCount(id).toString())
                 id++
             }
-            val dbHelper2=StarWordDatabaseHelper(requireContext())
-            dbHelper2.deleteAllData()
+
             Log.d("Delete","delete")
 
 

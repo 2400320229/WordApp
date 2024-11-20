@@ -8,12 +8,12 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
-class Study_Adapter (private val wordList: List<Word>, private val listener:OnWordClickListener): RecyclerView.Adapter<Study_Adapter.MyViewHolder>() {
+class Study_Adapter (private val wordList: List<Word_s>, private val listener:OnWordClickListener): RecyclerView.Adapter<Study_Adapter.MyViewHolder>() {
 
     interface OnWordClickListener{
 
-        fun onWordData(word: Word)
-        fun onDelete(word: Word)
+        fun onWordData(word: Word_s)
+        fun onDelete(word: Word_s)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemview: View =

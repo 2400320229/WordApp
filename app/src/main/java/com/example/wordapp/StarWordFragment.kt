@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 class StarWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var wordDatabaseHelper: StarWordDatabaseHelper
-    private var wordlist:MutableList<Word> = mutableListOf()
+    private lateinit var wordDatabaseHelper: WordDatabaseHelper
+    private var wordlist:MutableList<Word_s> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +29,8 @@ class StarWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
 
         // 初始化 recyclerView
         recyclerView = view.findViewById(R.id.RecyclerView)
-        wordDatabaseHelper=StarWordDatabaseHelper(requireContext())
-        wordlist= wordDatabaseHelper.getAllWords().toMutableList()
+        wordDatabaseHelper=WordDatabaseHelper(requireContext())
+        wordlist= wordDatabaseHelper.getStarWords().toMutableList()
 
         // 设置布局管理器
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -40,7 +40,7 @@ class StarWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
         return view
     }
 
-    override fun onWordData(word: Word) {
+    override fun onWordData(word: Word_s) {
         val intent= Intent(requireContext(),WordData::class.java)
         intent.putExtra("word",word.word)
         intent.putExtra("chinese",word.translation)
@@ -48,16 +48,16 @@ class StarWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
 
     }
 
-    override fun onDelete(word: Word) {
+    override fun onDelete(word: Word_s) {
 
 
-        wordDatabaseHelper.deleteWord(word.id)
+        wordDatabaseHelper.decreaseStar(word.id.toInt())
         loadWords()
         recyclerView.adapter?.notifyDataSetChanged()
     }
     private fun loadWords(){
         wordlist.clear()
-        wordlist.addAll(wordDatabaseHelper.getAllWords())
+        wordlist.addAll(wordDatabaseHelper.getStarWords())
 
     }
 

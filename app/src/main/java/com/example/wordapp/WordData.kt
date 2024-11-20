@@ -59,9 +59,9 @@ class WordData : AppCompatActivity() {
         //监听按钮
         addButton.setOnClickListener{
             try {
-                val dbHelper=StarWordDatabaseHelper(applicationContext)
+                val dbHelper=WordDatabaseHelper(applicationContext)
                 if (Word != null) {
-                    dbHelper.insertWordAndTranslation(Word, chinese.toString())
+                    dbHelper.incrementStar(wordId)
                 }
                 Toast.makeText(this,"添加成功",Toast.LENGTH_SHORT).show()
             }catch (e:Exception){

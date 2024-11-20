@@ -5,22 +5,23 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.wordapp.StarWordDatabaseHelper.Companion
+
 import java.lang.Error
 
 //这个数据库里的单词id是从1开始的
-data class Word_s(val id: Long, val word: String, val translation: String?,val error_count:Int)
+data class Word_s(val id: Long, val word: String, val translation: String?,val error_count:Int,val Star:Int)
 class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
     DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "words.db"
-        private const val DATABASE_VERSION = 7
+        private const val DATABASE_VERSION = 8
         private const val TABLE_NAME = "words"
         private const val COLUMN_ID = "id"
         private const val COLUMN_WORD = "word"
         private const val COLUMN_TRANSLATION = "translation"
         private const val COLUMN_ERROR_COUNT = "error_count"  // 新增错误计数列// 新增翻译列
+        private const val COLUMN_STAR = "star"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -29,16 +30,17 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_WORD TEXT NOT NULL,
                 $COLUMN_TRANSLATION TEXT ,
-                 $COLUMN_ERROR_COUNT INTEGER DEFAULT 0
+                $COLUMN_ERROR_COUNT INTEGER DEFAULT 0,
+                $COLUMN_STAR INTEGER DEFAULT 0
             );
         """
         db?.execSQL(CREATE_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        if (oldVersion < 3) {
+        if (oldVersion < 8) {
             // 如果数据库版本小于2，进行升级，增加翻译列
-            val ALTER_TABLE = "ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_ERROR_COUNT INTEGER DEFAULT 0"
+            val ALTER_TABLE = "ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_STAR INTEGER DEFAULT 0"
             db?.execSQL(ALTER_TABLE)
         }
     }
@@ -209,9 +211,10 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
                 val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
                 val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
                 val errorCount = cursor.getInt(cursor.getColumnIndex(COLUMN_ERROR_COUNT))
+                val star = cursor.getInt(cursor.getColumnIndex(COLUMN_STAR))
 
                 // 将每个查询到的单词对象添加到列表
-                wordsList.add(Word_s(id, word, translation, errorCount))
+                wordsList.add(Word_s(id, word, translation, errorCount,star))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -250,7 +253,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
                         val errorCount = it.getInt(errorCountIndex)
 
                         // 将每个查询到的单词对象添加到列表
-                        wordList.add(Word_s(id, word, translation, errorCount))
+                        wordList.add(Word_s(id, word, translation, errorCount,0))
                     } else {
                         // 如果某些列索引无效，输出错误日志
                         Log.e("WordDatabase", "Invalid column index found in query result.")
@@ -260,6 +263,45 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         }
 
         return wordList
+    }
+    fun getStarWords(): List<Word_s> {
+        val db = this.readableDatabase
+        val wordsList = mutableListOf<Word_s>()
+
+        // SQL 查询语句，获取 error_count > 0 的单词，并按 error_count 降序排列
+        val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_STAR> 0 ORDER BY $COLUMN_ERROR_COUNT DESC"
+        val cursor = db.rawQuery(query, null)
+        // 遍历查询结果并转换为Word_s对象
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+                val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+                val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+                val errorCount = cursor.getInt(cursor.getColumnIndex(COLUMN_ERROR_COUNT))
+                val star = cursor.getInt(cursor.getColumnIndex(COLUMN_STAR))
+
+                // 将每个查询到的单词对象添加到列表
+                wordsList.add(Word_s(id, word, translation, errorCount,star))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+
+        return wordsList
+    }
+    // 增加收藏
+    fun incrementStar(wordId: Int) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_STAR, 1 )
+        db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
+    }
+    // 增加收藏
+    fun decreaseStar(wordId: Int) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_STAR, 0 )
+        db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
     }
 
 
