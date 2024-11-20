@@ -1,5 +1,6 @@
 package com.example.wordapp
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -86,6 +87,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         }
     }
     // 根据ID获取单个单词和翻译
+    @SuppressLint("Range")
     fun getWordById(id: String?): String? {
         val db = this.readableDatabase
         val cursor = db.query(
@@ -105,7 +107,9 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         db.close()
         return word
     }
+
     // 根据单个单词获取ID
+    @SuppressLint("Range")
     fun getIdByWord(id: String?): Long? {
         val db = this.readableDatabase
         val cursor = db.query(
@@ -126,6 +130,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         return word
     }
     // 根据ID获取单个翻译
+    @SuppressLint("Range")
     fun getTranslationById(id: String?): String? {
         val db = this.readableDatabase
         val cursor = db.query(
@@ -147,6 +152,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
     }
 
     // 获取所有单词
+    @SuppressLint("Range")
     fun getAllWords(): List<String> {
         val words = mutableListOf<String>()
         val db = this.readableDatabase
@@ -170,6 +176,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
     }
     // 获取单词的错误次数
+    @SuppressLint("Range")
     fun getErrorCount(wordId: Int): Int {
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT $COLUMN_ERROR_COUNT FROM $TABLE_NAME WHERE $COLUMN_ID = ?", arrayOf(wordId.toString()))
@@ -187,6 +194,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
     }
     // 获取错误次数最多的单词
+    @SuppressLint("Range")
     fun getMostMistakenWords(limit: Int): List<String> {
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT $COLUMN_WORD FROM $TABLE_NAME ORDER BY $COLUMN_ERROR_COUNT DESC LIMIT ?", arrayOf(limit.toString()))
@@ -197,6 +205,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         cursor.close()
         return words
     }
+    @SuppressLint("Range")
     fun getWordsWithErrorCountGreaterThanZero(): List<Word_s> {
         val db = this.readableDatabase
         val wordsList = mutableListOf<Word_s>()
@@ -219,6 +228,29 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         }
         cursor.close()
         db.close()
+
+        return wordsList
+    }
+    @SuppressLint("Range")
+    fun getWordsWithErrorCount(): List<String> {
+        val wordsList = mutableListOf<String>()
+        val db = this.readableDatabase
+        try {
+            // SQL 查询语句，获取 error_count > 0 的单词，没有排序
+            val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ERROR_COUNT > 0"
+            db.rawQuery(query, null).use { cursor ->
+                if (cursor.moveToFirst()) {
+                    do {
+                        val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+                        wordsList.add(word)
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
 
         return wordsList
     }
@@ -264,28 +296,32 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
 
         return wordList
     }
+    @SuppressLint("Range")
     fun getStarWords(): List<Word_s> {
-        val db = this.readableDatabase
         val wordsList = mutableListOf<Word_s>()
+        val db = this.readableDatabase
+        try {
+            // SQL 查询语句，获取 error_count > 0 的单词，没有排序
+            val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_STAR > 0"
+            db.rawQuery(query, null).use { cursor ->
+                if (cursor.moveToFirst()) {
+                    do {
+                        val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+                        val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+                        val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+                        val errorCount = cursor.getInt(cursor.getColumnIndex(COLUMN_ERROR_COUNT))
+                        val star = cursor.getInt(cursor.getColumnIndex(COLUMN_STAR))
 
-        // SQL 查询语句，获取 error_count > 0 的单词，并按 error_count 降序排列
-        val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_STAR> 0 ORDER BY $COLUMN_ERROR_COUNT DESC"
-        val cursor = db.rawQuery(query, null)
-        // 遍历查询结果并转换为Word_s对象
-        if (cursor.moveToFirst()) {
-            do {
-                val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
-                val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
-                val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
-                val errorCount = cursor.getInt(cursor.getColumnIndex(COLUMN_ERROR_COUNT))
-                val star = cursor.getInt(cursor.getColumnIndex(COLUMN_STAR))
-
-                // 将每个查询到的单词对象添加到列表
-                wordsList.add(Word_s(id, word, translation, errorCount,star))
-            } while (cursor.moveToNext())
+                        // 将每个查询到的单词对象添加到列表
+                        wordsList.add(Word_s(id, word, translation, errorCount, star))
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
         }
-        cursor.close()
-        db.close()
 
         return wordsList
     }

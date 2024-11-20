@@ -12,10 +12,7 @@ class IdUpdateReceiver : BroadcastReceiver() {
         val sharedPreferences = context?.getSharedPreferences("wordId", Context.MODE_PRIVATE)
         val editor = sharedPreferences?.edit()
         //每天重置复习单词的数据库
-        val dbHelper1= context?.let { MistakeWordIDDatabaseHelper(it) }
-        if (dbHelper1 != null) {
-            dbHelper1.resetDatabase()
-        }
+
 
         // 获取当前的 Id，默认值为 0
         val currentId = sharedPreferences?.getInt("studiedId", 0) ?: 0

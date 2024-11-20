@@ -81,10 +81,7 @@ class StudyFragment : Fragment() {
         DeleteButton.setOnClickListener{
             val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
 
-            val dbHelper1= context?.let { MistakeWordIDDatabaseHelper(it) }
-            if (dbHelper1 != null) {
-                dbHelper1.resetDatabase()
-            }
+
             val dbHelper=WordDatabaseHelper(requireContext())
             var id=0
             while (id<sharedPreferences3.getInt("studiedId",0)){

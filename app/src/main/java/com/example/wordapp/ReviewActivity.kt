@@ -34,96 +34,105 @@ class ReviewActivity : AppCompatActivity() {
         editor.apply()
         startTime = System.currentTimeMillis()// 记录应用启动的时间戳
 
-        val dbHelper=MistakeWordIDDatabaseHelper(applicationContext)
-        var mistake_word_id=2
-        var wordId=dbHelper.getWordIdById(mistake_word_id)
-        Log.d("mistake_word",mistake_word_id.toString())
-        Log.d("wordId",wordId.toString())
-        if(mistake_word_id==2&&wordId==null){
+        val dbHelper=WordDatabaseHelper(applicationContext)
+        val wordList:MutableList<String> = dbHelper.getWordsWithErrorCount().toMutableList()
+        var mistake_word_id=0
 
-            wordId= 1.toString()
-            Log.d("wordId",wordId.toString())
-            val builder=AlertDialog.Builder(this)
+
+        if (wordList.isEmpty()) {
+            val builder = AlertDialog.Builder(this)
             builder.setTitle("今天还没有单词哦")
             builder.setMessage("请先开始今天的学习")
-            builder.setPositiveButton("去学习！"){dialog,which->
-                val intent=Intent(this,MainActivity::class.java)
+            builder.setPositiveButton("去学习！") { dialog, which ->
+                val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             }
-            builder.setNegativeButton("去看看其他科目把"){dialog,which->
+            builder.setNegativeButton("去看看其他科目把") { dialog, which ->
 
             }
             builder.create().show()
         }
+
+
         val WordText: TextView = findViewById(R.id.Word_text)
         val Studybutton: Button = findViewById(R.id.nextWord)
         val WordDatabutton: Button = findViewById(R.id.ShowWordDate)
         val lastWordButton:MaterialButton=findViewById(R.id.last_word)
-        while(wordId==null) {
-            wordId=dbHelper.getWordIdById(mistake_word_id++)
-            Log.d("misId", wordId.toString())
-        }
-        WordDatabutton.setOnClickListener {
 
-            val wordId: String? =dbHelper.getWordIdById(mistake_word_id-2)
-            val wordId1:Int= wordId!!.toInt()
-            val intent = Intent(this, WordData::class.java)
-            Log.d("DateId",wordId.toString())
-            intent.putExtra("key", wordId1)
-            startActivity(intent)
-            val dbHelper = WordDatabaseHelper(applicationContext)
-            val word = dbHelper.getWordById(wordId)
-            Log.d("word",word.toString())
-            OKHttpRequestVoice(word)
+        WordText.setText(wordList[mistake_word_id])
+        mistake_word_id++
+        WordDatabutton.setOnClickListener {
+            try {
+                val wordId: Long? =dbHelper.getIdByWord(wordList[mistake_word_id-1])
+                val wordId1:Int= wordId!!.toInt()
+                val intent = Intent(this, WordData::class.java)
+                Log.d("DateId",wordId.toString())
+                intent.putExtra("key", wordId1)
+                startActivity(intent)
+                val dbHelper = WordDatabaseHelper(applicationContext)
+                val word = dbHelper.getWordById(wordId.toString())
+                Log.d("word",word.toString())
+                OKHttpRequestVoice(word)
+                try{
+                    if(wordList[mistake_word_id-2]!=word) {
+                        wordList.add(word.toString())
+                    }
+                }catch (e:Exception){
+                    wordList.add(word.toString())
+                }
+            }catch (e:Exception){
+
+            }
+
+
+
 
 
         }
         Studybutton.setOnClickListener {
-            var wordId=dbHelper.getWordIdById(mistake_word_id-1)
-            val last_wordId =dbHelper.getWordIdById(mistake_word_id-2)
-            if(wordId!=null) {
-                val dbHelper = WordDatabaseHelper(applicationContext)
-                val word = dbHelper.getWordById(wordId)
+            try{
 
+                val dbHelper = WordDatabaseHelper(applicationContext)
+                val word = wordList[mistake_word_id]
                 WordText.setText(word)
                 OKHttpRequestVoice(word)
-
-                if(last_wordId.toString()!=null){
-
-                    lastWordButton.setText(dbHelper.getWordById(last_wordId))
+                try{
+                    val last_word=wordList[mistake_word_id-1]
+                    lastWordButton.setVisibility(View.VISIBLE)
+                    lastWordButton.setText(last_word)
                     lastWordButton.setOnClickListener {
-
+                        val last_wordId=dbHelper.getIdByWord(last_word)
                         Log.d("LastId",last_wordId.toString())
                         val intent = Intent(this, WordData::class.java)
-                        Log.d("DateId",wordId.toString())
                         if (last_wordId != null) {
                             intent.putExtra("key", last_wordId.toInt())
                         }
                         startActivity(intent)
                     }
-                }else{
+                }catch (e: Exception) {
                     lastWordButton.setVisibility(View.GONE)
                 }
                 mistake_word_id++
 
-            }else{
-                val builder=AlertDialog.Builder(this)
-                builder.setTitle("今天的单词已经复习完了")
-                builder.setMessage("请选择：")
-                builder.setPositiveButton("再去学一些新单词吧"){dialog,which->
-                    val intent=Intent(this,MainActivity::class.java)
+                Log.d("word",wordList.toString())
+
+
+
+            }catch (e:Exception){
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("太有实力了！")
+                builder.setMessage("今天的单词语句复习完了")
+                builder.setPositiveButton("再去学习！") { dialog, which ->
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
-                builder.setNegativeButton("再复习一遍"){dialog,which->
-                     recreate()
+                builder.setNegativeButton("再复习一遍") { dialog, which ->
+                    recreate()
                 }
                 builder.create().show()
             }
-
-
-
         }
 
     }

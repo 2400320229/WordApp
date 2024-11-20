@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
         val Goal=sharedPreferences3.getInt("goalId",10)
+        val Studied=sharedPreferences3.getInt("studiedId",0)
         Log.d("goal",Goal.toString())
 
         val WordText:TextView=findViewById(R.id.Word_text)
@@ -60,34 +61,32 @@ class MainActivity : AppCompatActivity() {
         val WordDatabutton:Button=findViewById(R.id.ShowWordDate)
 
         GoalNUM.setText(Goal.toString())
+        StudyNUM.setText(Studied.toString())
 
+        WordText.setText("点击下一个开始学习")
         WordDatabutton.setOnClickListener{
-            val studyId=sharedPreferences3.getInt("studiedId",1)
-            val dbHelper1=MistakeWordIDDatabaseHelper(applicationContext)
-            val wordId=studyId-1//因为点击下一个单词后，先显示单词再让studiedId+1，所以要对获取的wordId-1
-            dbHelper1.insertWordId(wordId)//将不认识的单词加入Mistake数据库中，可以复习
-            val intent= Intent(this,WordData::class.java)
-            intent.putExtra("key",wordId)
-            startActivity(intent)
-            Log.d("AllmistakeId",dbHelper1.getAllWords().toString())
-            val dbHelper=WordDatabaseHelper(applicationContext)
-            val word=dbHelper.getWordById((wordId).toString())
-            OKHttpRequestVoice(word)
-            dbHelper.incrementErrorCount(wordId)
-            Log.d("error","${word} is ${dbHelper.getErrorCount(wordId)}")
+            try{
+                val studyId=sharedPreferences3.getInt("studiedId",1)
+                val wordId=studyId-1//因为点击下一个单词后，先显示单词再让studiedId+1，所以要对获取的wordId-1
+                val intent= Intent(this,WordData::class.java)
+                intent.putExtra("key",wordId)
+                startActivity(intent)
+                val dbHelper=WordDatabaseHelper(applicationContext)
+                val word=dbHelper.getWordById((wordId).toString())
+                OKHttpRequestVoice(word)
+                dbHelper.incrementErrorCount(wordId)
+                Log.d("error","${word} is ${dbHelper.getErrorCount(wordId)}")
+            }catch (e:Exception){
 
+            }
 
         }
         Studybutton.setOnClickListener{
 
-            val studyId=sharedPreferences3.getInt("studiedId",1)?:1
+            val studyId=sharedPreferences3.getInt("studiedId",1)
             val wordId=studyId
             Log.d("id",wordId.toString())
-
-            //sendRequestWithOkHttp()一劳永逸
             val dbHelper=WordDatabaseHelper(applicationContext)
-
-            //让lastWord的文本为last_word
             val last_word=dbHelper.getWordById((wordId-1).toString())
             lastWord.setText(last_word)
             if(dbHelper.getErrorCount(wordId-1)==0){

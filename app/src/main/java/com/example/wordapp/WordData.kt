@@ -76,6 +76,14 @@ class WordData : AppCompatActivity() {
 
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        val sharedPreferences=getSharedPreferences("service", Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",false)
+        editor.apply()
+    }
     override fun onPause() {
         super.onPause()
 
