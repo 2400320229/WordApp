@@ -125,6 +125,7 @@ class MainActivity : AppCompatActivity() {
                     val intent=Intent(this,FragmentActivity::class.java)
                     startActivity(intent)
                     dialog.dismiss()
+                    finish()
                 }
                 builder.create().show()
             }

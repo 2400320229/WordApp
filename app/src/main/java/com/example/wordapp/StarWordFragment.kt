@@ -2,12 +2,14 @@ package com.example.wordapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 
 class StarWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
 
@@ -43,7 +45,8 @@ class StarWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
     override fun onWordData(word: Word_s) {
         val intent= Intent(requireContext(),WordData::class.java)
         intent.putExtra("word",word.word)
-        intent.putExtra("chinese",word.translation)
+        Log.d("DATA",word.translation.toString())
+        intent.putExtra("chinese",obtainChinese(word.translation.toString()).toString())
         startActivity(intent)
 
     }
@@ -58,6 +61,13 @@ class StarWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
     private fun loadWords(){
         wordlist.clear()
         wordlist.addAll(wordDatabaseHelper.getStarWords())
+
+    }
+    //解析翻译得到的JSON字符串，获取中文翻译
+    private fun obtainChinese(jsonString: String): List<String> {
+        val gson= Gson()
+        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
+        return jsonResponse.data.entries.map { it.explain }
 
     }
 

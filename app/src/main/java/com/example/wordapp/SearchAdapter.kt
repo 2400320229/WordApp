@@ -44,4 +44,5 @@ class SearchAdapter(private val wordList: List<Word_s>,private val listener:OnSe
 
     }
 
+
 }
