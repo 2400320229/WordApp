@@ -7,10 +7,11 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 
-import java.lang.Error
-
 //这个数据库里的单词id是从1开始的
-data class Word_s(val id: Long, val word: String, val translation: String?,val error_count:Int,val Star:Int, val learn:Int)
+data class Word_s(
+    val id: Long, val word: String, val translation: String?,
+    val error_count:Int,
+    val Star:Int, val learn:Int)
 class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
     DATABASE_VERSION) {
 
@@ -107,6 +108,32 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
             cursor.close()
         }
         db.close()
+        return word
+    }
+    @SuppressLint("Range")
+    fun getWord_sById(id: String?): Word_s? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            TABLE_NAME, // 表名
+            arrayOf(COLUMN_ID, COLUMN_WORD, COLUMN_TRANSLATION, COLUMN_ERROR_COUNT, COLUMN_STAR, COLUMN_LEARN), // 查询字段
+            "$COLUMN_ID = ?", // 查询条件
+            arrayOf(id.toString()), // 查询参数
+            null, null, null
+        )
+        var word: Word_s? = null
+        if (cursor != null && cursor.moveToFirst()) {
+            word = Word_s(
+                cursor.getLong(cursor.getColumnIndex(COLUMN_ID)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_WORD)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION)),
+                cursor.getInt(cursor.getColumnIndex(COLUMN_ERROR_COUNT)),
+                cursor.getInt(cursor.getColumnIndex(COLUMN_STAR)),
+                cursor.getInt(cursor.getColumnIndex(COLUMN_LEARN))
+            )
+        }
+        cursor?.close()
+        db.close()
+
         return word
     }
 
@@ -356,10 +383,8 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         val db = readableDatabase
 
         // 查询 id 从 10 到 30，learn 为 0 的单词
-        val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID BETWEEN min AND max AND $COLUMN_LEARN = 0"
-
-        val cursor = db.rawQuery(query, null)
-
+        val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID BETWEEN ? AND ? AND $COLUMN_LEARN = 0"
+        val cursor = db.rawQuery(query,arrayOf(min.toString(), max.toString()))
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))

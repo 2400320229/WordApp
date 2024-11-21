@@ -98,7 +98,7 @@ class StudyFragment : Fragment() {
             editor_id.putInt("studiedId",1)
             editor_id.putInt("well_known",0)
 
-            editor_id.putInt("goalId",20)
+            editor_id.putInt("goalId",3)
             editor_id.apply()
         }
         Showf.setOnClickListener {

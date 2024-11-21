@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.preference.PreferenceManager.OnActivityStopListener
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -64,17 +63,38 @@ class MainActivity : AppCompatActivity() {
         StudyNUM.setText(Studied.toString())
 
         WordText.setText("点击下一个开始学习")
+        val dbHelper=WordDatabaseHelper(applicationContext)
+        var wordList:MutableList<Word_s>
+        if(sharedPreferences3.getInt("goalId",20)<=sharedPreferences3.getInt("studiedId",0)) {
+             wordList = dbHelper.getWordsByIdAndLearn(
+                sharedPreferences3.getInt("studiedId", 0),sharedPreferences3.getInt("studiedId", 0)+3
+            ).toMutableList()
+        }else{
+             wordList = dbHelper.getWordsByIdAndLearn(
+                sharedPreferences3.getInt("studiedId", 0),
+                sharedPreferences3.getInt("goalId", 20)).toMutableList()
+        }
+        Log.d("LIST","${wordList}")
+        Log.d("studiedId",sharedPreferences3.getInt("studiedId",0).toString())
+        Log.d("goalId",sharedPreferences3.getInt("goalId",0).toString())
+        var WORD=wordList[0]
+        WordText.setText(WORD.word)
         WordDatabutton.setOnClickListener{
             try{
-                val studyId=sharedPreferences3.getInt("studiedId",1)
-                val wordId=studyId-1//因为点击下一个单词后，先显示单词再让studiedId+1，所以要对获取的wordId-1
+
+                val wordId=WORD.id.toInt()//因为点击下一个单词后，先显示单词再让studiedId+1，所以要对获取的wordId-1
                 val intent= Intent(this,WordData::class.java)
                 intent.putExtra("key",wordId)
                 startActivity(intent)
-                val dbHelper=WordDatabaseHelper(applicationContext)
+
                 val word=dbHelper.getWordById((wordId).toString())
                 OKHttpRequestVoice(word)
                 dbHelper.incrementErrorCount(wordId)
+                val WORD1=dbHelper.getWord_sById(wordId.toString())
+                if (WORD1 != null) {
+                    wordList.add(WORD1)
+                }
+                Log.d("DATA","${wordList}")
                 Log.d("error","${word} is ${dbHelper.getErrorCount(wordId)}")
             }catch (e:Exception){
 
@@ -82,62 +102,85 @@ class MainActivity : AppCompatActivity() {
 
         }
         Studybutton.setOnClickListener{
+            try {
+                wordList.remove(WORD)
+                WORD=wordList[0]
+                val wordId=WORD.id.toInt()
+                Log.d("id",wordId.toString())
+                val last_word=dbHelper.getWordById((wordId-1).toString())
+                lastWord.setText(last_word)
+                if(dbHelper.getErrorCount(wordId-1)==0){
+                    val wellknown=sharedPreferences3.getInt("well_known",-1)
+                    editor_id.putInt("well_known",wellknown+1)
+                    editor_id.apply()
+                    Log.d("known","${sharedPreferences3.getInt("well_known",-1)}")
+                }
+                val word=dbHelper.getWordById(wordId.toString())
+                WordText.setText(word)
+                OKHttpRequestVoice(word)
 
-            val studyId=sharedPreferences3.getInt("studiedId",1)
-            val wordId=studyId
-            Log.d("id",wordId.toString())
-            val dbHelper=WordDatabaseHelper(applicationContext)
-            val last_word=dbHelper.getWordById((wordId-1).toString())
-            lastWord.setText(last_word)
-            if(dbHelper.getErrorCount(wordId-1)==0){
-                val wellknown=sharedPreferences3.getInt("well_known",-1)
-                editor_id.putInt("well_known",wellknown+1)
-                editor_id.apply()
-                Log.d("known","${sharedPreferences3.getInt("well_known",-1)}")
-            }
-            val word=dbHelper.getWordById(wordId.toString())
-            WordText.setText(word)
-            OKHttpRequestVoice(word)
+                dbHelper.incrementLearn(wordId)
+                Log.d("STUDY","${wordList}")
+                //如果达成了学习目标
 
-            //如果达成了学习目标
-            if(wordId!=Goal+1) {
-                editor_id.putInt("studiedId", wordId + 1)
-                editor_id.apply()
-                Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
-                StudyNUM.setText(wordId.toString())
-            }else{
 
-                endTime = System.currentTimeMillis()// 记录应用暂停或退出的时间戳
-                val duration1 = endTime - startTime
-                val intent=Intent(this,SummaryActivity::class.java)
-                intent.putExtra("Time",duration1)
-                startActivity(intent)
-                val builder= AlertDialog.Builder(this)
-                builder.setTitle("恭喜你完成了今天的目标")
-                builder.setMessage("您确定要继续学习吗？")
-                builder.setPositiveButton("继续学") {dialog,which->
+            }catch (e:Exception){
+
+                val wordId=WORD.id.toInt()
+                if(wordList.isNotEmpty()) {
                     editor_id.putInt("studiedId", wordId + 1)
                     editor_id.apply()
                     Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
                     StudyNUM.setText(wordId.toString())
+                }else {
+
+                    if(sharedPreferences3.getBoolean("summary",true)) {
+                        endTime = System.currentTimeMillis()// 记录应用暂停或退出的时间戳
+                        val duration1 = endTime - startTime
+                        val intent = Intent(this, SummaryActivity::class.java)//学习新单词的时长
+                        intent.putExtra("Time", duration1)
+                        startActivity(intent)
+                        val builder = AlertDialog.Builder(this)
+                        builder.setTitle("恭喜你完成了今天的目标")
+                        builder.setMessage("您确定要继续学习吗？")
+                        builder.setPositiveButton("继续学") { dialog, which ->
+                            editor_id.putInt(
+                                "studiedId",
+                                sharedPreferences3.getInt("goalId", 20) + sharedPreferences3.getInt(
+                                    "studiedId", 0) + 1
+                            )
+                            editor_id.putBoolean("summary", false)
+                            editor_id.apply()
+                            Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
+                            StudyNUM.setText(wordId.toString())
+                            recreate()
+                        }
+                        builder.setNegativeButton("去看看其他科目把") { dialog, which ->
+                            val intent = Intent(this, FragmentActivity::class.java)
+                            startActivity(intent)
+                            dialog.dismiss()
+                            finish()
+                        }
+                        builder.create().show()
+                    }else{
+                        wordList = dbHelper.getWordsByIdAndLearn(
+                            sharedPreferences3.getInt("studiedId", 0),sharedPreferences3.getInt("studiedId", 0)+3
+                        ).toMutableList()
+                    }
                 }
-                builder.setNegativeButton("去看看其他科目把"){dialog,which->
-                    val intent=Intent(this,FragmentActivity::class.java)
-                    startActivity(intent)
-                    dialog.dismiss()
-                    finish()
-                }
-                builder.create().show()
             }
+
+
         }
         /*sendRequestWithOkHttp()*/
         lastWord.setOnClickListener {
-            val studyId=sharedPreferences3.getInt("studiedId",1)?:1
-            val wordId=studyId
+
+            val wordId=WORD.id-1
             val dbHelper=WordDatabaseHelper(applicationContext)
-            val last_word=dbHelper.getWordById((wordId-2).toString())
+            val last_word=dbHelper.getWordById((wordId).toString())
+            Log.d("last",(wordId).toString())
             val intent= Intent(this,WordData::class.java)
-            intent.putExtra("key",wordId-2)//不知道为什么就减二了
+            intent.putExtra("key",wordId.toInt())
             startActivity(intent)
             OKHttpRequestVoice(last_word)
 
