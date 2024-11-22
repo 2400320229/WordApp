@@ -55,7 +55,7 @@ class WordData : AppCompatActivity() {
         }
         //显示数据
         WordText.setText(Word)
-        TranslateText.setText(chinese.toString())
+        TranslateText.setText(chinese)
         //监听按钮
         addButton.setOnClickListener{
             try {
@@ -66,6 +66,7 @@ class WordData : AppCompatActivity() {
                 Toast.makeText(this,"添加成功",Toast.LENGTH_SHORT).show()
             }catch (e:Exception){
                 Log.e("addWord", e.toString())
+                Toast.makeText(this,"添加失败",Toast.LENGTH_SHORT).show()
             }
         }
         VoiceButton.setOnClickListener{
@@ -73,7 +74,6 @@ class WordData : AppCompatActivity() {
         }
         KnowButton.setOnClickListener{
             finish()
-
         }
     }
 

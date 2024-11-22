@@ -60,8 +60,14 @@ class ReviewActivity : AppCompatActivity() {
         val WordDatabutton: Button = findViewById(R.id.ShowWordDate)
         val lastWordButton:MaterialButton=findViewById(R.id.last_word)
 
-        WordText.setText(wordList[mistake_word_id])
-        mistake_word_id++
+        try{
+            WordText.setText(wordList[mistake_word_id])
+            OKHttpRequestVoice(wordList[mistake_word_id])
+            mistake_word_id++
+        }catch (e:Exception){
+
+        }
+
         WordDatabutton.setOnClickListener {
             try {
                 val wordId: Long? =dbHelper.getIdByWord(wordList[mistake_word_id-1])

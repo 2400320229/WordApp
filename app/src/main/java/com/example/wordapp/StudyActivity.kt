@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                 WordText.setText(word)
                 OKHttpRequestVoice(word)
 
-                dbHelper.incrementLearn(wordId)
+                /*dbHelper.incrementLearn(wordId)*/
                 Log.d("STUDY","${wordList}")
                 //如果达成了学习目标
 

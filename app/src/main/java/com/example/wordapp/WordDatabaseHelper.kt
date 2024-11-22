@@ -374,7 +374,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
     fun incrementLearn(wordId: Int) {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(COLUMN_STAR, 1 )
+        contentValues.put(COLUMN_LEARN, 1 )
         db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
     }
     @SuppressLint("Range")
