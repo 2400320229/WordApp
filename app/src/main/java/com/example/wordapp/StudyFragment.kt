@@ -91,13 +91,26 @@ class StudyFragment : Fragment() {
                     val id= dbHelper.getIdByWord(word)?.toInt()
                     dbHelper.deleteErrorCount(id!!)
 
+
                     Log.d("${id}",dbHelper.getErrorCount(id).toString())
                 }catch (e:Exception){
 
                 }
                 num++
             }
+            var num1=0
+            while (num1<100){
+                try {
 
+                    dbHelper.decreaseLearn(num1)
+                }catch (e:Exception){
+
+                }
+                num1++
+            }
+
+            val word=dbHelper.getWordsByIdAndLearn(1,20)
+            Log.d("${id}",word.toString())
             Log.d("Delete","delete")
 
 

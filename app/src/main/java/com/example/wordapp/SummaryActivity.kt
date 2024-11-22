@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,8 @@ class SummaryActivity : AppCompatActivity(),SearchAdapter.OnSearchClickListener 
         recyclerView.adapter=SummeryAdapter(wordlist,this)
         val WordKnow:TextView=findViewById(R.id.word_know)
         val UnknownNumber:TextView=findViewById(R.id.word_unknown_number)
+        val Button:Button=findViewById(R.id.ok)
+        val time:TextView=findViewById(R.id.summeryTime)
         val sharedPreferences=getSharedPreferences("wordId",Context.MODE_PRIVATE)
         Log.d("known","${sharedPreferences.getInt("well_known",-1)}")
         WordKnow.text="第一次就认识${(sharedPreferences.getInt("well_known",0).toDouble()/sharedPreferences.getInt("goalId",1).toDouble()*100)}%"
@@ -36,7 +39,11 @@ class SummaryActivity : AppCompatActivity(),SearchAdapter.OnSearchClickListener 
         val editor=sharedPreferences.edit()
         editor.putInt("well_known",-1)
         editor.apply()
+        time.setText("用时${ intent.getLongExtra("Time", 0)/1000 }秒钟")
 
+        Button.setOnClickListener {
+            finish()
+        }
 
 
     }

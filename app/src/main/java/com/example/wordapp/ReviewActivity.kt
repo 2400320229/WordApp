@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
+import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -58,9 +59,12 @@ class ReviewActivity : AppCompatActivity() {
         val WordText: TextView = findViewById(R.id.Word_text)
         val Studybutton: Button = findViewById(R.id.nextWord)
         val WordDatabutton: Button = findViewById(R.id.ShowWordDate)
-        val lastWordButton:MaterialButton=findViewById(R.id.last_word)
+        val lastWordButton:MaterialButton = findViewById(R.id.last_word)
+        val remain:TextView = findViewById(R.id.remainNum)
+
 
         try{
+            remain.setText(wordList.size)
             WordText.setText(wordList[mistake_word_id])
             OKHttpRequestVoice(wordList[mistake_word_id])
             mistake_word_id++
@@ -104,9 +108,11 @@ class ReviewActivity : AppCompatActivity() {
                 WordText.setText(word)
                 OKHttpRequestVoice(word)
                 try{
+                    remain.setText((wordList.size-mistake_word_id).toString())
                     val last_word=wordList[mistake_word_id-1]
+                    val chinese=obtainChinese(dbHelper.getTranslationById(dbHelper.getIdByWord(last_word).toString()).toString())
                     lastWordButton.setVisibility(View.VISIBLE)
-                    lastWordButton.setText(last_word)
+                    lastWordButton.setText("${last_word} ${chinese}")
                     lastWordButton.setOnClickListener {
                         val last_wordId=dbHelper.getIdByWord(last_word)
                         Log.d("LastId",last_wordId.toString())
@@ -119,6 +125,7 @@ class ReviewActivity : AppCompatActivity() {
                 }catch (e: Exception) {
                     lastWordButton.setVisibility(View.GONE)
                 }
+
                 mistake_word_id++
 
                 Log.d("word",wordList.toString())
@@ -159,6 +166,13 @@ class ReviewActivity : AppCompatActivity() {
         val time=sharedPreferences3.getLong("Time",0)
         editor_id.putLong("Time",duration+time)
         editor_id.apply()
+    }
+    //解析翻译得到的JSON字符串，获取中文翻译
+    private fun obtainChinese(jsonString: String): List<String> {
+        val gson= Gson()
+        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
+        return jsonResponse.data.entries.map { it.explain }
+
     }
     private fun OKHttpRequestVoice(Word: String?) {
         Thread {

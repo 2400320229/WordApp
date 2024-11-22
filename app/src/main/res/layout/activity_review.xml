@@ -26,10 +26,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp">
-                <!--<com.google.android.material.button.MaterialButton
+                <TextView
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
-                    app:icon=""-->
+                    android:id="@+id/remainNum"/>
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
@@ -37,7 +37,8 @@
                     android:backgroundTint="@color/white"
                     android:textColor="@color/black"
                     app:cornerRadius="5dp"
-                    android:id="@+id/last_word"/>
+                    android:id="@+id/last_word"
+                    android:maxLines="1"/>
             </LinearLayout>
             <TextView
                 android:layout_width="match_parent"

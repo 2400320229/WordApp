@@ -377,12 +377,18 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         contentValues.put(COLUMN_LEARN, 1 )
         db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
     }
+    fun decreaseLearn(wordId: Int) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_LEARN, 0 )
+        db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
+    }
     @SuppressLint("Range")
     fun getWordsByIdAndLearn( min:Int,max:Int): List<Word_s> {
         val words = mutableListOf<Word_s>()
         val db = readableDatabase
 
-        // 查询 id 从 10 到 30，learn 为 0 的单词
+        // 查询 id 从 min 到 max，learn 为 0 的单词
         val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID BETWEEN ? AND ? AND $COLUMN_LEARN = 0"
         val cursor = db.rawQuery(query,arrayOf(min.toString(), max.toString()))
         if (cursor.moveToFirst()) {
