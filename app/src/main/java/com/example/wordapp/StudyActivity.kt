@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("goalId",sharedPreferences3.getInt("goalId",0).toString())
         var WORD=wordList[0]
         WordText.setText(WORD.word)
+        OKHttpRequestVoice(WORD.word)
         WordDatabutton.setOnClickListener{
             try{
 
@@ -163,6 +164,13 @@ class MainActivity : AppCompatActivity() {
                         }
                         builder.create().show()
                     }else{
+
+                        editor_id.putInt(
+                            "studiedId",
+                            sharedPreferences3.getInt("goalId", 20) + sharedPreferences3.getInt(
+                                "studiedId", 0) + 1
+                        )
+                        editor_id.apply()
                         wordList = dbHelper.getWordsByIdAndLearn(
                             sharedPreferences3.getInt("studiedId", 0),sharedPreferences3.getInt("studiedId", 0)+3
                         ).toMutableList()

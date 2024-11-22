@@ -83,12 +83,19 @@ class StudyFragment : Fragment() {
 
 
             val dbHelper=WordDatabaseHelper(requireContext())
-            var id=0
-            while (id<sharedPreferences3.getInt("studiedId",0)){
-                dbHelper.deleteErrorCount(id)
 
-                Log.d("${id}",dbHelper.getErrorCount(id).toString())
-                id++
+            var num=0
+            while (num<100){
+                try {
+                    val word=dbHelper.getWordsWithErrorCount()[0]
+                    val id= dbHelper.getIdByWord(word)?.toInt()
+                    dbHelper.deleteErrorCount(id!!)
+
+                    Log.d("${id}",dbHelper.getErrorCount(id).toString())
+                }catch (e:Exception){
+
+                }
+                num++
             }
 
             Log.d("Delete","delete")
@@ -97,7 +104,7 @@ class StudyFragment : Fragment() {
             val editor_id = sharedPreferences3.edit()
             editor_id.putInt("studiedId",1)
             editor_id.putInt("well_known",0)
-
+            editor_id.putBoolean("summary",true)
             editor_id.putInt("goalId",3)
             editor_id.apply()
         }
