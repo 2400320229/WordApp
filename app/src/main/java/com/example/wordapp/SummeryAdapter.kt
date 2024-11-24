@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wordapp.SearchAdapter.OnSearchClickListener
+import com.google.gson.Gson
 
 
 class SummeryAdapter(private val wordList: List<Word_s>,private val listener: com.example.wordapp.SearchAdapter.OnSearchClickListener) :RecyclerView.Adapter<SummeryAdapter.MyViewHolder>() {
@@ -28,6 +29,7 @@ class SummeryAdapter(private val wordList: List<Word_s>,private val listener: co
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.word.text=wordList[position].word
         holder.error.text= wordList[position].error_count.toString()
+        holder.transaction.text=obtainChinese(wordList[position].translation.toString()).toString()
         holder.word.setOnClickListener {
             listener.onWordData(wordList[position])
         }
@@ -39,6 +41,13 @@ class SummeryAdapter(private val wordList: List<Word_s>,private val listener: co
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
        var word:TextView=view.findViewById(R.id.word_s)
         var error:TextView=view.findViewById(R.id.error_count)
+        var transaction:TextView=view.findViewById(R.id.translation_s)
+    }
+    private fun obtainChinese(jsonString: String): List<String> {
+        val gson= Gson()
+        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
+        return jsonResponse.data.entries.map { it.explain }
+
     }
 
 }
