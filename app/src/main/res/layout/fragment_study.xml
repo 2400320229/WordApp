@@ -130,11 +130,6 @@
             android:text="复习"
             android:id="@+id/ReviewWord"/>
         </LinearLayout>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="清空"
-            android:id="@+id/DeleteWord"/>
 </LinearLayout>
     <FrameLayout
         android:layout_width="300dp"

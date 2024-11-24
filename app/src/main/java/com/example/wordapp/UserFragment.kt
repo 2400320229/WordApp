@@ -1,16 +1,32 @@
 package com.example.wordapp
 
+import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.system.Os.remove
 import android.text.TextUtils.replace
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import kotlin.math.E
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,6 +41,10 @@ private const val ARG_PARAM2 = "param2"
  */
 class UserFragment : Fragment() {
 
+    private lateinit var bak:Button
+    private lateinit var ImageView:ImageView
+    // 请求码常量
+    private val PICK_IMAGE_REQUEST = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -42,6 +62,9 @@ class UserFragment : Fragment() {
         val Time:TextView=view.findViewById(R.id.Time)
         Time.setText("${sharedPreferences2.getLong("Time",3)/60000}分钟")
         val Exit:Button=view.findViewById(R.id.Exit)
+        val claer:Button=view.findViewById(R.id.clear)
+        bak=view.findViewById(R.id.bak)
+        ImageView=view.findViewById(R.id.Image)
         Exit.setOnClickListener{
 
             editor2.putBoolean("auto_login", false)
@@ -50,9 +73,114 @@ class UserFragment : Fragment() {
             startActivity(intent)
 
         }
+        bak.setOnClickListener {
+
+            openGallery()
+
+        }
+
+        claer.setOnClickListener {
+            val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
+
+
+            val dbHelper=WordDatabaseHelper(requireContext())
+
+            var num=0
+            while (num<100){
+                try {
+                    val word=dbHelper.getWordsWithErrorCount()[0]
+                    val id= dbHelper.getIdByWord(word)?.toInt()
+                    dbHelper.deleteErrorCount(id!!)
+
+
+                    Log.d("${id}",dbHelper.getErrorCount(id).toString())
+                }catch (e:Exception){
+
+                }
+                num++
+            }
+            var num1=0
+            while (num1<100){
+                try {
+
+                    dbHelper.decreaseLearn(num1)
+                }catch (e:Exception){
+
+                }
+                num1++
+            }
+
+            val word=dbHelper.getWordsByIdAndLearn(1,20)
+            Log.d("${id}",word.toString())
+            Log.d("Delete","delete")
+
+
+            val editor_id = sharedPreferences3.edit()
+            editor_id.putInt("studiedId",1)
+            editor_id.putInt("well_known",0)
+            editor_id.putBoolean("summary",true)
+            editor_id.putInt("goalId",3)
+            editor_id.apply()
+            loadImageFromInternalStorage()
+        }
+
         return view
+    }
+    // 打开系统图库选择图片
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    // 处理图片选择结果
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            val selectedImageUri = data.data
+            selectedImageUri?.let {
+                val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, it)
+
+
+                // 保存图片
+                saveImageToInternalStorage(bitmap)
+            }
+        }
+    }
+
+    // 保存图片到内部存储
+    private fun saveImageToInternalStorage(bitmap: Bitmap) {
+        try {
+            val file = File(requireActivity().filesDir, "selected_image.jpg")
+            val fileOutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+            fileOutputStream.flush()
+            fileOutputStream.close()
+
+            Toast.makeText(requireActivity(), "图片已保存", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(requireActivity(), "保存图片失败", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun loadImageFromInternalStorage() {
+        try {
+            val file = File(requireActivity().filesDir, "selected_image.jpg")
+            if (file.exists()) {
+                Log.d("MainActivity", "File exists: ${file.absolutePath}")
+                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                ImageView.setImageBitmap(bitmap)
+            } else {
+                Log.d("MainActivity", "File does not exist.")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
 
 }
+
+
+

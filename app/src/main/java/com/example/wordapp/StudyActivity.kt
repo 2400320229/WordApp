@@ -2,15 +2,18 @@ package com.example.wordapp
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toDrawable
 import com.google.gson.Gson
 
 import okhttp3.OkHttpClient
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     private var startTime: Long = 0
     private var endTime: Long = 0
+    private lateinit var bakeground:ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +40,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.study_activity)
+
+        bakeground=findViewById(R.id.backgroundImage)
+        loadImageFromInternalStorage()//显示背景
+
+
         val intent = Intent(this, MyService::class.java)
         stopService(intent)
 
@@ -59,10 +68,10 @@ class MainActivity : AppCompatActivity() {
         val Studybutton:Button=findViewById(R.id.nextWord)
         val WordDatabutton:Button=findViewById(R.id.ShowWordDate)
 
+
         GoalNUM.setText(Goal.toString())
         StudyNUM.setText(Studied.toString())
 
-        WordText.setText("点击下一个开始学习")
         val dbHelper=WordDatabaseHelper(applicationContext)
         var wordList:MutableList<Word_s>
         if(Goal<=Studied||dbHelper.getWordsByIdAndLearn(Studied,Goal).isEmpty()) {
@@ -378,6 +387,22 @@ class MainActivity : AppCompatActivity() {
         return jsonResponse.data.entries.map { it.explain }
 
     }
+    // 从内部存储加载图片
+    private fun loadImageFromInternalStorage() {
+        try {
+            val file = File(filesDir, "selected_image.jpg")
+            if (file.exists()) {
+                Log.d("MainActivity", "File exists: ${file.absolutePath}")
+                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                bakeground.setImageBitmap(bitmap)
+            } else {
+                Log.d("MainActivity", "File does not exist.")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 
 
 }

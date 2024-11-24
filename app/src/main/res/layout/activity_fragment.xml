@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/bakegrand"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,6 +32,8 @@
                 android:id="@+id/tab1"
                 app:icon="@drawable/study"
                 app:iconGravity="textTop"
+                android:textColor="@color/black"
+                app:iconTint="@color/black"
                 app:cornerRadius="5dp"
                 android:backgroundTint="#ff7f50"
                 android:text="学习"/>
@@ -42,6 +44,8 @@
                 android:id="@+id/tab2"
                 app:icon="@drawable/starbook"
                 app:iconGravity="textTop"
+                android:textColor="@color/black"
+                app:iconTint="@color/black"
                 android:backgroundTint="#ff7f50"
                 android:text="单词本"/>
             <com.google.android.material.button.MaterialButton
@@ -51,6 +55,8 @@
                 android:id="@+id/tab3"
                 app:icon="@drawable/user"
                 app:iconGravity="textTop"
+                android:textColor="@color/black"
+                app:iconTint="@color/black"
                 android:text="用户"
                 android:backgroundTint="#ff7f50"
                 app:cornerRadius="5dp"/>

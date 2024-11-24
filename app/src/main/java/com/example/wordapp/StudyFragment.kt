@@ -53,7 +53,6 @@ class StudyFragment : Fragment() {
         // Inflate the layout for this fragment
        val view=inflater.inflate(R.layout.fragment_study, container, false)
         val StudyButton:Button=view.findViewById(R.id.StarStudy)
-        val DeleteButton:Button=view.findViewById(R.id.DeleteWord)
         val StudyInSumText:TextView=view.findViewById(R.id.goal)
         val StudyInGoalText:TextView=view.findViewById(R.id.Study)
         val Showf:Button=view.findViewById(R.id.edit_new_goal)
@@ -77,49 +76,6 @@ class StudyFragment : Fragment() {
             val intent=Intent(requireContext(),ReviewActivity::class.java)
             startActivity(intent)
 
-        }
-        DeleteButton.setOnClickListener{
-            val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
-
-
-            val dbHelper=WordDatabaseHelper(requireContext())
-
-            var num=0
-            while (num<100){
-                try {
-                    val word=dbHelper.getWordsWithErrorCount()[0]
-                    val id= dbHelper.getIdByWord(word)?.toInt()
-                    dbHelper.deleteErrorCount(id!!)
-
-
-                    Log.d("${id}",dbHelper.getErrorCount(id).toString())
-                }catch (e:Exception){
-
-                }
-                num++
-            }
-            var num1=0
-            while (num1<100){
-                try {
-
-                    dbHelper.decreaseLearn(num1)
-                }catch (e:Exception){
-
-                }
-                num1++
-            }
-
-            val word=dbHelper.getWordsByIdAndLearn(1,20)
-            Log.d("${id}",word.toString())
-            Log.d("Delete","delete")
-
-
-            val editor_id = sharedPreferences3.edit()
-            editor_id.putInt("studiedId",1)
-            editor_id.putInt("well_known",0)
-            editor_id.putBoolean("summary",true)
-            editor_id.putInt("goalId",3)
-            editor_id.apply()
         }
         Showf.setOnClickListener {
             showAddFragment()

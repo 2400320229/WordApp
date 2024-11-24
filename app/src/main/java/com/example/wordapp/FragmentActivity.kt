@@ -48,24 +48,21 @@ class FragmentActivity : AppCompatActivity() {
                     // 恢复之前选中的按钮的颜色
                     val previousButton = findViewById<MaterialButton>(selectIndex)
                     previousButton.setStrokeColorResource(R.color.white)
-                    previousButton.setTextColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.black
-                        )
-                    )
+                    previousButton.setTextColor(ContextCompat.getColor(this, R.color.black))
+                    previousButton.setIconTintResource(R.color.black)
                 }
 
                 // 更新选中的按钮
                 selectIndex = checkedId
                 button.setStrokeColorResource(R.color.black)
                 button.setTextColor(ContextCompat.getColor(this, R.color.white))
+                button.setIconTintResource(R.color.white)
 
                 switchFragment(selectIndex)
             } else {
                 // 如果按钮被取消选中
                 button.setStrokeColorResource(R.color.white)
-                button.setTextColor(ContextCompat.getColor(this, R.color.black))
+                /*button.setTextColor(ContextCompat.getColor(this, R.color.black))*/
             }
         }
 

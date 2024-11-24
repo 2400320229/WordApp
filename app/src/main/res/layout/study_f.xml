@@ -4,14 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".BlankFragment">
+    tools:context=".BlankFragment"
+    >
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardCornerRadius="20dp"
-        android:backgroundTint="@color/white">
+        android:backgroundTint="@color/white"
+        app:cardElevation="10dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -25,9 +27,15 @@
             android:layout_gravity="center_vertical"/>
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="80dp"
             android:layout_gravity="bottom"
-            android:id="@+id/accomplish"/>
+            android:id="@+id/accomplish"
+            android:text="完成"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/white"
+            app:strokeColor="@color/black"
+            app:strokeWidth="2dp"
+            app:cornerRadius="8dp" />
     </androidx.cardview.widget.CardView>
 
 </FrameLayout>
