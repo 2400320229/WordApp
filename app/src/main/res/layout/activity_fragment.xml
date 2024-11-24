@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/bakegrand"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:id="@+id/A_f_background"/>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +19,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="650dp"
-            android:id="@+id/fragment"/>
+            android:id="@+id/fragment"
+            tools:ignore="MissingConstraints" />
         <com.google.android.material.button.MaterialButtonToggleGroup
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="match_parent"

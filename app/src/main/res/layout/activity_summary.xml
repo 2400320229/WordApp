@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".SummaryActivity"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="#fee7ef">
 
    <LinearLayout
        android:layout_width="match_parent"

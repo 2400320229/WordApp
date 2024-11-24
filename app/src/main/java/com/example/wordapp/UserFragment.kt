@@ -122,7 +122,7 @@ class UserFragment : Fragment() {
             editor_id.putBoolean("summary",true)
             editor_id.putInt("goalId",3)
             editor_id.apply()
-            loadImageFromInternalStorage()
+
         }
 
         return view
@@ -131,6 +131,8 @@ class UserFragment : Fragment() {
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
+
+
     }
 
     // 处理图片选择结果
@@ -164,20 +166,7 @@ class UserFragment : Fragment() {
             Toast.makeText(requireActivity(), "保存图片失败", Toast.LENGTH_SHORT).show()
         }
     }
-    private fun loadImageFromInternalStorage() {
-        try {
-            val file = File(requireActivity().filesDir, "selected_image.jpg")
-            if (file.exists()) {
-                Log.d("MainActivity", "File exists: ${file.absolutePath}")
-                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                ImageView.setImageBitmap(bitmap)
-            } else {
-                Log.d("MainActivity", "File does not exist.")
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+
 
 
 
