@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -69,10 +70,11 @@ class MainActivity : AppCompatActivity() {
         val WordDatabutton:Button=findViewById(R.id.ShowWordDate)
 
 
-        GoalNUM.setText(Goal.toString())
-        StudyNUM.setText(Studied.toString())
-
         val dbHelper=WordDatabaseHelper(applicationContext)
+        GoalNUM.setText(Goal.toString())
+        StudyNUM.setText(dbHelper.getWordsLearn().size.toString())
+        lastWord.setVisibility(View.GONE)
+
         var wordList:MutableList<Word_s>
         if(Goal<=Studied||dbHelper.getWordsByIdAndLearn(Studied,Goal).isEmpty()) {
              wordList = dbHelper.getWordsByIdAndLearn(
@@ -111,6 +113,7 @@ class MainActivity : AppCompatActivity() {
         }
         var last_word=""
         Studybutton.setOnClickListener{
+            Log.d("learn",dbHelper.getWordsLearn().size.toString())
             try {
                 val chinese=obtainChinese(dbHelper.getTranslationById(WORD.id.toString()).toString())
                 last_word="${WORD.word} ${chinese}"
@@ -119,6 +122,7 @@ class MainActivity : AppCompatActivity() {
                 WORD=wordList[0]
                 val wordId=WORD.id.toInt()
                 Log.d("id",wordId.toString())
+                lastWord.setVisibility(View.VISIBLE)
                 lastWord.setText(last_word)
                 if(dbHelper.getErrorCount(wordId-1)==0){
                     val wellknown=sharedPreferences3.getInt("well_known",-1)
@@ -129,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                 val word=dbHelper.getWordById(wordId.toString())
                 WordText.setText(word)
                 OKHttpRequestVoice(word)
-                editor_id.putInt("studiedId", dbHelper.getWordsByIdAndLearn(1,100).size)
+                editor_id.putInt("studiedId", dbHelper.getWordsLearn().size)
                 editor_id.apply()
                 Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
                 StudyNUM.setText(sharedPreferences3.getInt("studiedId",0).toString())
@@ -139,7 +143,6 @@ class MainActivity : AppCompatActivity() {
 
 
             }catch (e:Exception){
-
                 val wordId=WORD.id.toInt()
                 if(wordList.isNotEmpty()) {
                     editor_id.putInt("studiedId", sharedPreferences3.getInt("studied",0) + 1)

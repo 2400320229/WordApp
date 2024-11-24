@@ -37,7 +37,7 @@ class ReviewActivity : AppCompatActivity() {
 
         val dbHelper=WordDatabaseHelper(applicationContext)
         val wordList:MutableList<String> = dbHelper.getWordsWithErrorCount().toMutableList()
-        var mistake_word_id=0
+
 
 
         if (wordList.isEmpty()) {
@@ -62,19 +62,24 @@ class ReviewActivity : AppCompatActivity() {
         val lastWordButton:MaterialButton = findViewById(R.id.last_word)
         val remain:TextView = findViewById(R.id.remainNum)
 
+        lastWordButton.setVisibility(View.GONE)
 
         try{
-            remain.setText(wordList.size)
-            WordText.setText(wordList[mistake_word_id])
-            OKHttpRequestVoice(wordList[mistake_word_id])
-            mistake_word_id++
+
+            remain.setText(wordList.size.toString())
+            WordText.setText(wordList[0])
+            OKHttpRequestVoice(wordList[0])
+
+
         }catch (e:Exception){
 
+            Log.d("e","e")
         }
+
 
         WordDatabutton.setOnClickListener {
             try {
-                val wordId: Long? =dbHelper.getIdByWord(wordList[mistake_word_id-1])
+                val wordId: Long? =dbHelper.getIdByWord(wordList[0])
                 val wordId1:Int= wordId!!.toInt()
                 val intent = Intent(this, WordData::class.java)
                 Log.d("DateId",wordId.toString())
@@ -85,7 +90,7 @@ class ReviewActivity : AppCompatActivity() {
                 Log.d("word",word.toString())
                 OKHttpRequestVoice(word)
                 try{
-                    if(wordList[mistake_word_id-2]!=word) {
+                    if(wordList[0]!=word) {
                         wordList.add(word.toString())
                     }
                 }catch (e:Exception){
@@ -104,17 +109,19 @@ class ReviewActivity : AppCompatActivity() {
             try{
 
                 val dbHelper = WordDatabaseHelper(applicationContext)
-                val word = wordList[mistake_word_id]
+                var last_word = wordList[0]
+                wordList.remove(last_word)
+                val word=wordList[0]
                 WordText.setText(word)
                 OKHttpRequestVoice(word)
                 try{
-                    remain.setText((wordList.size-mistake_word_id).toString())
-                    val last_word=wordList[mistake_word_id-1]
+                    remain.setText((wordList.size).toString())
                     val chinese=obtainChinese(dbHelper.getTranslationById(dbHelper.getIdByWord(last_word).toString()).toString())
                     lastWordButton.setVisibility(View.VISIBLE)
                     lastWordButton.setText("${last_word} ${chinese}")
                     lastWordButton.setOnClickListener {
                         val last_wordId=dbHelper.getIdByWord(last_word)
+                        OKHttpRequestVoice(last_word)
                         Log.d("LastId",last_wordId.toString())
                         val intent = Intent(this, WordData::class.java)
                         if (last_wordId != null) {
@@ -126,7 +133,6 @@ class ReviewActivity : AppCompatActivity() {
                     lastWordButton.setVisibility(View.GONE)
                 }
 
-                mistake_word_id++
 
                 Log.d("word",wordList.toString())
 

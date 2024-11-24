@@ -103,7 +103,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
 
         var word: String? = null
 
-        if (cursor != null && cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
             cursor.close()
         }
@@ -121,7 +121,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
             null, null, null
         )
         var word: Word_s? = null
-        if (cursor != null && cursor.moveToFirst()) {
+        if ( cursor.moveToFirst()) {
             word = Word_s(
                 cursor.getLong(cursor.getColumnIndex(COLUMN_ID)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_WORD)),
@@ -131,7 +131,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
                 cursor.getInt(cursor.getColumnIndex(COLUMN_LEARN))
             )
         }
-        cursor?.close()
+        cursor.close()
         db.close()
 
         return word
@@ -151,7 +151,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
 
         var word: Long? = null
 
-        if (cursor != null && cursor.moveToFirst()) {
+        if ( cursor.moveToFirst()) {
             word = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
             cursor.close()
         }
@@ -172,7 +172,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
 
 
         var translation:String?=null
-        if (cursor != null && cursor.moveToFirst()) {
+        if (  cursor.moveToFirst()) {
             translation=cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
             cursor.close()
         }
@@ -187,7 +187,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         val db = this.readableDatabase
         val cursor = db.query(TABLE_NAME, arrayOf(COLUMN_WORD), null, null, null, null, null)
 
-        if (cursor != null && cursor.moveToFirst()) {
+        if ( cursor.moveToFirst()) {
             do {
                 val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
                 words.add(word)
@@ -300,7 +300,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
             )
 
             // 游标不为 null 且有数据时，才进行遍历
-            cursor?.use {
+            cursor.use {
                 while (it.moveToNext()) {
                     val idIndex = it.getColumnIndex(COLUMN_ID)
                     val wordIndex = it.getColumnIndex(COLUMN_WORD)
@@ -391,6 +391,33 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         // 查询 id 从 min 到 max，learn 为 0 的单词
         val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID BETWEEN ? AND ? AND $COLUMN_LEARN = 0"
         val cursor = db.rawQuery(query,arrayOf(min.toString(), max.toString()))
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+                val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+                val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+                val errorCount = cursor.getInt(cursor.getColumnIndex(COLUMN_ERROR_COUNT))
+                val star = cursor.getInt(cursor.getColumnIndex(COLUMN_STAR))
+                val learn = cursor.getInt(cursor.getColumnIndex(COLUMN_LEARN))
+
+                val wordEntry = Word_s(id, word, translation, errorCount, star, learn)
+                words.add(wordEntry)
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return words
+    }
+    @SuppressLint("Range")
+    fun getWordsLearn(): List<Word_s> {
+        val words = mutableListOf<Word_s>()
+        val db = readableDatabase
+
+        // 查询 id 从 min 到 max，learn 为 0 的单词
+        val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID AND $COLUMN_LEARN > 0"
+        val cursor = db.rawQuery(query,arrayOf())
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))

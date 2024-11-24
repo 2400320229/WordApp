@@ -100,10 +100,11 @@ class UserFragment : Fragment() {
                 num++
             }
             var num1=0
-            while (num1<100){
+            val wordlist=dbHelper.getWordsLearn()
+            while (num1<wordlist.size+2){
                 try {
-
-                    dbHelper.decreaseLearn(num1)
+                    val word=wordlist[num1]
+                    dbHelper.decreaseLearn(word.id.toInt())
                 }catch (e:Exception){
 
                 }
