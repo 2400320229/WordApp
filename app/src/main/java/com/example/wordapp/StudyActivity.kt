@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                 val word=dbHelper.getWordById(wordId.toString())
                 WordText.setText(word)
                 OKHttpRequestVoice(word)
-                editor_id.putInt("studiedId", sharedPreferences3.getInt("studiedId",0) + 1)
+                editor_id.putInt("studiedId", dbHelper.getWordsByIdAndLearn(1,100).size)
                 editor_id.apply()
                 Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
                 StudyNUM.setText(sharedPreferences3.getInt("studiedId",0).toString())
