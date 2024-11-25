@@ -106,7 +106,6 @@ class UserFragment : Fragment() {
                     val word=wordlist[num1]
                     dbHelper.decreaseLearn(word.id.toInt())
                 }catch (e:Exception){
-
                 }
                 num1++
             }
