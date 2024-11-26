@@ -6,112 +6,108 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     tools:context=".UserFragment">
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/bakegrand"
-        android:scaleType="centerCrop"/>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp">
-        <ImageView
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:src="@drawable/user_2"
-            android:id="@+id/Image"/>
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/_222" />
-
-
-    </LinearLayout>
-
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:cardCornerRadius="20dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <LinearLayout
+            android:layout_height="350dp">
+            <ImageView
+                android:layout_gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="65dp">
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="65dp"
-                    android:text="打卡时长:"
-                    android:id="@+id/daka"
-                    android:textSize="25dp" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="65dp"
-                    android:text="打卡时长"
-                    android:id="@+id/Time"
-                    android:textSize="30dp"
-                    android:gravity="right" />
-            </LinearLayout>
+                android:layout_height="250dp"
+                android:src="@drawable/user_2"
+                android:id="@+id/Image"/>
 
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/_222" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                >
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="50dp"
-                    android:backgroundTint="@color/white"
-                    android:text="清除"
-                    android:textColor="@color/black"
-                    app:strokeColor="@color/black"
-                    app:strokeWidth="1dp"
-                    app:cornerRadius="2dp"
-                    android:id="@+id/clear"/>
-                <LinearLayout
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent"/>
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="50dp"
-                    android:backgroundTint="@color/white"
-                    android:text="换背景"
-                    android:textColor="@color/black"
-                    app:strokeColor="@color/black"
-                    app:strokeWidth="1dp"
-                    app:cornerRadius="2dp"
-                    android:id="@+id/bak"/>
-            </LinearLayout>
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:backgroundTint="@color/white"
-                android:text="退出登录"
-                android:textColor="#ff0000"
-                app:strokeColor="@color/black"
-                app:strokeWidth="1dp"
-                app:cornerRadius="2dp"
-                android:id="@+id/Exit"/>
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="20dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp">
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="65dp"
+                        android:text="打卡时长:"
+                        android:id="@+id/daka"
+                        android:textSize="25dp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="65dp"
+                        android:text="打卡时长"
+                        android:id="@+id/Time"
+                        android:textSize="30dp"
+                        android:gravity="right" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    >
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="50dp"
+                        android:backgroundTint="@color/white"
+                        android:text="清除"
+                        android:textColor="@color/black"
+                        app:strokeColor="@color/black"
+                        app:strokeWidth="1dp"
+                        app:cornerRadius="2dp"
+                        android:id="@+id/clear"/>
+                    <LinearLayout
+                        android:layout_width="10dp"
+                        android:layout_height="match_parent"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="50dp"
+                        android:backgroundTint="@color/white"
+                        android:text="换背景"
+                        android:textColor="@color/black"
+                        app:strokeColor="@color/black"
+                        app:strokeWidth="1dp"
+                        app:cornerRadius="2dp"
+                        android:id="@+id/bak"/>
+                </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:backgroundTint="@color/white"
+                    android:text="退出登录"
+                    android:textColor="#ff0000"
+                    app:strokeColor="@color/black"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="2dp"
+                    android:id="@+id/Exit"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
 
 
 

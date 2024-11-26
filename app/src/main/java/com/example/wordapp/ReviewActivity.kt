@@ -59,6 +59,7 @@ class ReviewActivity : AppCompatActivity() {
             }
             builder.setNegativeButton("去看看其他科目把") { dialog, which ->
 
+                finish()
             }
             builder.create().show()
         }

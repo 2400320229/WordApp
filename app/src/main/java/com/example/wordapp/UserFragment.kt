@@ -86,7 +86,7 @@ class UserFragment : Fragment() {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("触发时光机")
             builder.setMessage("请选择")
-            builder.setPositiveButton("删除24小时！") { dialog, which ->
+            builder.setPositiveButton("前进24小时！") { dialog, which ->
                 val dbHelper=WordDatabaseHelper(requireContext())
                 dbHelper.updateDayForLearnWords()
 
