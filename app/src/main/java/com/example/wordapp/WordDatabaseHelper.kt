@@ -246,7 +246,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         val wordsList = mutableListOf<Word_s>()
 
         // SQL 查询语句，获取 error_count > 0 的单词，并按 error_count 降序排列
-        val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ERROR_COUNT > 0 ORDER BY $COLUMN_ERROR_COUNT DESC"
+        val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ERROR_COUNT > 0 AND $COLUMN_DAY = 0 ORDER BY $COLUMN_ERROR_COUNT DESC"
         val cursor = db.rawQuery(query, null)
         // 遍历查询结果并转换为Word_s对象
         if (cursor.moveToFirst()) {
@@ -391,6 +391,12 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         contentValues.put(COLUMN_LEARN, 0 )
         db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
     }
+    fun decreaseDay(wordId: Int) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_DAY, 0 )
+        db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(wordId.toString()))
+    }
     @SuppressLint("Range")
     fun getWordsByIdAndLearn( min:Int,max:Int): List<Word_s> {
         val words = mutableListOf<Word_s>()
@@ -473,7 +479,49 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
 
         return wordsList
     }
+    @SuppressLint("Range")
+    fun getTodayErrorWord(): List<String> {
+        val wordsList = mutableListOf<String>()
+        val db = this.readableDatabase
+        try {
+            val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ERROR_COUNT > 0 AND $COLUMN_DAY = 0"
+            db.rawQuery(query, null).use { cursor ->
+                if (cursor.moveToFirst()) {
+                    do {
+                        val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+                        wordsList.add(word)
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+
+        return wordsList
+    }
+    @SuppressLint("Range")
+    //给今天Learn的单词的day+1
+    fun updateDayForLearnWords() {
+
+        val db = this.writableDatabase
+        // 执行更新操作
+        try {
 
 
+            // 使用 rawQuery 执行 SQL 更新操作
+            val updateQuery = "UPDATE $TABLE_NAME SET $COLUMN_DAY = $COLUMN_DAY + 1 WHERE $COLUMN_LEARN = 1"
+            db.execSQL(updateQuery)
 
+            db.close()
+            Log.d("Database", "day +1 rows updated.")
+        } catch (e: Exception) {
+            Log.e("DatabaseError", "Error updating day for error words: ${e.message}", e)
+        } finally {
+            db.close()  // 确保数据库连接关闭
+        }
+    }
 }
+
+

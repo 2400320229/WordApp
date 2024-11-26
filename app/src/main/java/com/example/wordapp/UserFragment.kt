@@ -22,6 +22,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.File
@@ -80,47 +81,79 @@ class UserFragment : Fragment() {
         }
 
         claer.setOnClickListener {
-            val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
 
 
-            val dbHelper=WordDatabaseHelper(requireContext())
-
-            var num=0
-            while (num<100){
-                try {
-                    val word=dbHelper.getWordsWithErrorCount()[0]
-                    val id= dbHelper.getIdByWord(word)?.toInt()
-                    dbHelper.deleteErrorCount(id!!)
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("触发时光机")
+            builder.setMessage("请选择")
+            builder.setPositiveButton("删除24小时！") { dialog, which ->
+                val dbHelper=WordDatabaseHelper(requireContext())
+                dbHelper.updateDayForLearnWords()
 
 
-                    Log.d("${id}",dbHelper.getErrorCount(id).toString())
-                }catch (e:Exception){
+                val sharedPreferences = context?.getSharedPreferences("wordId", Context.MODE_PRIVATE)
+                val editor = sharedPreferences?.edit()
+                val goal= sharedPreferences?.getInt("goalId",20)
+                //每天重置复习单词的数据库
 
-                }
-                num++
+
+                // 获取当前的 Id，默认值为 0
+                val currentId = sharedPreferences?.getInt("studiedId", 0) ?: 0
+
+                // 将 Id 增长 20
+                val newId = currentId + goal!!
+
+                // 更新保存新的 Id
+                editor?.putInt("goalId", newId)
+                editor?.apply()
+                Log.d("before",dbHelper.getBeforeErrorWord().toString())
             }
-            var num1=0
-            val wordlist=dbHelper.getWordsLearn()
-            while (num1<wordlist.size+2){
-                try {
-                    val word=wordlist[num1]
-                    dbHelper.decreaseLearn(word.id.toInt())
-                }catch (e:Exception){
+            builder.setNegativeButton("回到起点") { dialog, which ->
+                val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
+
+
+                val dbHelper=WordDatabaseHelper(requireContext())
+
+                var num=0
+                while (num<100){
+                    try {
+                        val word=dbHelper.getWordsWithErrorCount()[0]
+                        val id= dbHelper.getIdByWord(word)?.toInt()
+                        dbHelper.deleteErrorCount(id!!)
+
+
+                        Log.d("${id}",dbHelper.getErrorCount(id).toString())
+                    }catch (e:Exception){
+
+                    }
+                    num++
                 }
-                num1++
+                var num1=0
+                val wordlist=dbHelper.getWordsLearn()
+                while (num1<wordlist.size+2){
+                    try {
+                        val word=wordlist[num1]
+                        dbHelper.decreaseLearn(word.id.toInt())
+                        dbHelper.decreaseDay(word.id.toInt())
+                    }catch (e:Exception){
+                    }
+                    num1++
+                }
+
+                val word=dbHelper.getWordsByIdAndLearn(1,20)
+                Log.d("${id}",word.toString())
+                Log.d("Delete","delete")
+
+
+                val editor_id = sharedPreferences3.edit()
+                editor_id.putInt("studiedId",1)
+                editor_id.putInt("well_known",0)
+                editor_id.putBoolean("summary",true)
+                editor_id.putInt("goalId",3)
+                editor_id.apply()
             }
+            builder.create().show()
 
-            val word=dbHelper.getWordsByIdAndLearn(1,20)
-            Log.d("${id}",word.toString())
-            Log.d("Delete","delete")
-
-
-            val editor_id = sharedPreferences3.edit()
-            editor_id.putInt("studiedId",1)
-            editor_id.putInt("well_known",0)
-            editor_id.putBoolean("summary",true)
-            editor_id.putInt("goalId",3)
-            editor_id.apply()
 
         }
 

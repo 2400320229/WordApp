@@ -57,6 +57,8 @@ class StudyFragment : Fragment() {
         val StudyInGoalText:TextView=view.findViewById(R.id.Study)
         val Showf:Button=view.findViewById(R.id.edit_new_goal)
         val SearchButtom:ImageButton=view.findViewById(R.id.search)
+        val TodayWord:Button=view.findViewById(R.id.ReviewWord)
+        val BeforeWord:Button=view.findViewById(R.id.ReviewBeforeWord)
          progressBar = view.findViewById(R.id.progressBar)
 
         val sharedPreferences = requireActivity().getSharedPreferences("wordId", Context.MODE_PRIVATE )
@@ -71,9 +73,16 @@ class StudyFragment : Fragment() {
             val intent=Intent(requireContext(),MainActivity::class.java)
             startActivity(intent)
         }
-        val ReviewButton:Button=view.findViewById(R.id.ReviewWord)
-        ReviewButton.setOnClickListener{
+
+        TodayWord.setOnClickListener{
             val intent=Intent(requireContext(),ReviewActivity::class.java)
+            intent.putExtra("WordList","Today")
+            startActivity(intent)
+
+        }
+        BeforeWord.setOnClickListener{
+            val intent=Intent(requireContext(),ReviewActivity::class.java)
+            intent.putExtra("WordList","Before")
             startActivity(intent)
 
         }

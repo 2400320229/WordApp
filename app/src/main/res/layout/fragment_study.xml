@@ -129,6 +129,17 @@
             app:strokeWidth="2dp"
             android:text="复习"
             android:id="@+id/ReviewWord"/>
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="80dp"
+                android:textColor="@color/black"
+                app:backgroundTint="@color/white"
+                app:cornerRadius="10dp"
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp"
+                android:text="复习1"
+                android:id="@+id/ReviewBeforeWord"/>
         </LinearLayout>
 </LinearLayout>
     <FrameLayout

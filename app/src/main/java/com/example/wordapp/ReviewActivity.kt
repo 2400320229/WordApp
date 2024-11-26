@@ -36,7 +36,15 @@ class ReviewActivity : AppCompatActivity() {
         startTime = System.currentTimeMillis()// 记录应用启动的时间戳
 
         val dbHelper=WordDatabaseHelper(applicationContext)
-        val wordList:MutableList<String> = dbHelper.getWordsWithErrorCount().toMutableList()
+        var wordList = mutableListOf<String>()
+        if (this.intent.getStringExtra("WordList")=="Today"){
+            wordList = dbHelper.getTodayErrorWord().toMutableList()
+        }
+        if (this.intent.getStringExtra("WordList")=="Before"){
+            wordList = dbHelper.getBeforeErrorWord().toMutableList()
+        }
+
+
 
 
 
