@@ -13,6 +13,7 @@ class IdUpdateReceiver : BroadcastReceiver() {
         val editor = sharedPreferences?.edit()
         //每天重置复习单词的数据库
 
+        val date=sharedPreferences?.getInt("date", 0) ?: 0
 
         // 获取当前的 Id，默认值为 0
         val currentId = sharedPreferences?.getInt("studiedId", 0) ?: 0
@@ -21,6 +22,7 @@ class IdUpdateReceiver : BroadcastReceiver() {
         val newId = currentId + goal
 
         // 更新保存新的 Id
+        editor?.putInt("date",date+1)
         editor?.putInt("goalId", newId)
         editor?.apply()
 

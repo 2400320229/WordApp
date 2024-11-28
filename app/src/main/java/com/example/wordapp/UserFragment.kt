@@ -8,11 +8,14 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.system.Os.remove
 import android.text.TextUtils.replace
 import android.util.Log
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +25,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -50,11 +54,15 @@ class UserFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        val sharedPreferences=requireActivity().getSharedPreferences("service",Context.MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
+        editor.putBoolean("FA",false).apply()
          val view=inflater.inflate(R.layout.fragment_user, container, false)
         val sharedPreferences1 = requireActivity().getSharedPreferences("Check", Context.MODE_PRIVATE )
         val sharedPreferences2 = requireActivity().getSharedPreferences("wordId", Context.MODE_PRIVATE )
@@ -82,6 +90,8 @@ class UserFragment : Fragment() {
         }
         record.setOnClickListener {
 
+            val intent=Intent(requireContext(),RecordActivity::class.java)
+            startActivity(intent)
         }
 
         claer.setOnClickListener {
@@ -97,19 +107,37 @@ class UserFragment : Fragment() {
 
                 val sharedPreferences = context?.getSharedPreferences("wordId", Context.MODE_PRIVATE)
                 val editor = sharedPreferences?.edit()
-                val goal= sharedPreferences?.getInt("goalId",20)
-                //每天重置复习单词的数据库
+                val goal= sharedPreferences?.getInt("goalId",20)?:20
+                val date=sharedPreferences?.getInt("date", 0) ?: 0
+                val currentDate = LocalDate.now()
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")  // 自定义格式
+                val formattedDate = currentDate.format(formatter)
+                val today_study_time=sharedPreferences?.getLong("TodayTime",0)?:0
+                if (sharedPreferences != null) {
+                    if(sharedPreferences.getBoolean("stu",false)){
+                        dbHelper.insertCheckInRecord(1,today_study_time.toInt(),formattedDate.toString())
+                    }else{
+                        dbHelper.insertCheckInRecord(0,today_study_time.toInt(),formattedDate.toString())
+                    }
+
+                }
+
 
 
                 // 获取当前的 Id，默认值为 0
                 val currentId = sharedPreferences?.getInt("studiedId", 0) ?: 0
 
                 // 将 Id 增长 20
-                val newId = currentId + goal!!
+                val newId = currentId + goal
 
                 // 更新保存新的 Id
+                editor?.putLong("TodayTime",0)//每日的学习时间归零
+                editor?.putInt("date",date+1)//日期加一
                 editor?.putInt("goalId", newId)
+                editor?.putBoolean("summary",true)
+                editor?.putBoolean("stu",false)
                 editor?.apply()
+
                 Log.d("before",dbHelper.getBeforeErrorWord().toString())
             }
             builder.setNegativeButton("回到起点") { dialog, which ->
@@ -127,7 +155,7 @@ class UserFragment : Fragment() {
 
 
                         Log.d("${id}",dbHelper.getErrorCount(id).toString())
-                    }catch (e:Exception){
+                    }catch (_:Exception){
 
                     }
                     num++
@@ -139,11 +167,12 @@ class UserFragment : Fragment() {
                         val word=wordlist[num1]
                         dbHelper.decreaseLearn(word.id.toInt())
                         dbHelper.decreaseDay(word.id.toInt())
-                    }catch (e:Exception){
+                    }catch (_:Exception){
                     }
                     num1++
                 }
 
+                dbHelper.clearCheckInRecords()
                 val word=dbHelper.getWordsByIdAndLearn(1,20)
                 Log.d("${id}",word.toString())
                 Log.d("Delete","delete")
@@ -152,8 +181,10 @@ class UserFragment : Fragment() {
                 val editor_id = sharedPreferences3.edit()
                 editor_id.putInt("studiedId",1)
                 editor_id.putInt("well_known",0)
+                editor_id.putInt("date",0)
                 editor_id.putBoolean("summary",true)
                 editor_id.putInt("goalId",3)
+                editor_id.putBoolean("stu",false)
                 editor_id.apply()
             }
             builder.create().show()
@@ -172,6 +203,7 @@ class UserFragment : Fragment() {
     }
 
     // 处理图片选择结果
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

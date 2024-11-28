@@ -179,7 +179,9 @@ class ReviewActivity : AppCompatActivity() {
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
         val time=sharedPreferences3.getLong("Time",0)
+        val today_time=sharedPreferences3.getLong("TodayTime",0)
         editor_id.putLong("Time",duration+time)
+        editor_id.putLong("TodayTime",duration+today_time)
         editor_id.apply()
     }
     //解析翻译得到的JSON字符串，获取中文翻译

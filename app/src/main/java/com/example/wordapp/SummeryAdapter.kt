@@ -16,10 +16,6 @@ import com.google.gson.Gson
 class SummeryAdapter(private val wordList: List<Word_s>,private val listener: com.example.wordapp.SearchAdapter.OnSearchClickListener) :RecyclerView.Adapter<SummeryAdapter.MyViewHolder>() {
 
 
-    interface OnSearchClickListener{
-        fun onWordData(word_s:Word_s)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemview: View =
             LayoutInflater.from(parent.context).inflate(R.layout.item_sum, parent, false)

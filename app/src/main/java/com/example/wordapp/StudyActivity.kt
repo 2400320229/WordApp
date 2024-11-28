@@ -51,8 +51,8 @@ class MainActivity : AppCompatActivity() {
 
         val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
         val editor=sharedPreferences.edit()
-        editor.putBoolean("FA",false)
-        editor.apply()
+        editor.putBoolean("FA",false).apply()
+
         startTime = System.currentTimeMillis()// 记录应用启动的时间戳
 
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity() {
         }
         var last_word=""
         Studybutton.setOnClickListener{
+            editor_id.putBoolean("stu",true)
             Log.d("learn",dbHelper.getWordsLearn().size.toString())
             try {
                 val chinese=obtainChinese(dbHelper.getTranslationById(WORD.id.toString()).toString())
@@ -226,7 +227,9 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
         val time=sharedPreferences3.getLong("Time",0)
+        val today_time=sharedPreferences3.getLong("TodayTime",0)
         editor_id.putLong("Time",duration+time)
+        editor_id.putLong("TodayTime",duration+today_time)
         editor_id.apply()
 
         val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)

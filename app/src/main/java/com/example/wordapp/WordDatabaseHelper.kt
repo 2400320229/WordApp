@@ -13,20 +13,28 @@ data class Word_s(
     val error_count:Int,
     val Star:Int, val learn:Int,
     val day :Int)
+data class Clock_in_record(
+    val id:Long, val is_checked_in: Int,val check_in_duration: Int,val check_in_date: String
+)
 class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
     DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "words.db"
-        private const val DATABASE_VERSION = 12
+        private const val DATABASE_VERSION = 13
         private const val TABLE_NAME = "words"
         private const val COLUMN_ID = "id"
         private const val COLUMN_WORD = "word"
         private const val COLUMN_TRANSLATION = "translation"
-        private const val COLUMN_ERROR_COUNT = "error_count"  // 新增错误计数列// 新增翻译列
+        private const val COLUMN_ERROR_COUNT = "error_count"// 新增错误计数列// 新增翻译列
         private const val COLUMN_STAR = "star"
         private const val COLUMN_LEARN = "learn"
         private const val COLUMN_DAY = "day"
+        // 新表的相关字段
+        private const val CHECK_IN_TABLE_NAME = "check_in_records"
+        private const val COLUMN_IS_CHECKED_IN = "is_checked_in" // 是否打卡
+        private const val COLUMN_CHECK_IN_DURATION = "check_in_duration" // 打卡时长
+        private const val COLUMN_CHECK_IN_DATE = "check_in_date" // 打卡日期
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -41,14 +49,33 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
                 $COLUMN_DAY INTEGER DEFAULT 0
             );
         """
+
         db?.execSQL(CREATE_TABLE)
+        // 创建打卡记录表
+        val CREATE_CHECK_IN_TABLE = """
+            CREATE TABLE $CHECK_IN_TABLE_NAME (
+                $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                $COLUMN_IS_CHECKED_IN INTEGER DEFAULT 0, 
+                $COLUMN_CHECK_IN_DURATION INTEGER DEFAULT 0,
+                $COLUMN_CHECK_IN_DATE TEXT
+            );
+        """
+        db?.execSQL(CREATE_CHECK_IN_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        if (oldVersion < 12) {
-            // 如果数据库版本小于2，进行升级，增加翻译列
-            val ALTER_TABLE = "ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_DAY INTEGER DEFAULT 0"
-            db?.execSQL(ALTER_TABLE)
+        if (oldVersion < 13) {
+
+            // 创建新表
+            val CREATE_CHECK_IN_TABLE = """
+                CREATE TABLE $CHECK_IN_TABLE_NAME (
+                    $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    $COLUMN_IS_CHECKED_IN INTEGER DEFAULT 0,
+                    $COLUMN_CHECK_IN_DURATION INTEGER DEFAULT 0,
+                    $COLUMN_CHECK_IN_DATE TEXT
+                );
+            """
+            db?.execSQL(CREATE_CHECK_IN_TABLE)
         }
     }
     // 插入单词和翻译
@@ -61,6 +88,23 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         db.insert(TABLE_NAME, null, contentValues)
         db.close()
     }
+
+    fun clearCheckInRecords() {
+        val db = writableDatabase
+        val deleteQuery = "DELETE FROM $CHECK_IN_TABLE_NAME"
+        db.execSQL(deleteQuery)
+        db.close()
+    }
+    fun insertCheckInRecord(is_checked_in:Int,check_in_duration:Int,check_in_date:String) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put(COLUMN_IS_CHECKED_IN,is_checked_in)
+            put(COLUMN_CHECK_IN_DURATION,check_in_duration)
+            put(COLUMN_CHECK_IN_DATE,check_in_date)
+        }
+        db.insert(CHECK_IN_TABLE_NAME, null, contentValues)
+        db.close()
+    }
     //根据单词的id来更改它的翻译
     fun updateTranslationById(id: Int, translation: String) {
         val db = this.writableDatabase
@@ -71,6 +115,30 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         // 使用ID更新对应单词的翻译
         db.update(TABLE_NAME, contentValues, "$COLUMN_ID = ?", arrayOf(id.toString()))
         db.close()
+    }
+    // 获取所有打卡记录的方法
+    @SuppressLint("Range")
+    fun getAllCheckInRecords(): List<Clock_in_record> {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            CHECK_IN_TABLE_NAME, null, null, null,//不加条件，获取所有记录
+            null, null, null
+        )
+
+        val records = mutableListOf<Clock_in_record>()
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+                val isCheckedIn = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_CHECKED_IN))
+                val duration = cursor.getInt(cursor.getColumnIndex(COLUMN_CHECK_IN_DURATION))
+                val checkInDate = cursor.getString(cursor.getColumnIndex(COLUMN_CHECK_IN_DATE))
+                records.add(Clock_in_record(id, isCheckedIn, duration, checkInDate))
+                Log.d("id","${id}")
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return records
     }
     // 插入多个单词
     fun insertWords(words: List<String>) {
@@ -498,6 +566,42 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         } finally {
             db.close()
         }
+
+        return wordsList
+    }
+    @SuppressLint("Range")
+    fun getWordsByDayAndLearnGreaterThanZero(day: Int): List<Word_s> {
+        val db = readableDatabase
+        val wordsList = mutableListOf<Word_s>()
+
+        // 查询语句，查找指定 day 且 learn > 0 的单词
+        val query = """
+        SELECT * FROM $TABLE_NAME 
+        WHERE $COLUMN_DAY = ? AND $COLUMN_LEARN > 0
+    """
+
+        // 使用 SQLite 的 rawQuery 执行 SQL 查询
+        val cursor = db.rawQuery(query, arrayOf(day.toString()))
+
+        // 遍历游标并将符合条件的记录添加到列表中
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+                val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+                val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+                val errorCount = cursor.getInt(cursor.getColumnIndex(COLUMN_ERROR_COUNT))
+                val star = cursor.getInt(cursor.getColumnIndex(COLUMN_STAR))
+                val learn = cursor.getInt(cursor.getColumnIndex(COLUMN_LEARN))
+                val day = cursor.getInt(cursor.getColumnIndex(COLUMN_DAY))
+
+                // 将每一行数据转换为 Word_s 对象
+                wordsList.add(Word_s(id, word, translation, errorCount, star, learn, day))
+
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
 
         return wordsList
     }
