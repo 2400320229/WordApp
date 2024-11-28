@@ -64,6 +64,7 @@ class UserFragment : Fragment() {
         Time.setText("${sharedPreferences2.getLong("Time",3)/60000}分钟")
         val Exit:Button=view.findViewById(R.id.Exit)
         val claer:Button=view.findViewById(R.id.clear)
+        val record:Button=view.findViewById(R.id.record)
         bak=view.findViewById(R.id.bak)
         ImageView=view.findViewById(R.id.Image)
         Exit.setOnClickListener{
@@ -77,6 +78,9 @@ class UserFragment : Fragment() {
         bak.setOnClickListener {
 
             openGallery()
+
+        }
+        record.setOnClickListener {
 
         }
 

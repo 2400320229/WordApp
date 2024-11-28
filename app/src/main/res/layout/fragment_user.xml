@@ -49,7 +49,7 @@
                     <TextView
                         android:layout_width="150dp"
                         android:layout_height="65dp"
-                        android:text="打卡时长:"
+                        android:text="总打卡时长:"
                         android:id="@+id/daka"
                         android:textSize="25dp" />
                     <TextView
@@ -60,6 +60,16 @@
                         android:id="@+id/Time"
                         android:textSize="30dp"
                         android:gravity="right" />
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/record"
+                        app:cornerRadius="10dp"
+                        android:text="..."
+                        android:textSize="14dp"
+                        android:textColor="@color/black"
+                        android:backgroundTint="@color/white"/>
+
                 </LinearLayout>
 
 
