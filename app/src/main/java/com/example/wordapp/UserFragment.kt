@@ -127,6 +127,8 @@ class UserFragment : Fragment() {
                 // 获取当前的 Id，默认值为 0
                 val currentId = sharedPreferences?.getInt("studiedId", 0) ?: 0
 
+                Log.d("studiedId","${currentId}")
+                Log.d("goal","${goal}")
                 // 将 Id 增长 20
                 val newId = currentId + goal
 

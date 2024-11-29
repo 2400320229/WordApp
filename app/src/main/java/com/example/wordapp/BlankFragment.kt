@@ -50,15 +50,6 @@ class BlankFragment : Fragment() {
 
         return view
     }
-    fun toInteger(s: String): Int {
-        try {
-            val value = s.toInt()
-            return value
-        } catch (ex: NumberFormatException) {
-            return 0
-        }
-
-    }
 }
 
 

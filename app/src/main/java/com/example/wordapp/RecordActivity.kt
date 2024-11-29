@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecordActivity : AppCompatActivity(),SearchAdapter.OnSearchClickListener,RecordAdapter.OnRecordClickListener {
     private lateinit var recyclerView1: RecyclerView
-    private lateinit var recyclerView2: RecyclerView
 
     private var datelist:MutableList<Clock_in_record> = mutableListOf()
     private var wordlist:MutableList<Word_s> = mutableListOf()
