@@ -1,12 +1,14 @@
 package com.example.wordapp
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -20,9 +22,15 @@ import java.io.FileOutputStream
 class WordData : AppCompatActivity() {
     private var startTime: Long = 0
     private var endTime: Long = 0
+    private lateinit var bakeground: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         startTime = System.currentTimeMillis()
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_word_data)
+
+        bakeground=findViewById(R.id.background)
+        loadImageFromInternalStorage()
         val sharedPreferences=getSharedPreferences("service", Context.MODE_PRIVATE)
         val editor=sharedPreferences.edit()
         editor.putBoolean("FA",false)
@@ -32,8 +40,6 @@ class WordData : AppCompatActivity() {
         var chinese="chinese"
         val dbHelper = WordDatabaseHelper(applicationContext)
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_word_data)
         val KnowButton:Button=findViewById(R.id.well_know)
         val VoiceButton: ImageButton =findViewById(R.id.play_voice)
         val addButton:Button=findViewById(R.id.add_mistake_word)
@@ -151,5 +157,20 @@ class WordData : AppCompatActivity() {
                 }
             }
         }.start()
+    }
+
+    private fun loadImageFromInternalStorage() {
+        try {
+            val file = File(filesDir, "selected_image.jpg")
+            if (file.exists()) {
+                Log.d("MainActivity", "File exists: ${file.absolutePath}")
+                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                bakeground.setImageBitmap(bitmap)
+            } else {
+                Log.d("MainActivity", "File does not exist.")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

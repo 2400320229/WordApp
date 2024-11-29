@@ -75,8 +75,8 @@
                             android:indeterminate="false"
                             android:layout_gravity="center"
                             android:max="100"
-                            android:progress="0"
-                            android:progressDrawable="@drawable/progress_bar"
+                            android:progress="10"
+
                             style="@android:style/Widget.ProgressBar.Horizontal"/>
 
 

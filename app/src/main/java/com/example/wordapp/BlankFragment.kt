@@ -2,7 +2,6 @@ package com.example.wordapp
 
 import android.content.Context
 import android.os.Bundle
-import android.system.Os.remove
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +26,7 @@ class BlankFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view= inflater.inflate(R.layout.study_f, container, false)
+        val view= inflater.inflate(R.layout.edit_goal_f, container, false)
         val NewGoal:EditText=view.findViewById(R.id.new_goal)
         val sharedPreferences=requireContext()
             .getSharedPreferences("wordId",Context.MODE_PRIVATE)

@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/bakegrand"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:id="@+id/backgroundImage_review"/>
     <androidx.cardview.widget.CardView
         android:layout_width="360dp"
         android:layout_height="550dp"

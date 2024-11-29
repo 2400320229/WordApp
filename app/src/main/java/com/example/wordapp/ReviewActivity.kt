@@ -2,11 +2,13 @@ package com.example.wordapp
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -22,6 +24,7 @@ import java.io.FileOutputStream
 class ReviewActivity : AppCompatActivity() {
     private var startTime: Long = 0
     private var endTime: Long = 0
+    private lateinit var bakeground: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +32,8 @@ class ReviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_review)
+        bakeground=findViewById(R.id.backgroundImage_review)
+        loadImageFromInternalStorage()
         val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
         val editor=sharedPreferences.edit()
         editor.putBoolean("FA",false)
@@ -234,6 +239,21 @@ class ReviewActivity : AppCompatActivity() {
                 }
             }
         }.start()
+    }
+    // 从内部存储加载图片
+    private fun loadImageFromInternalStorage() {
+        try {
+            val file = File(filesDir, "selected_image.jpg")
+            if (file.exists()) {
+                Log.d("MainActivity", "File exists: ${file.absolutePath}")
+                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                bakeground.setImageBitmap(bitmap)
+            } else {
+                Log.d("MainActivity", "File does not exist.")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 }

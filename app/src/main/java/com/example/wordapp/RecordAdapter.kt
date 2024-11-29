@@ -29,7 +29,7 @@ class RecordAdapter( val context: Context,val list: List<Clock_in_record>,privat
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.date.text=list[position].check_in_date
-        holder.date_time.text= "${ (list[position].check_in_duration) / 60000 }分钟"
+        holder.date_time.text= "${ (list[position].check_in_duration) / 1000 }秒钟"
         if(list[position].is_checked_in==1){
             holder.card.setCardBackgroundColor(ContextCompat.getColor(context,R.color.aquamarine))
         }else{

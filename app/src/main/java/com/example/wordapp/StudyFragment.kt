@@ -33,12 +33,6 @@ private const val ARG_PARAM2 = "param2"
 class StudyFragment : Fragment() {
 
     private lateinit var progressBar: ProgressBar
-    private val handler = Handler(Handler.Callback { msg ->
-        when (msg.what) {
-            0 -> progressBar.progress = msg.arg1  // 更新进度
-        }
-        true
-    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +82,7 @@ class StudyFragment : Fragment() {
         }
         Showf.setOnClickListener {
             showAddFragment()
+            progressBar.invalidate()
         }
         SearchButtom.setOnClickListener {
             val intent=Intent(requireContext(),SearchActivity::class.java)
