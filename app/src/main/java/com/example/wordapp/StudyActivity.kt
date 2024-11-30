@@ -126,14 +126,14 @@ class MainActivity : AppCompatActivity() {
             Log.d("learn",dbHelper.getWordsLearn().size.toString())
             try {
                 val chinese=obtainChinese(dbHelper.getTranslationById(WORD.id.toString()).toString())
-                last_word="${WORD.word} ${chinese}"
+                last_word=WORD.word
                 wordList.remove(WORD)
                 dbHelper.incrementLearn(WORD.id.toInt())
                 WORD=wordList[0]
                 val wordId=WORD.id.toInt()
                 Log.d("id",wordId.toString())
                 lastWord.setVisibility(View.VISIBLE)
-                lastWord.setText(last_word)
+                lastWord.setText("${last_word} ${chinese}")
                 if(dbHelper.getErrorCount(wordId-1)==0){
                     val wellknown=sharedPreferences3.getInt("well_known",-1)
                     editor_id.putInt("well_known",wellknown+1)

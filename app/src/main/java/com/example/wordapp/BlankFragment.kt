@@ -40,6 +40,7 @@ class BlankFragment : Fragment() {
 
             val newGoal = NewGoal.text.toString().toInt()
             editor.putInt("goalNumber",newGoal)
+            editor.putInt("goalId",newGoal+sharedPreferences.getInt("studiedId",0))
             editor.apply()
             val transaction: FragmentTransaction =
                 requireActivity().supportFragmentManager.beginTransaction()

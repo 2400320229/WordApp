@@ -183,6 +183,7 @@ class UserFragment : Fragment() {
                 val editor_id = sharedPreferences3.edit()
                 editor_id.putInt("studiedId",0)
                 editor_id.putInt("well_known",0)
+                editor?.putLong("TodayTime",0)
                 editor_id.putInt("date",0)
                 editor_id.putBoolean("summary",true)
                 editor_id.putInt("goalNumber",3)

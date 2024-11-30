@@ -34,12 +34,19 @@ class SummaryActivity : AppCompatActivity(),SearchAdapter.OnSearchClickListener 
         val time:TextView=findViewById(R.id.summeryTime)
         val sharedPreferences=getSharedPreferences("wordId",Context.MODE_PRIVATE)
         Log.d("known","${sharedPreferences.getInt("well_known",-1)}")
-        WordKnow.text="第一次就认识${(dbHelper.getTodayLearnWord().size-dbHelper.getTodayErrorWord().size/dbHelper.getTodayLearnWord().size*100)}%"
+        WordKnow.text="第一次就认识${((dbHelper.getTodayLearnWord().size-dbHelper.getTodayErrorWord().size).toDouble()
+                /(dbHelper.getTodayLearnWord().size).toDouble()*100).toInt()}%"
         UnknownNumber.text="以下是错误单词"
         val editor=sharedPreferences.edit()
         editor.putInt("well_known",-1)
         editor.apply()
-        time.setText("用时${ intent.getLongExtra("Time", 0)/1000 }秒钟")
+        if(intent.getLongExtra("Time", 0)<=60000){
+            time.setText("用时${ intent.getLongExtra("Time", 0)/1000 }秒钟")
+        }
+        else {
+            time.setText("用时${ intent.getLongExtra("Time", 0)/60000 }分钟")
+        }
+
 
         Button.setOnClickListener {
             finish()

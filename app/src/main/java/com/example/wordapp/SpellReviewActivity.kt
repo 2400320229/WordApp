@@ -80,6 +80,7 @@ class SpellReviewActivity : AppCompatActivity() {
         val WordText: TextView = findViewById(R.id.Word_text)
         val lastWordButton:MaterialButton = findViewById(R.id.last_word)
         val remain:TextView = findViewById(R.id.remainNum)
+        val NoiceButton:Button=findViewById(R.id.ShowWordDate)
         val Spell:EditText=findViewById(R.id.spell)
 
         lastWordButton.setVisibility(View.GONE)
@@ -180,7 +181,12 @@ class SpellReviewActivity : AppCompatActivity() {
             }
         }
 
+        NoiceButton.setOnClickListener {
+            val word=wordList[0].word
+            OKHttpRequestVoice(word)
+        }
     }
+
     override fun onPause() {
         super.onPause()
         val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
