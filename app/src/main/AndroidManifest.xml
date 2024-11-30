@@ -22,6 +22,9 @@
             android:name=".RecordActivity"
             android:exported="false" />
         <activity
+            android:name=".SpellReviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".SearchActivity"
             android:exported="false" />
         <activity
@@ -31,7 +34,9 @@
         <service
             android:name=".MyService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+
+        </service>
 
         <activity
             android:name=".ReviewActivity"

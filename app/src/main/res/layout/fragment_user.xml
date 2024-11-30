@@ -82,7 +82,7 @@
                         android:layout_weight="1"
                         android:layout_height="50dp"
                         android:backgroundTint="@color/white"
-                        android:text="清除"
+                        android:text="时光机"
                         android:textColor="@color/black"
                         app:strokeColor="@color/black"
                         app:strokeWidth="1dp"

@@ -3,16 +3,22 @@ package com.example.wordapp
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
@@ -27,11 +33,12 @@ class SpellReviewActivity : AppCompatActivity() {
     private lateinit var bakeground: ImageView
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_review)
+        setContentView(R.layout.activity_spell_review)
         bakeground=findViewById(R.id.backgroundImage_review)
         loadImageFromInternalStorage()
         val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
@@ -41,7 +48,7 @@ class SpellReviewActivity : AppCompatActivity() {
         startTime = System.currentTimeMillis()// 记录应用启动的时间戳
 
         val dbHelper=WordDatabaseHelper(applicationContext)
-        var wordList = mutableListOf<String>()
+        var wordList = mutableListOf<Word>()
         if (this.intent.getStringExtra("WordList")=="Today"){
             wordList = dbHelper.getTodayErrorWord().toMutableList()
         }
@@ -71,18 +78,16 @@ class SpellReviewActivity : AppCompatActivity() {
 
 
         val WordText: TextView = findViewById(R.id.Word_text)
-        val Studybutton: Button = findViewById(R.id.nextWord)
-        val WordDatabutton: Button = findViewById(R.id.ShowWordDate)
         val lastWordButton:MaterialButton = findViewById(R.id.last_word)
         val remain:TextView = findViewById(R.id.remainNum)
+        val Spell:EditText=findViewById(R.id.spell)
 
         lastWordButton.setVisibility(View.GONE)
 
         try{
 
             remain.setText(wordList.size.toString())
-            WordText.setText(wordList[0])
-            OKHttpRequestVoice(wordList[0])
+            WordText.setText(obtainChinese(wordList[0].translation.toString()).toString())
 
 
         }catch (e:Exception){
@@ -90,81 +95,88 @@ class SpellReviewActivity : AppCompatActivity() {
             Log.d("e","e")
         }
 
+        Spell.addTextChangedListener {
+            if (wordList.isNotEmpty()) {
+                val spell = Spell.text.toString()
+                if (spell.length == wordList[0].word.length) {
+                    //拼对了
+                    if (spell == wordList[0].word) {
 
-        WordDatabutton.setOnClickListener {
-            try {
-                val wordId: Long? =dbHelper.getIdByWord(wordList[0])
-                val wordId1:Int= wordId!!.toInt()
-                val intent = Intent(this, WordData::class.java)
-                Log.d("DateId",wordId.toString())
-                intent.putExtra("key", wordId1)
-                startActivity(intent)
-                val dbHelper = WordDatabaseHelper(applicationContext)
-                val word = dbHelper.getWordById(wordId.toString())
-                Log.d("word",word.toString())
-                OKHttpRequestVoice(word)
-                try{
-                    if(wordList[0]!=word) {
-                        wordList.add(word.toString())
-                    }
-                }catch (e:Exception){
-                    wordList.add(word.toString())
-                }
-            }catch (e:Exception){
+                        try {
 
-            }
+                            val last_word=wordList[0].word
+                            wordList.remove(wordList[0])
+                            remain.setText(wordList.size.toString())
+                            val chinese=obtainChinese(dbHelper.getTranslationById(dbHelper.getIdByWord(last_word).toString()).toString())
+                            lastWordButton.setVisibility(View.VISIBLE)
+                            lastWordButton.setText("${last_word} ${chinese}")
+                            lastWordButton.setOnClickListener {
+                                val last_wordId=dbHelper.getIdByWord(last_word)
+                                OKHttpRequestVoice(last_word)
+                                Log.d("LastId",last_wordId.toString())
+                                val intent = Intent(this, WordData::class.java)
+                                if (last_wordId != null) {
+                                    intent.putExtra("key", last_wordId.toInt())
+                                }
+                                startActivity(intent)
+                            }
+                            if (wordList.isNotEmpty()) {
+                                WordText.setText(obtainChinese(wordList[0].translation.toString()).toString())
+                            } else {
+                                Toast.makeText(this,"复习完成",Toast.LENGTH_SHORT).show()
+                                finish()
+                            }
 
 
+                        } catch (_: Exception) {
 
-
-
-        }
-        Studybutton.setOnClickListener {
-            try{
-
-                val dbHelper = WordDatabaseHelper(applicationContext)
-                var last_word = wordList[0]
-                wordList.remove(last_word)
-                val word=wordList[0]
-                WordText.setText(word)
-                OKHttpRequestVoice(word)
-                try{
-                    remain.setText((wordList.size).toString())
-                    val chinese=obtainChinese(dbHelper.getTranslationById(dbHelper.getIdByWord(last_word).toString()).toString())
-                    lastWordButton.setVisibility(View.VISIBLE)
-                    lastWordButton.setText("${last_word} ${chinese}")
-                    lastWordButton.setOnClickListener {
-                        val last_wordId=dbHelper.getIdByWord(last_word)
-                        OKHttpRequestVoice(last_word)
-                        Log.d("LastId",last_wordId.toString())
-                        val intent = Intent(this, WordData::class.java)
-                        if (last_wordId != null) {
-                            intent.putExtra("key", last_wordId.toInt())
                         }
-                        startActivity(intent)
+
                     }
-                }catch (e: Exception) {
-                    lastWordButton.setVisibility(View.GONE)
+                    //拼错了
+                    else {
+                        Spell.text.clear()
+                        try {
+                            val wordId: Long? = dbHelper.getIdByWord(wordList[0].word)
+                            val wordId1: Int = wordId!!.toInt()
+                            val intent = Intent(applicationContext, WordData::class.java)
+                            Log.d("DateId", wordId.toString())
+                            intent.putExtra("key", wordId1)
+                            startActivity(intent)
+                            val dbHelper = WordDatabaseHelper(applicationContext)
+                            val word = dbHelper.getWordById(wordId.toString())
+                            Log.d("word", word.toString())
+                            OKHttpRequestVoice(word)
+                            try {
+
+                                if(wordList[wordList.size-1].word!=word){
+                                    wordList.add(wordList[0])
+                                }
+                            } catch (e: Exception) {
+
+                            }
+                            Log.d("wordlistSize","${wordList.size}")
+                        } catch (e: Exception) {
+
+                        }
+                    }
+                }
+
+                try{
+                    for (i in spell.indices) {
+                        if (spell[i] == wordList[0].word[i]) {
+                            Spell.setTextColor(Color.GREEN)
+                        } else {
+                            Spell.setTextColor(Color.RED)
+                        }
+                    }
+                }catch (_:Exception){
+                    Spell.text.clear()
                 }
 
 
-                Log.d("word",wordList.toString())
-
-
-
-            }catch (e:Exception){
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("太有实力了！")
-                builder.setMessage("今天的单词语句复习完了")
-                builder.setPositiveButton("再去学习！") { dialog, which ->
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-                builder.setNegativeButton("再复习一遍") { dialog, which ->
-                    recreate()
-                }
-                builder.create().show()
+            }else{
+                finish()
             }
         }
 
@@ -255,5 +267,6 @@ class SpellReviewActivity : AppCompatActivity() {
             e.printStackTrace()
         }
     }
+
 
 }

@@ -16,6 +16,7 @@ data class Word_s(
 data class Clock_in_record(
     val id:Long, val is_checked_in: Int,val check_in_duration: Int,val check_in_date: String
 )
+data class Word(val word:String,val translation: String?)
 class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME,null,
     DATABASE_VERSION) {
 
@@ -525,8 +526,8 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         return wordsList
     }
     @SuppressLint("Range")
-    fun getBeforeErrorWord(): List<String> {
-        val wordsList = mutableListOf<String>()
+    fun getBeforeErrorWord(): List<Word> {
+        val wordsList = mutableListOf<Word>()
         val db = this.readableDatabase
         try {
             // SQL 查询语句，获取 error_count > 0 的单词，没有排序
@@ -535,7 +536,8 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
                 if (cursor.moveToFirst()) {
                     do {
                         val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
-                        wordsList.add(word)
+                        val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+                        wordsList.add(Word(word,translation))
                     } while (cursor.moveToNext())
                 }
             }
@@ -548,8 +550,8 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         return wordsList
     }
     @SuppressLint("Range")
-    fun getTodayErrorWord(): List<String> {
-        val wordsList = mutableListOf<String>()
+    fun getTodayErrorWord(): List<Word> {
+        val wordsList = mutableListOf<Word>()
         val db = this.readableDatabase
         try {
             val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ERROR_COUNT > 0 AND $COLUMN_DAY = 0"
@@ -557,7 +559,8 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
                 if (cursor.moveToFirst()) {
                     do {
                         val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
-                        wordsList.add(word)
+                        val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+                        wordsList.add(Word(word,translation))
                     } while (cursor.moveToNext())
                 }
             }

@@ -41,7 +41,7 @@ class ReviewActivity : AppCompatActivity() {
         startTime = System.currentTimeMillis()// 记录应用启动的时间戳
 
         val dbHelper=WordDatabaseHelper(applicationContext)
-        var wordList = mutableListOf<String>()
+        var wordList = mutableListOf<Word>()
         if (this.intent.getStringExtra("WordList")=="Today"){
             wordList = dbHelper.getTodayErrorWord().toMutableList()
         }
@@ -81,8 +81,8 @@ class ReviewActivity : AppCompatActivity() {
         try{
 
             remain.setText(wordList.size.toString())
-            WordText.setText(wordList[0])
-            OKHttpRequestVoice(wordList[0])
+            WordText.setText(wordList[0].word)
+            OKHttpRequestVoice(wordList[0].word)
 
 
         }catch (e:Exception){
@@ -93,7 +93,7 @@ class ReviewActivity : AppCompatActivity() {
 
         WordDatabutton.setOnClickListener {
             try {
-                val wordId: Long? =dbHelper.getIdByWord(wordList[0])
+                val wordId: Long? =dbHelper.getIdByWord(wordList[0].word)
                 val wordId1:Int= wordId!!.toInt()
                 val intent = Intent(this, WordData::class.java)
                 Log.d("DateId",wordId.toString())
@@ -104,11 +104,11 @@ class ReviewActivity : AppCompatActivity() {
                 Log.d("word",word.toString())
                 OKHttpRequestVoice(word)
                 try{
-                    if(wordList[0]!=word) {
-                        wordList.add(word.toString())
+                    if(wordList[0].word!=word) {
+                        wordList.add(Word(word.toString(),wordList[0].translation))
                     }
                 }catch (e:Exception){
-                    wordList.add(word.toString())
+                    wordList.add(Word(word.toString(),wordList[0].translation))
                 }
             }catch (e:Exception){
 
@@ -123,9 +123,9 @@ class ReviewActivity : AppCompatActivity() {
             try{
 
                 val dbHelper = WordDatabaseHelper(applicationContext)
-                var last_word = wordList[0]
-                wordList.remove(last_word)
-                val word=wordList[0]
+                var last_word = wordList[0].word
+                wordList.remove(wordList[0])
+                val word=wordList[0].word
                 WordText.setText(word)
                 OKHttpRequestVoice(word)
                 try{
