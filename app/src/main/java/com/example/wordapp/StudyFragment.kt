@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.times
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,9 +60,13 @@ class StudyFragment : Fragment() {
 
 
 
-        StudyInSumText.setText("${sharedPreferences.getInt("studiedId",0)}/19702")
+        val dbHelper=WordDatabaseHelper(requireContext())
+        StudyInSumText.setText("${sharedPreferences.getInt("studiedId",0)}/10927")
         StudyInGoalText.setText("${sharedPreferences.getInt("studiedId",0)}/${sharedPreferences.getInt("goalId",0)}")
-        progressBar.progress=(2000/19702) * 100
+
+        progressBar.max=100
+        progressBar.progress=((dbHelper.getWordsLearn().size.toDouble()/10927.0) * 100).toInt()
+
 
         StudyButton.setOnClickListener{
             val intent=Intent(requireContext(),MainActivity::class.java)

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/review"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bakegrand"
+        android:scaleType="centerCrop"
+        android:id="@+id/backgroundImage_review"/>
+    <androidx.cardview.widget.CardView
+        android:layout_width="360dp"
+        android:layout_height="550dp"
+        android:layout_gravity="center"
+        app:cardCornerRadius="10dp">
+
+        <LinearLayout
+            android:layout_width="360dp"
+            android:layout_height="550dp"
+            android:orientation="vertical"
+            android:padding="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/remainNum"/>
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="last_word"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    app:cornerRadius="5dp"
+                    android:id="@+id/last_word"
+                    android:maxLines="1"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:textSize="35dp"
+                android:text="word"
+                android:gravity="center"
+                android:id="@+id/Word_text"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:id="@+id/spell"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/ShowWordDate"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="70dp"
+                    android:text="不知道"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/black"
+                    app:strokeWidth="2dp"/>
+                <LinearLayout
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"/>
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="70dp"
+                    android:id="@+id/nextWord"
+                    android:text="下一个"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/black"
+                    app:strokeWidth="2dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</FrameLayout>

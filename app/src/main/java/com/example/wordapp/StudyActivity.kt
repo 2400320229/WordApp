@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private var startTime: Long = 0
     private var endTime: Long = 0
     private lateinit var bakeground:ImageView
+    private lateinit var WORD: Word_s
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +77,8 @@ class MainActivity : AppCompatActivity() {
         lastWord.setVisibility(View.GONE)
 
         var wordList:MutableList<Word_s>
+        var O_Num=0
+
         if(Goal<=Studied||dbHelper.getWordsByIdAndLearn(Studied,Goal).isEmpty()) {
              wordList = dbHelper.getWordsByIdAndLearn(
                 Studied,Studied+3
@@ -86,7 +89,13 @@ class MainActivity : AppCompatActivity() {
         Log.d("LIST","${wordList}")
         Log.d("studiedId",sharedPreferences3.getInt("studiedId",0).toString())
         Log.d("goalId",sharedPreferences3.getInt("goalId",0).toString())
-        var WORD=wordList[0]
+        try{
+            O_Num=Studied+wordList.size
+            WORD=wordList[0]
+        }catch (_:Exception){}
+
+
+
         WordText.setText(WORD.word)
         OKHttpRequestVoice(WORD.word)
         WordDatabutton.setOnClickListener{
@@ -137,7 +146,14 @@ class MainActivity : AppCompatActivity() {
                 editor_id.putInt("studiedId", dbHelper.getWordsLearn().size)
                 editor_id.apply()
                 Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
-                StudyNUM.setText(sharedPreferences3.getInt("studiedId",0).toString())
+                if(sharedPreferences3.getBoolean("summary",true)){
+                    StudyNUM.setText((O_Num-wordList.size).toString())
+                }
+                else
+                {
+                    StudyNUM.setText(sharedPreferences3.getInt("studiedId", 1).toString())
+                }
+
                 /*dbHelper.incrementLearn(wordId)*/
                 Log.d("STUDY","${wordList}")
                 //如果达成了学习目标
@@ -158,6 +174,8 @@ class MainActivity : AppCompatActivity() {
                     editor_id.apply()
                     Log.d("known","${sharedPreferences3.getInt("well_known",-1)}")
                     if(sharedPreferences3.getBoolean("summary",true)) {
+                        editor_id.putBoolean("summary", false).apply()
+
                         endTime = System.currentTimeMillis()// 记录应用暂停或退出的时间戳
                         val duration1 = endTime - startTime
                         val intent = Intent(this, SummaryActivity::class.java)//学习新单词的时长
@@ -172,8 +190,7 @@ class MainActivity : AppCompatActivity() {
                                 sharedPreferences3.getInt("goalId", 20) + sharedPreferences3.getInt(
                                     "studiedId", 0) + 1
                             )
-                            editor_id.putBoolean("summary", false)
-                            editor_id.apply()
+
                             Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
                             StudyNUM.setText(wordId.toString())
                             recreate()

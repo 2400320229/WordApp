@@ -34,7 +34,7 @@ class SummaryActivity : AppCompatActivity(),SearchAdapter.OnSearchClickListener 
         val time:TextView=findViewById(R.id.summeryTime)
         val sharedPreferences=getSharedPreferences("wordId",Context.MODE_PRIVATE)
         Log.d("known","${sharedPreferences.getInt("well_known",-1)}")
-        WordKnow.text="第一次就认识${(sharedPreferences.getInt("well_known",0).toDouble()/sharedPreferences.getInt("goalId",1).toDouble()*100)}%"
+        WordKnow.text="第一次就认识${(dbHelper.getTodayLearnWord().size-dbHelper.getTodayErrorWord().size/dbHelper.getTodayLearnWord().size*100)}%"
         UnknownNumber.text="以下是错误单词"
         val editor=sharedPreferences.edit()
         editor.putInt("well_known",-1)

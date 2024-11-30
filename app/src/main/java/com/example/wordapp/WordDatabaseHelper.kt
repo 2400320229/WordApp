@@ -570,6 +570,28 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         return wordsList
     }
     @SuppressLint("Range")
+    fun getTodayLearnWord(): List<String> {
+        val wordsList = mutableListOf<String>()
+        val db = this.readableDatabase
+        try {
+            val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_LEARN > 0 AND $COLUMN_DAY = 0"
+            db.rawQuery(query, null).use { cursor ->
+                if (cursor.moveToFirst()) {
+                    do {
+                        val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+                        wordsList.add(word)
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+
+        return wordsList
+    }
+    @SuppressLint("Range")
     fun getWordsByDayAndLearnGreaterThanZero(day: Int): List<Word_s> {
         val db = readableDatabase
         val wordsList = mutableListOf<Word_s>()

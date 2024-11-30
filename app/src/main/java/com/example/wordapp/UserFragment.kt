@@ -107,7 +107,7 @@ class UserFragment : Fragment() {
 
                 val sharedPreferences = context?.getSharedPreferences("wordId", Context.MODE_PRIVATE)
                 val editor = sharedPreferences?.edit()
-                val goal= sharedPreferences?.getInt("goalId",20)?:20
+                val goal= sharedPreferences?.getInt("goalNumber",20)?:20
                 val date=sharedPreferences?.getInt("date", 0) ?: 0
                 val currentDate = LocalDate.now()
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")  // 自定义格式
@@ -181,10 +181,11 @@ class UserFragment : Fragment() {
 
 
                 val editor_id = sharedPreferences3.edit()
-                editor_id.putInt("studiedId",1)
+                editor_id.putInt("studiedId",0)
                 editor_id.putInt("well_known",0)
                 editor_id.putInt("date",0)
                 editor_id.putBoolean("summary",true)
+                editor_id.putInt("goalNumber",3)
                 editor_id.putInt("goalId",3)
                 editor_id.putBoolean("stu",false)
                 editor_id.apply()

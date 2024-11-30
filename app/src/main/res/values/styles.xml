@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:progressTint">#FF0000</item> <!-- 设置进度条的颜色为红色 -->
+        <item name="android:indeterminateTint">#00FF00</item> <!-- 设置不确定模式下的颜色为绿色 -->
+    </style>
+</resources>

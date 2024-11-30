@@ -24,7 +24,7 @@ class SummeryAdapter(private val wordList: List<Word_s>,private val listener: co
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.word.text=wordList[position].word
-        holder.error.text= wordList[position].error_count.toString()
+        holder.error.text= "错${ wordList[position].error_count }次"
         holder.transaction.text=obtainChinese(wordList[position].translation.toString()).toString()
         holder.word.setOnClickListener {
             listener.onWordData(wordList[position])

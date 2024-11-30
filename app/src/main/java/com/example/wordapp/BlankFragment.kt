@@ -33,13 +33,13 @@ class BlankFragment : Fragment() {
         val editor=sharedPreferences.edit()
         val Button:Button=view.findViewById(R.id.accomplish)
 
-        NewGoal.setText(sharedPreferences.getInt("goalId",0).toString())
+        NewGoal.setText(sharedPreferences.getInt("goalNumber",0).toString())
 
 
         Button.setOnClickListener {
 
             val newGoal = NewGoal.text.toString().toInt()
-            editor.putInt("goalId",newGoal)
+            editor.putInt("goalNumber",newGoal)
             editor.apply()
             val transaction: FragmentTransaction =
                 requireActivity().supportFragmentManager.beginTransaction()
