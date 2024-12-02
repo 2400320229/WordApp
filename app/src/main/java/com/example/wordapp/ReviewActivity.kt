@@ -104,7 +104,7 @@ class ReviewActivity : AppCompatActivity() {
                 Log.d("word",word.toString())
                 OKHttpRequestVoice(word)
                 try{
-                    if(wordList[0].word!=word) {
+                    if(wordList[wordList.size-1].word!=word) {
                         wordList.add(Word(word.toString(),wordList[0].translation))
                     }
                 }catch (e:Exception){

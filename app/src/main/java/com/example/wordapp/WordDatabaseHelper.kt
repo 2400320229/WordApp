@@ -529,7 +529,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         val wordsList = mutableListOf<Word_s>()
         val db = this.readableDatabase
         try {
-            // SQL 查询语句，获取 error_count > 0 的单词，没有排序
+            // SQL 查询语句，获取 error_learn > 0 的单词，没有排序
             val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_LEARN > 0"
             db.rawQuery(query, null).use { cursor ->
                 if (cursor.moveToFirst()) {

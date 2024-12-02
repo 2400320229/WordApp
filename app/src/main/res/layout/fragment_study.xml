@@ -72,15 +72,33 @@
                         android:orientation="vertical"
                         android:padding="10dp"
                         >
-                        <ImageButton
-                            android:layout_width="70dp"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="50dp"
-                            android:id="@+id/search"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"/>
+                            <ImageButton
+                                android:layout_width="70dp"
+                                android:layout_height="50dp"
+                                android:id="@+id/why"
 
-                            android:backgroundTint="#ffffe0"
-                            android:layout_gravity="right"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/search"/>
+                                android:backgroundTint="#ffffe0"
+                                android:layout_gravity="right"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/why"/>
+                            <ImageButton
+                                android:layout_width="70dp"
+                                android:layout_height="50dp"
+                                android:id="@+id/search"
+
+                                android:backgroundTint="#ffffe0"
+                                android:layout_gravity="right"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/search"/>
+                        </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="50dp">

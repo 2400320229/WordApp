@@ -56,6 +56,7 @@ class StudyFragment : Fragment() {
         val BeforeWord:Button=view.findViewById(R.id.ReviewBeforeWord)
         val SpellBforeWord:Button=view.findViewById(R.id.SpellBeforeWord)
         val SpellWord:Button=view.findViewById(R.id.SpellWord)
+        val Why:ImageButton=view.findViewById(R.id.why)
          progressBar = view.findViewById(R.id.progressBar)
 
         val sharedPreferences = requireActivity().getSharedPreferences("wordId", Context.MODE_PRIVATE )
@@ -105,6 +106,10 @@ class StudyFragment : Fragment() {
             val intent=Intent(requireContext(),SearchActivity::class.java)
             startActivity(intent)
 
+        }
+        Why.setOnClickListener {
+            val intent=Intent(requireContext(),WebActivity::class.java)
+            startActivity(intent)
         }
         return view
     }

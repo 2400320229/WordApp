@@ -103,6 +103,8 @@ class SpellReviewActivity : AppCompatActivity() {
                     //拼对了
                     if (spell == wordList[0].word) {
 
+                        Spell.text.clear()
+
                         try {
 
                             val last_word=wordList[0].word

@@ -19,6 +19,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".WebActivity"
+            android:exported="false" />
+        <activity
             android:name=".RecordActivity"
             android:exported="false" />
         <activity
@@ -34,9 +37,7 @@
         <service
             android:name=".MyService"
             android:enabled="true"
-            android:exported="true">
-
-        </service>
+            android:exported="true"></service>
 
         <activity
             android:name=".ReviewActivity"
@@ -52,12 +53,10 @@
             android:exported="false" />
         <activity
             android:name=".zhu_ce"
-            android:exported="true"
-            android:label="注册账号" />
+            android:exported="true" />
         <activity
             android:name=".FirstActivity"
-            android:exported="true"
-            android:label="你好，请登录">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

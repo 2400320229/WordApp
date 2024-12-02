@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         loadImageFromInternalStorage()//显示背景
 
 
+
         val intent = Intent(this, MyService::class.java)
         stopService(intent)
 
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
         val Goal=sharedPreferences3.getInt("goalId",10)
-        val Studied=sharedPreferences3.getInt("studiedId",0)
+        val Studied=sharedPreferences3.getInt("studiedId",1)
         Log.d("goal",Goal.toString())
 
         val WordText:TextView=findViewById(R.id.Word_text)
@@ -93,7 +94,9 @@ class MainActivity : AppCompatActivity() {
         try{
             O_Num=Studied+wordList.size
             WORD=wordList[0]
-        }catch (_:Exception){}
+        }catch (_:Exception){
+            finish()
+        }
 
 
 
@@ -135,12 +138,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d("id",wordId.toString())
                 lastWord.setVisibility(View.VISIBLE)
                 lastWord.setText("${last_word} ${chinese}")
-                if(dbHelper.getErrorCount(wordId-1)==0){
-                    val wellknown=sharedPreferences3.getInt("well_known",-1)
-                    editor_id.putInt("well_known",wellknown+1)
-                    editor_id.apply()
-                    Log.d("known","${sharedPreferences3.getInt("well_known",-1)}")
-                }
                 val word=dbHelper.getWordById(wordId.toString())
                 WordText.setText(word)
                 OKHttpRequestVoice(word)
@@ -169,11 +166,6 @@ class MainActivity : AppCompatActivity() {
                     StudyNUM.setText(sharedPreferences3.getInt("studied",0).toString())
 
                 }else {
-
-                    val wellknown=sharedPreferences3.getInt("well_known",-1)
-                    editor_id.putInt("well_known",wellknown+1)
-                    editor_id.apply()
-                    Log.d("known","${sharedPreferences3.getInt("well_known",-1)}")
                     if(sharedPreferences3.getBoolean("summary",true)) {
                         editor_id.putBoolean("summary", false).apply()
 
@@ -205,12 +197,6 @@ class MainActivity : AppCompatActivity() {
                         builder.create().show()
                     }else{
 
-                        editor_id.putInt(
-                            "studiedId",
-                            sharedPreferences3.getInt("goalId", 20) + sharedPreferences3.getInt(
-                                "studiedId", 0) + 1
-                        )
-                        editor_id.apply()
                         wordList = dbHelper.getWordsByIdAndLearn(
                             sharedPreferences3.getInt("studiedId", 0),sharedPreferences3.getInt("studiedId", 0)+3
                         ).toMutableList()

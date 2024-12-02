@@ -30,6 +30,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -84,10 +88,17 @@ class UserFragment : Fragment() {
             editor2.apply()
             val intent=Intent(requireContext(),FirstActivity::class.java)
             startActivity(intent)
+            requireActivity().finish()
 
         }
         bak.setOnClickListener {
 
+            GlobalScope.launch(Dispatchers.Main) {
+                delay(1000) // 延迟 1 秒
+                // 延迟后执行的任务
+                val editor=sharedPreferences.edit()
+                editor.putBoolean("FA",false).apply()
+            }
             openGallery()
 
         }
@@ -172,6 +183,7 @@ class UserFragment : Fragment() {
                         val word=wordlist[num1]
                         dbHelper.decreaseLearn(word.id.toInt())
                         dbHelper.decreaseDay(word.id.toInt())
+                        Log.d("decrease",word.id.toString())
                     }catch (_:Exception){
                     }
                     num1++
@@ -179,7 +191,7 @@ class UserFragment : Fragment() {
 
                 dbHelper.clearCheckInRecords()
                 val word=dbHelper.getWordsByIdAndLearn(1,20)
-                Log.d("${id}",word.toString())
+                Log.d("learnId",word.toString())
                 Log.d("Delete","delete")
 
 
