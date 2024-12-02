@@ -12,7 +12,8 @@
         android:layout_marginBottom="11dp"
         android:src="@drawable/back1"
         app:layout_constraintBottom_toTopOf="@+id/card1"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="0dp"
+        android:scaleType="centerCrop"/>
 
     <androidx.cardview.widget.CardView
 

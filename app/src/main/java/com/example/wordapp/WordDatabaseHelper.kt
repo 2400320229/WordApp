@@ -79,6 +79,36 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
             db?.execSQL(CREATE_CHECK_IN_TABLE)
         }
     }
+    @SuppressLint("Range")
+    fun checkDatabaseCompleteness(): Boolean {
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_NAME"
+        val cursor = db.rawQuery(query, null)
+
+        var completeCount = false
+
+        // 遍历每一条记录
+        while (cursor.moveToNext()) {
+            val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+            val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+
+
+            // 判断字段是否有效
+            val isTranslationValid = translation != null && translation.isNotEmpty()
+            val isWordValid = word != null && word.isNotEmpty()
+
+
+            // 如果所有字段都有效，则认为这条记录是完整的
+            if (isTranslationValid && isWordValid) {
+                completeCount=true
+            }
+        }
+
+        cursor.close()
+        db.close()
+
+        return completeCount
+    }
     // 插入单词和翻译
     fun insertWord(word: String,translation: String?) {
         val db = this.writableDatabase

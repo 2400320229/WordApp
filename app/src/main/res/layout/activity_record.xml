@@ -8,6 +8,9 @@
     tools:context=".RecordActivity"
     android:orientation="vertical"
     android:padding="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="60dp"

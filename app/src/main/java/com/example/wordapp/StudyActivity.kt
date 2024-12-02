@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.study_activity)
 
+
         bakeground=findViewById(R.id.backgroundImage)
         loadImageFromInternalStorage()//显示背景
 
@@ -195,7 +196,7 @@ class MainActivity : AppCompatActivity() {
                             StudyNUM.setText(wordId.toString())
                             recreate()
                         }
-                        builder.setNegativeButton("去看看其他科目把") { dialog, which ->
+                        builder.setNegativeButton("休息一下把") { dialog, which ->
                             val intent = Intent(this, FragmentActivity::class.java)
                             startActivity(intent)
                             dialog.dismiss()
@@ -301,108 +302,7 @@ class MainActivity : AppCompatActivity() {
             }
         }.start()
     }
-    //录入数据
-    private fun sendRequestWithOkHttp() {
 
-        Thread {
-            try {
-                val client = OkHttpClient()
-                val request = Request.Builder()
-                    .url("https://cdn.jsdelivr.net/gh/lyc8503/baicizhan-word-meaning-API/data/list.json")
-                    .build()
-
-                val response = client.newCall(request).execute()
-                // 使用response.body?.string()获取返回的内容
-                val responseData = response.body?.string()
-
-                val gson=Gson()
-                val wordResponse =gson.fromJson(responseData,WordResponse::class.java)
-
-                runOnUiThread{
-                    Log.d("WordInfo", "Total words: ${wordResponse.total}")
-                    Log.d("WordInfo", "First word in list: ${wordResponse.list[1]}")
-                }
-                // 存储数据到数据库
-                val dbHelper = WordDatabaseHelper(applicationContext)
-
-                // 使用事务来批量插入数据，提高效率
-                val db = dbHelper.writableDatabase
-                /*db.beginTransaction()*/
-
-                try {
-                    // 一次性批量插入所有单词
-                    dbHelper.insertWords(wordResponse.list)
-
-                    /*db.setTransactionSuccessful()*/  // 提交事务
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    /*db.endTransaction()*/  // 结束事务
-                    db.close()
-                }
-            } catch (e: Exception) {
-                // 错误处理
-                runOnUiThread {
-                    Log.e("http", "Request failed: ${e.message}")
-                }
-            }
-        }.start() // 启动线程
-    }
-    //给单词添加翻译
-    private fun OkHttpRequestTranslate() {
-
-        Thread {
-            try {
-
-                /*db.beginTransaction()*/
-                val dbHelper = WordDatabaseHelper(applicationContext)
-
-                // 使用事务来批量插入数据，提高效率
-                val db = dbHelper.writableDatabase
-
-                try {
-                    var id=1
-                    while (id<=10927){
-                        var word=dbHelper.getWordById(id.toString())
-                        val client = OkHttpClient()
-                        val request = Request.Builder()
-                            .url("http://dict.youdao.com/suggest?num=1&doctype=json&q=${word}")
-                            .build()
-
-                        val response = client.newCall(request).execute()
-                        // 使用response.body?.string()获取返回的内容
-                        val responseData = response.body?.string()
-
-                        val gson=Gson()
-                        val wordResponse =gson.fromJson(responseData,WordResponse::class.java)
-
-                        // 存储数据到数据库
-
-
-                        dbHelper.updateTranslationById(id,responseData.toString())
-
-                        Log.d("id",id.toString())
-                        if(id==10927){
-                            Toast.makeText(this,"翻译成功",Toast.LENGTH_SHORT).show()
-                        }
-                        id+=1
-                    }
-
-                    /*db.setTransactionSuccessful()*/  // 提交事务
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    /*db.endTransaction()*/  // 结束事务
-                    db.close()
-                }
-            } catch (e: Exception) {
-                // 错误处理
-                runOnUiThread {
-                    Log.e("http", "Request failed: ${e.message}")
-                }
-            }
-        }.start() // 启动线程
-    }
     //解析翻译得到的JSON字符串，获取中文翻译
     private fun obtainChinese(jsonString: String): List<String> {
         val gson=Gson()

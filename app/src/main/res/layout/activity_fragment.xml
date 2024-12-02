@@ -21,47 +21,53 @@
             android:layout_height="650dp"
             android:id="@+id/fragment"
             tools:ignore="MissingConstraints" />
+
         <com.google.android.material.button.MaterialButtonToggleGroup
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/ToggleGroup"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:id="@+id/ToggleGroup"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:singleSelection="true">
+
             <com.google.android.material.button.MaterialButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
                 android:id="@+id/tab1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="#ff7f50"
+                android:text="学习"
+                android:textColor="@color/black"
+                app:cornerRadius="5dp"
                 app:icon="@drawable/study"
                 app:iconGravity="textTop"
-                android:textColor="@color/black"
-                app:iconTint="@color/black"
-                app:cornerRadius="5dp"
-                android:backgroundTint="#ff7f50"
-                android:text="学习"/>
+                app:iconTint="@color/black" />
+
             <com.google.android.material.button.MaterialButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
                 android:id="@+id/tab2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="#ff7f50"
+                android:text="单词本"
+                android:textColor="@color/black"
                 app:icon="@drawable/starbook"
                 app:iconGravity="textTop"
-                android:textColor="@color/black"
-                app:iconTint="@color/black"
-                android:backgroundTint="#ff7f50"
-                android:text="单词本"/>
+                app:iconTint="@color/black" />
+
             <com.google.android.material.button.MaterialButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
                 android:id="@+id/tab3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="#ff7f50"
+                android:text="用户"
+                android:textColor="@color/black"
+                app:cornerRadius="5dp"
                 app:icon="@drawable/user"
                 app:iconGravity="textTop"
-                android:textColor="@color/black"
-                app:iconTint="@color/black"
-                android:text="用户"
-                android:backgroundTint="#ff7f50"
-                app:cornerRadius="5dp"/>
+                app:iconTint="@color/black" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
