@@ -308,8 +308,10 @@ class UserFragment : Fragment() {
                 // 使用事务来批量插入数据，提高效率
                 val db = dbHelper.writableDatabase
 
+                val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
+                val editor=sharedPreferences3.edit()
                 try {
-                    var id=1
+                    var id=sharedPreferences3.getInt("saveID",1)
                     while (id<=10927){
                         var word=dbHelper.getWordById(id.toString())
                         val client = OkHttpClient()
@@ -332,8 +334,10 @@ class UserFragment : Fragment() {
                         if(id%100==0){
 
 
+
                         requireActivity().runOnUiThread {
                             Toast.makeText(requireActivity(), "${id}", Toast.LENGTH_LONG).show()
+                            editor.putInt("saveID",id)
                         }
                         }
                         id+=1
