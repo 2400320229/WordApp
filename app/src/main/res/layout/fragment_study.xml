@@ -149,66 +149,119 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="120dp">
 
 
-        <com.google.android.material.button.MaterialButton
+
+
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="80dp"
-            android:textColor="@color/black"
-            app:backgroundTint="#ffffe0"
-            app:cornerRadius="10dp"
-            app:strokeColor="@color/black"
-            app:strokeWidth="2dp"
-            android:text="拼写今天"
-            android:textSize="10dp"
-            android:id="@+id/SpellWord"/>
+            android:layout_height="116dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:src="@drawable/button1"
+                app:layout_constraintBottom_toTopOf="@+id/ReviewWord" />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:textColor="@color/black"
+                app:backgroundTint="#ffffe0"
+                android:layout_gravity="bottom"
+                app:cornerRadius="10dp"
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp"
+                android:text="拼写今天"
+                android:textSize="10dp"
+                android:id="@+id/SpellWord"/>
+        </FrameLayout>
+
+
         <LinearLayout
             android:layout_width="10dp"
             android:layout_height="match_parent"/>
-        <com.google.android.material.button.MaterialButton
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="80dp"
-            android:textColor="@color/black"
-            app:backgroundTint="#ffffe0"
-            app:cornerRadius="10dp"
-            app:strokeColor="@color/black"
-            app:strokeWidth="2dp"
-            android:text="复习今天"
-            android:textSize="10dp"
-            android:id="@+id/ReviewWord"/>
+            android:layout_height="116dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:src="@drawable/button3"
+                app:layout_constraintBottom_toTopOf="@+id/ReviewWord" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ReviewWord"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+
+                android:text="复习今天"
+                android:textColor="@color/black"
+                android:textSize="10dp"
+                app:backgroundTint="#ffffe0"
+                android:layout_gravity="bottom"
+                app:cornerRadius="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp" />
+        </FrameLayout>
+
         <LinearLayout
             android:layout_width="10dp"
             android:layout_height="match_parent"/>
-        <com.google.android.material.button.MaterialButton
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="80dp"
-            android:textColor="@color/black"
-            app:backgroundTint="#ffffe0"
-            app:cornerRadius="10dp"
-            app:strokeColor="@color/black"
-            app:strokeWidth="2dp"
-            android:text="复习昨天"
-            android:textSize="10dp"
-            android:id="@+id/ReviewBeforeWord"/>
+            android:layout_height="116dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:src="@drawable/button"
+                app:layout_constraintBottom_toTopOf="@+id/ReviewWord" />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_height="80dp"
+                android:textColor="@color/black"
+                app:backgroundTint="#ffffe0"
+                app:cornerRadius="10dp"
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp"
+                android:text="复习昨天"
+                android:textSize="10dp"
+                android:id="@+id/ReviewBeforeWord"/>
+        </FrameLayout>
+
         <LinearLayout
             android:layout_width="10dp"
             android:layout_height="match_parent"/>
-        <com.google.android.material.button.MaterialButton
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="80dp"
-            android:textColor="@color/black"
-            app:backgroundTint="#ffffe0"
-            app:cornerRadius="10dp"
-            app:strokeColor="@color/black"
-            app:strokeWidth="2dp"
-            android:text="拼写昨天"
-            android:textSize="10dp"
-            android:id="@+id/SpellBeforeWord"/>
+            android:layout_height="116dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:src="@drawable/button2"
+                app:layout_constraintBottom_toTopOf="@+id/ReviewWord" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_height="80dp"
+                android:textColor="@color/black"
+                app:backgroundTint="#ffffe0"
+                app:cornerRadius="10dp"
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp"
+                android:text="拼写昨天"
+                android:textSize="10dp"
+                android:id="@+id/SpellBeforeWord"/>
+        </FrameLayout>
+
     </LinearLayout>
 </LinearLayout>
     <FrameLayout

@@ -7,15 +7,27 @@
     android:layout_height="match_parent"
     tools:context=".RecordActivity"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="#fee48d">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="20dp"/>
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="打卡信息"
-        android:textSize="30dp"/>
+        android:layout_height="150dp">
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:text="打卡信息"
+            android:textSize="30dp"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/summery"/>
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

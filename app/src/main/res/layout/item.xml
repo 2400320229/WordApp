@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="150dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="10dp"
@@ -36,8 +36,9 @@
                         android:id="@+id/cardView"/>
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"
+                        android:layout_height="match_parent"
                         android:text="chinese"
+                        android:textSize="15dp"
                         android:id="@+id/mistake_word_translation"/>
                 </FrameLayout>
 
@@ -63,7 +64,7 @@
                     android:id="@+id/delete"/>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="20dp"/>
+                    android:layout_height="10dp"/>
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="60dp"
