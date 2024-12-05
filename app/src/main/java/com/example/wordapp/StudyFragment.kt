@@ -51,7 +51,7 @@ class StudyFragment : Fragment() {
         val StudyInSumText:TextView=view.findViewById(R.id.goal)
         val StudyInGoalText:TextView=view.findViewById(R.id.Study)
         val Showf:Button=view.findViewById(R.id.edit_new_goal)
-        val SearchButtom:ImageButton=view.findViewById(R.id.search)
+        val SearchButtom:Button=view.findViewById(R.id.search)
         val TodayWord:Button=view.findViewById(R.id.ReviewWord)
         val BeforeWord:Button=view.findViewById(R.id.ReviewBeforeWord)
         val SpellBforeWord:Button=view.findViewById(R.id.SpellBeforeWord)

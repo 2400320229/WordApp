@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,10 +25,13 @@ class RecordActivity : AppCompatActivity(),SearchAdapter.OnSearchClickListener,R
         val editor=sharedPreferences.edit()
         editor.putBoolean("FA",false).apply()
         val dbHelper=WordDatabaseHelper(applicationContext)
+        val dayNum:TextView=findViewById(R.id.day_number)
         recyclerView1=findViewById(R.id.Clock_in2)
         datelist=dbHelper.getAllCheckInRecords().toMutableList()
 
+
         Log.d("list","${datelist}")
+        dayNum.setText("共打卡${(dbHelper.getSucceedCheckedInRecords()).size}天")
         recyclerView1.layoutManager= LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         recyclerView1.adapter=RecordAdapter(this,datelist,this)
     }

@@ -37,12 +37,7 @@ class SearchAdapter(private val wordList: List<Word_s>,private val listener:OnSe
        var word:TextView=view.findViewById(R.id.search_word)
         var transaction:TextView=view.findViewById(R.id.search_translation)
     }
-    private fun obtainChinese(jsonString: String): List<String> {
-        val gson= Gson()
-        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
-        return jsonResponse.data.entries.map { it.explain }
 
-    }
 
 
 }

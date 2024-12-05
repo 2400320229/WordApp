@@ -22,7 +22,16 @@ import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
 
-
+//解析翻译得到的JSON字符串，获取中文翻译
+ fun obtainChinese(jsonString: String): List<String> {
+    try{
+        val gson=Gson()
+        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
+        return jsonResponse.data.entries.map { it.explain }
+    }catch (_:Exception){
+        return listOf("null")
+    }
+}
 
 data class WordResponse(
     val total: Int,
@@ -52,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, MyService::class.java)
         stopService(intent)
 
+
         val sharedPreferences=getSharedPreferences("service",Context.MODE_PRIVATE)
         val editor=sharedPreferences.edit()
         editor.putBoolean("FA",false).apply()
@@ -77,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         GoalNUM.setText(Goal.toString())
         StudyNUM.setText(dbHelper.getWordsLearn().size.toString())
         lastWord.setVisibility(View.GONE)
+
 
         var wordList:MutableList<Word_s>
         var O_Num=0
@@ -126,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         }
         var last_word=""
         Studybutton.setOnClickListener{
-            editor_id.putBoolean("stu",true)
+
             Log.d("learn",dbHelper.getWordsLearn().size.toString())
             try {
                 val chinese=obtainChinese(dbHelper.getTranslationById(WORD.id.toString()).toString())
@@ -160,15 +171,16 @@ class MainActivity : AppCompatActivity() {
             }catch (e:Exception){
                 val wordId=WORD.id.toInt()
                 if(wordList.isNotEmpty()) {
-                    editor_id.putInt("studiedId", sharedPreferences3.getInt("studied",0) + 1)
+                    editor_id.putInt("studiedId", sharedPreferences3.getInt("studiedId",0) + 1)
                     editor_id.apply()
                     Log.d("studiedId", sharedPreferences3.getInt("studiedId", 1).toString())
-                    StudyNUM.setText(sharedPreferences3.getInt("studied",0).toString())
+                    StudyNUM.setText(sharedPreferences3.getInt("studiedId",0).toString())
 
                 }else {
+
                     if(sharedPreferences3.getBoolean("summary",true)) {
                         editor_id.putBoolean("summary", false).apply()
-
+                        editor_id.putBoolean("stu",true).apply()
                         endTime = System.currentTimeMillis()// 记录应用暂停或退出的时间戳
                         val duration1 = endTime - startTime
                         val intent = Intent(this, SummaryActivity::class.java)//学习新单词的时长
@@ -289,13 +301,7 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-    //解析翻译得到的JSON字符串，获取中文翻译
-    private fun obtainChinese(jsonString: String): List<String> {
-        val gson=Gson()
-        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
-        return jsonResponse.data.entries.map { it.explain }
 
-    }
     // 从内部存储加载图片
     private fun loadImageFromInternalStorage() {
         try {

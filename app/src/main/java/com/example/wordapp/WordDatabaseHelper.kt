@@ -3,6 +3,7 @@ package com.example.wordapp
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -78,6 +79,35 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
             """
             db?.execSQL(CREATE_CHECK_IN_TABLE)
         }
+    }
+    @SuppressLint("Range")
+    fun getNullId(): List<Long> {
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_NAME"
+        val cursor = db.rawQuery(query, null)
+
+        val idList= mutableListOf<Long>()
+
+
+        // 遍历每一条记录
+        while (cursor.moveToNext()) {
+
+            val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+            val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+            // 判断字段是否有效
+            translation != null && translation.isNotEmpty()
+
+            // 如果所有字段都有效，则认为这条记录是完整的
+            if (translation == null || translation.isEmpty() ) {
+                idList.add(id)
+            }
+
+        }
+
+        cursor.close()
+        db.close()
+
+        return idList
     }
     @SuppressLint("Range")
     fun checkDatabaseCompleteness(): Boolean {
@@ -171,6 +201,35 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         db.close()
         return records
     }
+    @SuppressLint("Range")
+    fun getSucceedCheckedInRecords(): List<Clock_in_record> {
+        val db = this.readableDatabase
+        val records = mutableListOf<Clock_in_record>()
+
+        // 构建查询SQL
+        val query = "SELECT * FROM $CHECK_IN_TABLE_NAME WHERE $COLUMN_IS_CHECKED_IN > 0"
+        val cursor: Cursor = db.rawQuery(query, null)
+
+        // 迭代Cursor获取数据
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID))
+                val isCheckedIn = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_CHECKED_IN))
+                val checkInDuration = cursor.getInt(cursor.getColumnIndex(COLUMN_CHECK_IN_DURATION))
+                val checkInDate = cursor.getString(cursor.getColumnIndex(COLUMN_CHECK_IN_DATE))
+
+                // 创建CheckInRecord对象
+                val record = Clock_in_record(id, isCheckedIn, checkInDuration, checkInDate)
+                records.add(record)
+            } while (cursor.moveToNext())
+        }
+
+        // 关闭cursor
+        cursor.close()
+
+        return records
+    }
+
     // 插入多个单词
     fun insertWords(words: List<String>) {
         val db = this.writableDatabase

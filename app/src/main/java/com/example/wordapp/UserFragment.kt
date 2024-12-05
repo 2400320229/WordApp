@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.system.Os.remove
 import android.text.TextUtils.replace
@@ -39,6 +41,7 @@ import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.concurrent.Executors
 import kotlin.math.E
 
 // TODO: Rename parameter arguments, choose names that match
@@ -205,14 +208,25 @@ class UserFragment : Fragment() {
                 editor_id.putInt("goalId",3)
                 editor_id.putBoolean("stu",false)
                 editor_id.apply()
-                if (dbHelper.checkDatabaseCompleteness()){
-                    Toast.makeText(requireContext(),"数据完整",Toast.LENGTH_SHORT).show()
-                }else{
+
+                OkHttpRequestTranslate()
+
+                if (!dbHelper.checkDatabaseCompleteness()){
                     Toast.makeText(requireContext(),"数据不完整，正在恢复，请稍等",Toast.LENGTH_SHORT).show()
                     sendRequestWithOkHttp()
+                }else if(dbHelper.getNullId().isNotEmpty()){
+                    Toast.makeText(requireContext(),"数据不完整，正在恢复，请稍等",Toast.LENGTH_SHORT).show()
+                    OkHttpRequestTranslate()
+                }else{
+                    Toast.makeText(requireContext(),"数据完整",Toast.LENGTH_SHORT).show()
                 }
+
+
+
             }
+
             builder.create().show()
+
 
 
         }
@@ -320,39 +334,46 @@ class UserFragment : Fragment() {
                 // 使用事务来批量插入数据，提高效率
                 val db = dbHelper.writableDatabase
 
+                val IdList=dbHelper.getNullId()
+                Log.d("IdList",IdList.toString())
                 val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
                 val editor=sharedPreferences3.edit()
                 try {
-                    var id=sharedPreferences3.getInt("saveID",1)
-                    while (id<=10927){
+
+                    for (id in IdList){
                         var word=dbHelper.getWordById(id.toString())
-                        val client = OkHttpClient()
-                        val request = Request.Builder()
-                            .url("http://dict.youdao.com/suggest?num=1&doctype=json&q=${word}")
-                            .build()
+                        if(dbHelper.getTranslationById(id.toString())==null){
+                            val client = OkHttpClient()
+                            val request = Request.Builder()
+                                .url("http://dict.youdao.com/suggest?num=1&doctype=json&q=${word}")
+                                .build()
 
-                        val response = client.newCall(request).execute()
-                        // 使用response.body?.string()获取返回的内容
-                        val responseData = response.body?.string()
+                            val response = client.newCall(request).execute()
+                            // 使用response.body?.string()获取返回的内容
+                            val responseData = response.body?.string()
 
-                        val gson= Gson()
-                        val wordResponse =gson.fromJson(responseData,WordResponse::class.java)
+                            val gson= Gson()
+                            val wordResponse =gson.fromJson(responseData,WordResponse::class.java)
 
-                        // 存储数据到数据库
-
-
-                        dbHelper.updateTranslationById(id,responseData.toString())
-
-                        if(id%100==0){
+                            // 存储数据到数据库
 
 
+                            dbHelper.updateTranslationById(id.toInt(),responseData.toString())
 
-                        requireActivity().runOnUiThread {
-                            Toast.makeText(requireActivity(), "${id}", Toast.LENGTH_LONG).show()
-                            editor.putInt("saveID",id)
+                            Log.d("id",id.toString())
+                            if((id%100).toInt() ==0){
+
+                                requireActivity().runOnUiThread {
+                                    Toast.makeText(requireActivity(), "${id}", Toast.LENGTH_LONG).show()
+                                    if(id.toInt() ==10927){
+                                        Toast.makeText(requireActivity(), "恢复成功", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+
+                            }
                         }
-                        }
-                        id+=1
+
+
                     }
 
                     /*db.setTransactionSuccessful()*/  // 提交事务
@@ -370,6 +391,7 @@ class UserFragment : Fragment() {
             }
         }.start() // 启动线程
     }
+
 
 
 

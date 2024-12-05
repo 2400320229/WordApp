@@ -39,11 +39,6 @@ class SummeryAdapter(private val wordList: List<Word_s>,private val listener: co
         var error:TextView=view.findViewById(R.id.error_count)
         var transaction:TextView=view.findViewById(R.id.translation_s)
     }
-    private fun obtainChinese(jsonString: String): List<String> {
-        val gson= Gson()
-        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
-        return jsonResponse.data.entries.map { it.explain }
 
-    }
 
 }

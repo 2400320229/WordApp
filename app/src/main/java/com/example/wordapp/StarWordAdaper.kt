@@ -48,11 +48,4 @@ class Study_Adapter (private val wordList: List<Word_s>, private val listener:On
         val deleteButton: Button =view.findViewById(R.id.delete)
         val dataButton:Button=view.findViewById(R.id.to_wordData)
     }
-    //解析翻译得到的JSON字符串，获取中文翻译
-    private fun obtainChinese(jsonString: String): List<String> {
-        val gson= Gson()
-        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
-        return jsonResponse.data.entries.map { it.explain }
-
-    }
 }

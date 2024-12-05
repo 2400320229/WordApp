@@ -19,12 +19,16 @@ import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
 
+
+@Suppress("NAME_SHADOWING")
 class WordData : AppCompatActivity() {
     private var startTime: Long = 0
     private var endTime: Long = 0
     private lateinit var bakeground: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         startTime = System.currentTimeMillis()
         enableEdgeToEdge()
         setContentView(R.layout.activity_word_data)
@@ -39,7 +43,7 @@ class WordData : AppCompatActivity() {
         var Word="word"
         var chinese="chinese"
         val dbHelper = WordDatabaseHelper(applicationContext)
-        super.onCreate(savedInstanceState)
+
         val KnowButton:Button=findViewById(R.id.well_know)
         val VoiceButton: ImageButton =findViewById(R.id.play_voice)
         val addButton:Button=findViewById(R.id.add_mistake_word)
@@ -66,9 +70,7 @@ class WordData : AppCompatActivity() {
         addButton.setOnClickListener{
             try {
                 val dbHelper=WordDatabaseHelper(applicationContext)
-                if (Word != null) {
-                    dbHelper.incrementStar(wordId)
-                }
+                dbHelper.incrementStar(wordId)
                 Toast.makeText(this,"添加成功",Toast.LENGTH_SHORT).show()
             }catch (e:Exception){
                 Log.e("addWord", e.toString())
@@ -106,13 +108,7 @@ class WordData : AppCompatActivity() {
         editor.putBoolean("FA",true)
         editor.apply()
     }
-    //解析翻译得到的JSON字符串，获取中文翻译
-    private fun obtainChinese(jsonString: String): List<String> {
-        val gson= Gson()
-        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
-        return jsonResponse.data.entries.map { it.explain }
 
-    }
     //请求单词音频并播放
     private fun OKHttpRequestVoice(Word: String?) {
         Thread {
@@ -133,20 +129,16 @@ class WordData : AppCompatActivity() {
                     outputStream.close()
 
                     runOnUiThread {
-                        if (responseData != null) {
-                            try {
-                                val mediaPlayer = MediaPlayer()
+                        try {
+                            val mediaPlayer = MediaPlayer()
 
-                                // 直接使用 InputStream 作为数据源
-                                mediaPlayer.setDataSource(tempFile.absolutePath)
-                                mediaPlayer.prepare()
-                                mediaPlayer.start()
+                            // 直接使用 InputStream 作为数据源
+                            mediaPlayer.setDataSource(tempFile.absolutePath)
+                            mediaPlayer.prepare()
+                            mediaPlayer.start()
 
-                            } catch (e: Exception) {
-                                Log.e("http", "Error playing audio: ${e.message}")
-                            }
-                        } else {
-                            Log.e("http", "Failed to get audio stream")
+                        } catch (e: Exception) {
+                            Log.e("http", "Error playing audio: ${e.message}")
                         }
                     }
                 }

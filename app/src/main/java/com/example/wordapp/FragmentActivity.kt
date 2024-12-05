@@ -73,11 +73,23 @@ class FragmentActivity : AppCompatActivity() {
         }
 
 
+
         toggleGroup.check(R.id.tab1)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        val dbHelper=WordDatabaseHelper(applicationContext)
+        if (dbHelper.checkDatabaseCompleteness()&&sharedPreferences.getBoolean("firstWord",true)){
+            Toast.makeText(this,"数据完整",Toast.LENGTH_SHORT).show()
+            editor.putBoolean("firstWord",false).apply()
+            sendRequestWithOkHttp()
+        }else if(sharedPreferences.getBoolean("first",true)){
+            Toast.makeText(this,"数据不完整，正在恢复，请稍等",Toast.LENGTH_SHORT).show()
+            OkHttpRequestTranslate()
+            editor.putBoolean("first",false).apply()
         }
     }
 
@@ -124,6 +136,122 @@ class FragmentActivity : AppCompatActivity() {
             }
         // 提交事务
         transaction.commit()
+    }
+    private fun sendRequestWithOkHttp() {
+
+        Thread {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                    .url("https://cdn.jsdelivr.net/gh/lyc8503/baicizhan-word-meaning-API/data/list.json")
+                    .build()
+
+                val response = client.newCall(request).execute()
+                // 使用response.body?.string()获取返回的内容
+                val responseData = response.body?.string()
+
+                val gson= Gson()
+                val wordResponse =gson.fromJson(responseData,WordResponse::class.java)
+
+                runOnUiThread{
+                    Log.d("WordInfo", "Total words: ${wordResponse.total}")
+                    Log.d("WordInfo", "First word in list: ${wordResponse.list[1]}")
+                }
+                // 存储数据到数据库
+                val dbHelper = WordDatabaseHelper(applicationContext)
+
+                // 使用事务来批量插入数据，提高效率
+                val db = dbHelper.writableDatabase
+                /*db.beginTransaction()*/
+
+                try {
+                    // 一次性批量插入所有单词
+                    dbHelper.insertWords(wordResponse.list)
+
+                    /*db.setTransactionSuccessful()*/  // 提交事务
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    /*db.endTransaction()*/  // 结束事务
+                    db.close()
+                }
+            } catch (e: Exception) {
+                // 错误处理
+                runOnUiThread {
+                    Toast.makeText(this, "Request failed: ${e.message}", Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }.start() // 启动线程
+        OkHttpRequestTranslate()
+    }
+    //给单词添加翻译
+    private fun OkHttpRequestTranslate() {
+
+        Thread {
+            try {
+
+                /*db.beginTransaction()*/
+                val dbHelper = WordDatabaseHelper(applicationContext)
+
+                // 使用事务来批量插入数据，提高效率
+                val db = dbHelper.writableDatabase
+
+                val IdList=dbHelper.getNullId()
+                Log.d("IdList",IdList.toString())
+                val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
+                val editor=sharedPreferences3.edit()
+                try {
+
+                    for (id in IdList){
+                        var word=dbHelper.getWordById(id.toString())
+                        if(dbHelper.getTranslationById(id.toString())==null){
+                            val client = OkHttpClient()
+                            val request = Request.Builder()
+                                .url("http://dict.youdao.com/suggest?num=1&doctype=json&q=${word}")
+                                .build()
+
+                            val response = client.newCall(request).execute()
+                            // 使用response.body?.string()获取返回的内容
+                            val responseData = response.body?.string()
+
+                            val gson= Gson()
+                            val wordResponse =gson.fromJson(responseData,WordResponse::class.java)
+
+                            // 存储数据到数据库
+
+
+                            dbHelper.updateTranslationById(id.toInt(),responseData.toString())
+
+                            Log.d("id",id.toString())
+                            if((id%100).toInt() ==0){
+
+                                runOnUiThread {
+                                    Toast.makeText(this, "${id}", Toast.LENGTH_LONG).show()
+                                    if(id.toInt() ==10927){
+                                        Toast.makeText(this, "恢复成功", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                            }
+                        }
+
+
+                    }
+
+                    /*db.setTransactionSuccessful()*/  // 提交事务
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    /*db.endTransaction()*/  // 结束事务
+                    db.close()
+                }
+            } catch (e: Exception) {
+                // 错误处理
+                runOnUiThread {
+                    Toast.makeText(this, "Request failed: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }.start() // 启动线程
     }
 
 }

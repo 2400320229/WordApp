@@ -1,11 +1,15 @@
 package com.example.wordapp
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,9 +19,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import java.util.Calendar
+import android.Manifest
 
 class FirstActivity : AppCompatActivity() {
 
@@ -25,6 +31,8 @@ class FirstActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.frist_layout)
+
+        requestExactAlarmPermissionIfNeeded()
 
         val intent = Intent(this, MyService::class.java)
         stopService(intent)
@@ -35,9 +43,7 @@ class FirstActivity : AppCompatActivity() {
         editor.apply()
         val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
-        /*editor_id.putInt("goalId",1)
-        editor_id.putInt("studiedId",1)
-        editor_id.apply()*/
+
         setupDailyAlarm()
         var id=sharedPreferences3.getInt("goalId",0)
         Log.d("goalId","${id}")
@@ -108,7 +114,16 @@ class FirstActivity : AppCompatActivity() {
         editor.apply()
     }
 
+    @SuppressLint("ScheduleExactAlarm")
     private fun setupDailyAlarm() {
+
+        // 检查是否已经获得了精确闹钟权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !isExactAlarmPermissionGranted()) {
+            // 提示用户启用精确闹钟权限
+            requestExactAlarmPermission()
+            return
+        }
+
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         // 设置触发时间为今天的 0:00
@@ -131,33 +146,47 @@ class FirstActivity : AppCompatActivity() {
         val intent = Intent(this, IdUpdateReceiver::class.java)
 
         // 创建一个 PendingIntent，用于触发广播
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(this,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE)//FLAG_IMMUTABLE保证PendingIntent不可修改
 
-        // 设置 AlarmManager 每天 0:00 触发广播
-        alarmManager.setRepeating(
+        // 使用 setExactAndAllowWhileIdle 设置精确的定时任务
+        alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP, // 使用 RTC_WAKEUP，确保即使设备休眠时也能触发
             calendar.timeInMillis,   // 初始触发时间
-            AlarmManager.INTERVAL_DAY, // 每天间隔
             pendingIntent            // 触发时要执行的 PendingIntent
         )
 
         Log.d("FirstActivity", "AlarmManager set for daily update at 1:00")
         Log.d("FirstActivity", "Alarm will trigger at: ${System.currentTimeMillis()}")
     }
+    private fun requestExactAlarmPermissionIfNeeded() {
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val permissionRequested = sharedPreferences.getBoolean("exact_alarm_permission_requested", false)
 
-
-   /* override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main,menu)
-        return true
-    }*/
-
-    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.add_item->Toast.makeText(this,"you clicked add",
-                Toast.LENGTH_SHORT).show()
-            R.id.remove_item->Toast.makeText(this,"you clicked remove",
-                Toast.LENGTH_SHORT).show()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !isExactAlarmPermissionGranted() && !permissionRequested) {
+            // 提示用户启用精确闹钟权限
+            requestExactAlarmPermission()
         }
-        return true
-    }*/
+    }
+
+    private fun isExactAlarmPermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val permission = Manifest.permission.SCHEDULE_EXACT_ALARM
+            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true // 在 Android 12 以下不需要此权限
+        }
+    }
+
+    private fun requestExactAlarmPermission() {
+        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+        startActivity(intent)
+
+        // 标记请求过权限，以避免重复请求
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("exact_alarm_permission_requested", true).apply()
+    }
+
 }

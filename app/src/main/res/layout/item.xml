@@ -17,7 +17,8 @@
             android:padding="10dp">
 
             <LinearLayout
-                android:layout_width="300dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <TextView
@@ -33,19 +34,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:backgroundTint="#faf0e6"
-                        android:id="@+id/cardView"/>
+                        android:id="@+id/cardView" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="chinese"
                         android:textSize="15dp"
+                        android:maxLines="2"
                         android:id="@+id/mistake_word_translation"/>
                 </FrameLayout>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center">

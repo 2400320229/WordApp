@@ -4,16 +4,20 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.cardview.widget.CardView
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import kotlin.text.*
 
 
-class BlankFragment : Fragment() {
+class BlankFragment : DialogFragment() {
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +39,7 @@ class BlankFragment : Fragment() {
 
         NewGoal.setText(sharedPreferences.getInt("goalNumber",0).toString())
 
+        setCancelable(false)
 
         Button.setOnClickListener {
 

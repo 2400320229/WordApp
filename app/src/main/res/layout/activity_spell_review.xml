@@ -20,7 +20,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView2"
-            android:layout_width="360dp"
+            android:layout_width="0dp"
             android:layout_height="350dp"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
@@ -32,10 +32,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:layout_width="360dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="20dp">
 
 
                 <LinearLayout
@@ -66,14 +66,15 @@
                         android:id="@+id/Word_text"
                         android:layout_width="0dp"
                         android:layout_height="200dp"
-                        android:layout_weight="1"
+                        android:layout_weight="5"
                         android:gravity="center"
                         android:text="word"
                         android:textSize="35dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/ShowWordDate"
-                        android:layout_width="60dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="70dp"
                         android:backgroundTint="@color/white"
                         app:icon="@drawable/noice"
@@ -90,7 +91,7 @@
             android:layout_height="20dp" />
 
         <androidx.cardview.widget.CardView
-            android:layout_width="360dp"
+            android:layout_width="0dp"
             android:layout_height="130dp"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"

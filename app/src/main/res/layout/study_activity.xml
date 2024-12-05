@@ -12,16 +12,27 @@
         android:src="@drawable/bakegrand"
         android:scaleType="centerCrop"
         android:id="@+id/backgroundImage"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="360dp"
+            android:layout_width="0dp"
             android:layout_height="550dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:orientation="vertical"
-            android:layout_gravity="center">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 app:cardCornerRadius="10dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
@@ -30,8 +41,8 @@
                     <LinearLayout
                         android:layout_width="150dp"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/StudyNUM"
@@ -68,14 +79,16 @@
                         android:textColor="@color/black" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="10dp"/>
+                android:layout_height="10dp" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="360dp"
                 app:cardCornerRadius="10dp">
+
                 <TextView
                     android:id="@+id/Word_text"
                     android:layout_width="match_parent"
@@ -88,12 +101,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="10dp"/>
+                android:layout_height="10dp" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:cardCornerRadius="10dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -104,8 +118,8 @@
                         android:id="@+id/nextWord"
                         android:layout_width="100dp"
                         android:layout_height="60dp"
-                        android:text="下一个"
                         android:backgroundTint="@color/white"
+                        android:text="下一个"
                         android:textColor="@color/black"
                         app:cornerRadius="5dp"
                         app:strokeColor="@color/black"
@@ -130,6 +144,9 @@
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
 

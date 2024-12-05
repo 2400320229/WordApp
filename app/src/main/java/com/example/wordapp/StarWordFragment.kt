@@ -63,13 +63,7 @@ class StarWordFragment : Fragment(),Study_Adapter.OnWordClickListener {
         wordlist.addAll(wordDatabaseHelper.getStarWords())
 
     }
-    //解析翻译得到的JSON字符串，获取中文翻译
-    private fun obtainChinese(jsonString: String): List<String> {
-        val gson= Gson()
-        val jsonResponse=gson.fromJson(jsonString,JsonResponse::class.java)
-        return jsonResponse.data.entries.map { it.explain }
 
-    }
 
 
 }

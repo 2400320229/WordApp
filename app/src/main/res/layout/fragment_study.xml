@@ -77,7 +77,8 @@
                             android:layout_height="50dp"
                             android:orientation="horizontal">
                             <LinearLayout
-                                android:layout_width="50dp"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
                                 android:layout_height="50dp"/>
                             <ImageButton
                                 android:layout_width="70dp"
@@ -88,7 +89,7 @@
                                 android:layout_gravity="right"
                                 android:scaleType="centerInside"
                                 android:src="@drawable/why"/>
-                            <ImageButton
+                            <com.google.android.material.button.MaterialButton
                                 android:layout_width="70dp"
                                 android:layout_height="50dp"
                                 android:id="@+id/search"
@@ -96,21 +97,25 @@
                                 android:backgroundTint="#ffffe0"
                                 android:layout_gravity="right"
                                 android:scaleType="centerInside"
-                                android:src="@drawable/search"/>
+                                app:icon="@drawable/search"
+                                app:iconTint="#ff7f50"
+                                app:iconSize="20dp"/>
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="50dp">
+
                             <ProgressBar
                                 android:id="@+id/progressBar"
-                                android:layout_width="160dp"
-                                android:layout_height="10dp"
-                                android:indeterminate="false"
+                                style="@style/Widget.ProgressBar.Horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="8dp"
                                 android:layout_gravity="center"
-
-
-                                style="@android:style/Widget.ProgressBar.Horizontal"/>
+                                android:layout_weight="1"
+                                android:max="100"
+                                android:progress="10"
+                                android:indeterminate="false" />
 
 
                         </LinearLayout>
@@ -265,8 +270,8 @@
     </LinearLayout>
 </LinearLayout>
     <FrameLayout
-        android:layout_width="300dp"
-        android:layout_height="400dp"
+        android:layout_width="match_parent"
+        android:layout_height="410dp"
         android:id="@+id/study_f"
         android:layout_gravity="center_horizontal">
 

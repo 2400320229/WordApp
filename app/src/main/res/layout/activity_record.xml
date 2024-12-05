@@ -8,7 +8,7 @@
     tools:context=".RecordActivity"
     android:orientation="vertical"
     android:padding="10dp"
-    android:background="#fee48d">
+    android:background="#fed7d8">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="20dp"/>
@@ -16,15 +16,27 @@
         android:layout_width="match_parent"
         android:layout_height="150dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:text="打卡信息"
-            android:textSize="30dp"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:text="打卡信息"
+                android:textSize="30dp"/>
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:text="天数"
+                android:id="@+id/day_number"
+                android:textSize="30dp"/>
+        </LinearLayout>
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/summery"/>
+            android:src="@drawable/record"/>
 
     </LinearLayout>
 
