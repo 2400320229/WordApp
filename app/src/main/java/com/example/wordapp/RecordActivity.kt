@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,8 @@ class RecordActivity : AppCompatActivity(),SearchAdapter.OnSearchClickListener,R
         editor.putBoolean("FA",false).apply()
         val dbHelper=WordDatabaseHelper(applicationContext)
         val dayNum:TextView=findViewById(R.id.day_number)
+        val BackButton:ImageButton=findViewById(R.id.back)
+
         recyclerView1=findViewById(R.id.Clock_in2)
         datelist=dbHelper.getAllCheckInRecords().toMutableList()
 
@@ -34,6 +37,9 @@ class RecordActivity : AppCompatActivity(),SearchAdapter.OnSearchClickListener,R
         dayNum.setText("共打卡${(dbHelper.getSucceedCheckedInRecords()).size}天")
         recyclerView1.layoutManager= LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         recyclerView1.adapter=RecordAdapter(this,datelist,this)
+        BackButton.setOnClickListener {
+            finish()
+        }
     }
 
     override fun onStop() {

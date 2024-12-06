@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +22,7 @@ import okhttp3.Request
 
 class FragmentActivity : AppCompatActivity() {
 
+    private lateinit var progressBar:ProgressBar
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +36,7 @@ class FragmentActivity : AppCompatActivity() {
 
 
 
+        progressBar = findViewById(R.id.progressBar)
 
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.fragment, StudyFragment())
@@ -81,15 +85,15 @@ class FragmentActivity : AppCompatActivity() {
             insets
         }
 
+
         val dbHelper=WordDatabaseHelper(applicationContext)
-        if (dbHelper.checkDatabaseCompleteness()&&sharedPreferences.getBoolean("firstWord",true)){
-            Toast.makeText(this,"数据完整",Toast.LENGTH_SHORT).show()
-            editor.putBoolean("firstWord",false).apply()
-            sendRequestWithOkHttp()
-        }else if(sharedPreferences.getBoolean("first",true)){
+        if ( dbHelper.getWordById(10927.toString())
+                ?.isEmpty() ?: true){
             Toast.makeText(this,"数据不完整，正在恢复，请稍等",Toast.LENGTH_SHORT).show()
+            sendRequestWithOkHttp()
+        }else if(dbHelper.getNullId().isNotEmpty()){//存在空的id
+            Toast.makeText(this,"正在获取翻译，无需等待，开始你的学习吧",Toast.LENGTH_SHORT).show()
             OkHttpRequestTranslate()
-            editor.putBoolean("first",false).apply()
         }
     }
 
@@ -137,8 +141,19 @@ class FragmentActivity : AppCompatActivity() {
         // 提交事务
         transaction.commit()
     }
+    private fun HideFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment)
+        transaction.add(R.id.fragment,fragment)
+
+        transaction.hide(fragment)
+        // 提交事务
+        transaction.commit()
+    }
     private fun sendRequestWithOkHttp() {
 
+        progressBar.visibility = View.VISIBLE
+        HideFragment(StudyFragment())
         Thread {
             try {
                 val client = OkHttpClient()
@@ -174,16 +189,23 @@ class FragmentActivity : AppCompatActivity() {
                 } finally {
                     /*db.endTransaction()*/  // 结束事务
                     db.close()
+                    runOnUiThread{
+                        progressBar.visibility=View.GONE
+                        showOrHideFragment(StudyFragment())
+
+                    }
+
                 }
             } catch (e: Exception) {
                 // 错误处理
                 runOnUiThread {
                     Toast.makeText(this, "Request failed: ${e.message}", Toast.LENGTH_LONG).show()
-
+                    recreate()
                 }
             }
         }.start() // 启动线程
         OkHttpRequestTranslate()
+
     }
     //给单词添加翻译
     private fun OkHttpRequestTranslate() {
@@ -220,7 +242,6 @@ class FragmentActivity : AppCompatActivity() {
 
                             // 存储数据到数据库
 
-
                             dbHelper.updateTranslationById(id.toInt(),responseData.toString())
 
                             Log.d("id",id.toString())
@@ -228,8 +249,8 @@ class FragmentActivity : AppCompatActivity() {
 
                                 runOnUiThread {
                                     Toast.makeText(this, "${id}", Toast.LENGTH_LONG).show()
-                                    if(id.toInt() ==10927){
-                                        Toast.makeText(this, "恢复成功", Toast.LENGTH_LONG).show()
+                                    if(id.toInt() >10900){
+                                        Toast.makeText(this, "数据完整", Toast.LENGTH_LONG).show()
                                     }
                                 }
                             }
@@ -249,6 +270,7 @@ class FragmentActivity : AppCompatActivity() {
                 // 错误处理
                 runOnUiThread {
                     Toast.makeText(this, "Request failed: ${e.message}", Toast.LENGTH_LONG).show()
+
                 }
             }
         }.start() // 启动线程

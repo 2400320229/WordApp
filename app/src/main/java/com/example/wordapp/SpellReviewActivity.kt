@@ -10,8 +10,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.webkit.DateSorter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -31,6 +33,7 @@ class SpellReviewActivity : AppCompatActivity() {
     private var startTime: Long = 0
     private var endTime: Long = 0
     private lateinit var bakeground: ImageView
+    private lateinit var DATE:String
 
 
 
@@ -51,9 +54,11 @@ class SpellReviewActivity : AppCompatActivity() {
         var wordList = mutableListOf<Word>()
         if (this.intent.getStringExtra("WordList")=="Today"){
             wordList = dbHelper.getTodayErrorWord().toMutableList()
+            DATE="今天"
         }
         if (this.intent.getStringExtra("WordList")=="Before"){
             wordList = dbHelper.getBeforeErrorWord().toMutableList()
+            DATE="昨天"
         }
 
 
@@ -62,14 +67,14 @@ class SpellReviewActivity : AppCompatActivity() {
 
         if (wordList.isEmpty()) {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("今天还没有单词哦")
+            builder.setTitle("还没有单词哦")
             builder.setMessage("请先开始今天的学习")
             builder.setPositiveButton("去学习！") { dialog, which ->
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             }
-            builder.setNegativeButton("去看看其他科目把") { dialog, which ->
+            builder.setNegativeButton("先等会") { dialog, which ->
 
                 finish()
             }
@@ -82,9 +87,12 @@ class SpellReviewActivity : AppCompatActivity() {
         val remain:TextView = findViewById(R.id.remainNum)
         val NoiceButton:Button=findViewById(R.id.ShowWordDate)
         val Spell:EditText=findViewById(R.id.spell)
+        val BackButton: ImageButton =findViewById(R.id.back)
 
         lastWordButton.setVisibility(View.GONE)
 
+
+        BackButton.setOnClickListener { finish() }
         try{
 
             remain.setText(wordList.size.toString())

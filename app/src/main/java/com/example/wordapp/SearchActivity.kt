@@ -3,6 +3,7 @@ package com.example.wordapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -21,12 +22,14 @@ class SearchActivity : AppCompatActivity(),SearchAdapter.OnSearchClickListener {
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
 
+        val BackButton: ImageButton =findViewById(R.id.back)
         val dbHelper = WordDatabaseHelper(applicationContext)
         val sharedPreferences=getSharedPreferences("service", Context.MODE_PRIVATE)
         val editor=sharedPreferences.edit()
         editor.putBoolean("FA",false)
         editor.apply()
 
+        BackButton.setOnClickListener { finish() }
         val InputWord:TextView=findViewById(R.id.Input_word)
         InputWord.addTextChangedListener{
             if(InputWord.text.toString().isNotEmpty()) {

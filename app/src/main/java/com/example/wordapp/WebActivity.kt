@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 
 class WebActivity : AppCompatActivity() {
@@ -19,6 +20,8 @@ class WebActivity : AppCompatActivity() {
 
         // 获取 WebView 对象
         val webView: WebView = findViewById(R.id.webview)
+        val BackButton: ImageButton =findViewById(R.id.back)
+        BackButton.setOnClickListener { finish() }
 
         // 配置 WebView 设置
         val webSettings: WebSettings = webView.settings

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -25,7 +26,7 @@ class ReviewActivity : AppCompatActivity() {
     private var startTime: Long = 0
     private var endTime: Long = 0
     private lateinit var bakeground: ImageView
-
+    private lateinit var DATE:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -44,9 +45,11 @@ class ReviewActivity : AppCompatActivity() {
         var wordList = mutableListOf<Word>()
         if (this.intent.getStringExtra("WordList")=="Today"){
             wordList = dbHelper.getTodayErrorWord().toMutableList()
+            DATE="今天"
         }
         if (this.intent.getStringExtra("WordList")=="Before"){
             wordList = dbHelper.getBeforeErrorWord().toMutableList()
+            DATE="昨天"
         }
 
 
@@ -55,14 +58,14 @@ class ReviewActivity : AppCompatActivity() {
 
         if (wordList.isEmpty()) {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("今天还没有单词哦")
+            builder.setTitle("还没有单词哦")
             builder.setMessage("请先开始今天的学习")
             builder.setPositiveButton("去学习！") { dialog, which ->
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             }
-            builder.setNegativeButton("去看看其他科目把") { dialog, which ->
+            builder.setNegativeButton("先等会") { dialog, which ->
 
                 finish()
             }
@@ -75,7 +78,11 @@ class ReviewActivity : AppCompatActivity() {
         val WordDatabutton: Button = findViewById(R.id.ShowWordDate)
         val lastWordButton:MaterialButton = findViewById(R.id.last_word)
         val remain:TextView = findViewById(R.id.remainNum)
+        val BackButton: ImageButton =findViewById(R.id.back)
 
+        BackButton.setOnClickListener {
+            finish()
+        }
         lastWordButton.setVisibility(View.GONE)
 
         try{

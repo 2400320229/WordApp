@@ -12,6 +12,23 @@
         android:src="@drawable/bakegrand"
         android:scaleType="centerCrop"
         android:id="@+id/backgroundImage"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+        <ImageButton
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:src="@drawable/back3"
+            android:scaleType="centerCrop"
+            android:id="@+id/back"
+            android:background="@android:color/transparent"/>
+    </LinearLayout>
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -39,14 +56,15 @@
                     android:padding="10dp">
 
                     <LinearLayout
-                        android:layout_width="150dp"
+                        android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/StudyNUM"
-                            android:layout_width="50dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
                             android:layout_height="40dp"
                             android:text="0"
                             android:textAlignment="center"
@@ -54,7 +72,8 @@
 
                         <TextView
                             android:id="@+id/s1"
-                            android:layout_width="20dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="40dp"
                             android:text="/"
                             android:textAlignment="center"
@@ -62,7 +81,8 @@
 
                         <TextView
                             android:id="@+id/GoalNUM"
-                            android:layout_width="50dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
                             android:layout_height="40dp"
                             android:text="GoalNUM"
                             android:textAlignment="center"
@@ -71,7 +91,8 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/last_word"
-                        android:layout_width="180dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
                         android:maxLines="1"

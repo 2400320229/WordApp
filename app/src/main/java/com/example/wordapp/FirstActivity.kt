@@ -1,4 +1,23 @@
 package com.example.wordapp
+//2024绘蓝杯参数作品
+//2400320229
+//张宇
+/*基础功能：
+1. 实现登录注册（都有相对应的页面）和记住密码功能，已经登录过再次进入
+应用时跳过登录。
+2. 登录后主页要求为进入学习单词的入口。
+3. 点击学习单词后会进入学习单词功能模块，学习当日的单词任务。
+4. 学习单词时能够播放单词的读音
+5. 对学习过的单词的各种数据进行记录，并在合适位置展示数据统计信息。
+6. 没完成当日任务时，应用通知用户去完成。*/
+//
+/*拓展功能：
+1. 每日签到打卡功能，并记录每日学习时长。
+2. 可以自定义学习单词页面的背景
+3. 能够搜索查询陌生单词。
+4. 能够复习前一天学习过的单词。
+5. 自由发挥。*/
+//
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -126,9 +145,9 @@ class FirstActivity : AppCompatActivity() {
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        // 设置触发时间为今天的 0:00
+        // 设置触发时间为今天的 4:00
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.HOUR_OF_DAY, 4)
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)

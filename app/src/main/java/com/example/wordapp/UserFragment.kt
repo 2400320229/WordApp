@@ -29,6 +29,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.Builder
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
@@ -96,13 +97,24 @@ class UserFragment : Fragment() {
         }
         bak.setOnClickListener {
 
-            GlobalScope.launch(Dispatchers.Main) {
-                delay(1000) // 延迟 1 秒
-                // 延迟后执行的任务
-                val editor=sharedPreferences.edit()
-                editor.putBoolean("FA",false).apply()
+            val builder=Builder(requireContext())
+            builder.setTitle("触发时光机")
+            builder.setMessage("请选择")
+            builder.setPositiveButton("原皮"){dialog,which->
+
+                feelImageToInternalStorage()
+
             }
-            openGallery()
+            builder.setNegativeButton("新皮肤"){dialog,which->
+                GlobalScope.launch(Dispatchers.Main) {
+                    delay(1000) // 延迟 1 秒
+                    // 延迟后执行的任务
+                    val editor=sharedPreferences.edit()
+                    editor.putBoolean("FA",false).apply()
+                }
+                openGallery()
+            }
+            builder.create().show()
 
         }
         record.setOnClickListener {
@@ -114,7 +126,7 @@ class UserFragment : Fragment() {
         claer.setOnClickListener {
 
 
-            val builder = AlertDialog.Builder(requireContext())
+            val builder = Builder(requireContext())
             builder.setTitle("触发时光机")
             builder.setMessage("请选择")
             builder.setPositiveButton("前进24小时！") { dialog, which ->
@@ -211,10 +223,7 @@ class UserFragment : Fragment() {
 
                 OkHttpRequestTranslate()
 
-                if (!dbHelper.checkDatabaseCompleteness()){
-                    Toast.makeText(requireContext(),"数据不完整，正在恢复，请稍等",Toast.LENGTH_SHORT).show()
-                    sendRequestWithOkHttp()
-                }else if(dbHelper.getNullId().isNotEmpty()){
+                if(dbHelper.getNullId().isNotEmpty()){
                     Toast.makeText(requireContext(),"数据不完整，正在恢复，请稍等",Toast.LENGTH_SHORT).show()
                     OkHttpRequestTranslate()
                 }else{
@@ -267,10 +276,31 @@ class UserFragment : Fragment() {
             fileOutputStream.flush()
             fileOutputStream.close()
 
-            Toast.makeText(requireActivity(), "图片已保存", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireActivity(), "背景已切换，图片已保存", Toast.LENGTH_SHORT).show()
         } catch (e: IOException) {
             e.printStackTrace()
             Toast.makeText(requireActivity(), "保存图片失败", Toast.LENGTH_SHORT).show()
+        }
+    }
+    //释放保存的背景，显示最初的画卷
+    private fun feelImageToInternalStorage() {
+        try{
+            val file = File(requireActivity().filesDir, "selected_image.jpg")
+            if (file.exists()) {
+
+                val deleted = file.delete()
+
+                if (deleted) {
+                    Toast.makeText(requireActivity(), "背景已切换", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(requireActivity(), "背景已切换", Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                Toast.makeText(requireActivity(), "背景已切换", Toast.LENGTH_SHORT).show()
+            }
+        }catch (e: Exception){
+
+            Toast.makeText(requireActivity(), "删除图片时出错", Toast.LENGTH_SHORT).show()
         }
     }
     //录入数据

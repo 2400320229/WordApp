@@ -8,10 +8,40 @@
     tools:context=".SearchActivity"
     android:orientation="vertical"
     android:padding="10dp">
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:id="@+id/Input_word"/>
+        android:layout_height="73dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/back3"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/back"
+                    android:background="@android:color/transparent"/>
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:hint="请输入英文"
+                    android:id="@+id/Input_word"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

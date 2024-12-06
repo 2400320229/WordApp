@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -81,6 +82,7 @@ class MainActivity : AppCompatActivity() {
         val lastWord:Button=findViewById(R.id.last_word)
         val Studybutton:Button=findViewById(R.id.nextWord)
         val WordDatabutton:Button=findViewById(R.id.ShowWordDate)
+        val BackButton: ImageButton =findViewById(R.id.back)
 
 
         val dbHelper=WordDatabaseHelper(applicationContext)
@@ -233,6 +235,7 @@ class MainActivity : AppCompatActivity() {
             OKHttpRequestVoice(last_word)
 
         }
+        BackButton.setOnClickListener { finish() }
     }
 
     override fun onStop() {
