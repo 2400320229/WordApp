@@ -620,7 +620,31 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
         val db = this.readableDatabase
         try {
             // SQL 查询语句，获取 error_count > 0 的单词，没有排序
-            val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ERROR_COUNT > 0 AND $COLUMN_DAY >0"
+            val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ERROR_COUNT > 0 AND $COLUMN_DAY > 1"
+            db.rawQuery(query, null).use { cursor ->
+                if (cursor.moveToFirst()) {
+                    do {
+                        val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
+                        val translation = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSLATION))
+                        wordsList.add(Word(word,translation))
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+
+        return wordsList
+    }
+    @SuppressLint("Range")
+    fun getYesterdayErrorWord(): List<Word> {
+        val wordsList = mutableListOf<Word>()
+        val db = this.readableDatabase
+        try {
+            // SQL 查询语句，获取 error_count > 0 的单词，没有排序
+            val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ERROR_COUNT > 0 AND $COLUMN_DAY = 1"
             db.rawQuery(query, null).use { cursor ->
                 if (cursor.moveToFirst()) {
                     do {

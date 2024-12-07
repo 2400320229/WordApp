@@ -57,7 +57,7 @@ class SpellReviewActivity : AppCompatActivity() {
             DATE="今天"
         }
         if (this.intent.getStringExtra("WordList")=="Before"){
-            wordList = dbHelper.getBeforeErrorWord().toMutableList()
+            wordList = dbHelper.getYesterdayErrorWord().toMutableList()
             DATE="昨天"
         }
 
@@ -68,7 +68,6 @@ class SpellReviewActivity : AppCompatActivity() {
         if (wordList.isEmpty()) {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("还没有单词哦")
-            builder.setMessage("请先开始今天的学习")
             builder.setPositiveButton("去学习！") { dialog, which ->
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)

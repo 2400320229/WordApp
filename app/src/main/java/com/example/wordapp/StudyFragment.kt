@@ -21,16 +21,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.times
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [StudyFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class StudyFragment : Fragment() {
 
     private lateinit var progressBar: ProgressBar
@@ -38,14 +29,12 @@ class StudyFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
        val view=inflater.inflate(R.layout.fragment_study, container, false)
         val StudyButton:Button=view.findViewById(R.id.StarStudy)
         val StudyInSumText:TextView=view.findViewById(R.id.goal)
@@ -62,6 +51,8 @@ class StudyFragment : Fragment() {
         val sharedPreferences = requireActivity().getSharedPreferences("wordId", Context.MODE_PRIVATE )
 
 
+        val sharedPreferences1=requireActivity().getSharedPreferences("service",Context.MODE_PRIVATE)
+        val editor=sharedPreferences1.edit()
 
         val dbHelper=WordDatabaseHelper(requireContext())
         StudyInSumText.setText("${sharedPreferences.getInt("studiedId",0)}/10927")
@@ -95,6 +86,7 @@ class StudyFragment : Fragment() {
         BeforeWord.setOnClickListener{
             val intent=Intent(requireContext(),ReviewActivity::class.java)
             intent.putExtra("WordList","Before")
+            editor.putInt("ReViewBefore",0).apply()
             startActivity(intent)
 
         }

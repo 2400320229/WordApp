@@ -48,8 +48,12 @@ class ReviewActivity : AppCompatActivity() {
             DATE="今天"
         }
         if (this.intent.getStringExtra("WordList")=="Before"){
-            wordList = dbHelper.getBeforeErrorWord().toMutableList()
+            wordList = dbHelper.getYesterdayErrorWord().toMutableList()
             DATE="昨天"
+        }
+        if(sharedPreferences.getInt("ReViewBefore",0)==1){
+            wordList = dbHelper.getBeforeErrorWord().toMutableList()
+            DATE="以前"
         }
 
 
@@ -59,7 +63,6 @@ class ReviewActivity : AppCompatActivity() {
         if (wordList.isEmpty()) {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("还没有单词哦")
-            builder.setMessage("请先开始今天的学习")
             builder.setPositiveButton("去学习！") { dialog, which ->
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
@@ -160,18 +163,53 @@ class ReviewActivity : AppCompatActivity() {
 
 
             }catch (e:Exception){
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("太有实力了！")
-                builder.setMessage("今天的单词语句复习完了")
-                builder.setPositiveButton("再去学习！") { dialog, which ->
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                if(this.intent.getStringExtra("WordList")=="Today"){
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("太有实力了！")
+                    builder.setMessage("${DATE}的单词已经被你复习完了")
+                    builder.setPositiveButton("复习之前的单词") { dialog, which ->
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    builder.setNegativeButton("再复习一遍") { dialog, which ->
+                        recreate()
+                    }
+
+                    builder.create().show()
                 }
-                builder.setNegativeButton("再复习一遍") { dialog, which ->
-                    recreate()
+                if(this.intent.getStringExtra("WordList")=="Before"
+                    &&sharedPreferences.getInt("ReViewBefore",0)==1){
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("太有实力了！")
+                    builder.setMessage("${DATE}的单词已经被你复习完了")
+                    builder.setPositiveButton("复习昨天的单词") { dialog, which ->
+                        editor.putInt("ReViewBefore",0).apply()
+                        recreate()
+                    }
+                    builder.setNegativeButton("再复习一遍") { dialog, which ->
+                        recreate()
+                    }
+
+                    builder.create().show()
                 }
-                builder.create().show()
+                else{
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("太有实力了！")
+                    builder.setMessage("${DATE}的单词已经被你复习完了")
+                    builder.setPositiveButton("复习之前的单词") { dialog, which ->
+                        editor.putInt("ReViewBefore",1).apply()
+                        recreate()
+                    }
+                    builder.setNegativeButton("再复习一遍") { dialog, which ->
+                        recreate()
+                    }
+
+                    builder.create().show()
+                }
+
+
+
             }
         }
 
