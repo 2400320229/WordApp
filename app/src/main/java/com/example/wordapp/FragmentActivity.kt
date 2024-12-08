@@ -192,6 +192,7 @@ class FragmentActivity : AppCompatActivity() {
                     runOnUiThread{
                         progressBar.visibility=View.GONE
                         showOrHideFragment(StudyFragment())
+                        OkHttpRequestTranslate()
 
                     }
 
@@ -199,12 +200,12 @@ class FragmentActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 // 错误处理
                 runOnUiThread {
-                    Toast.makeText(this, "Request failed: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "获取数据失败，正在尝试重新获取", Toast.LENGTH_LONG).show()
                     recreate()
                 }
             }
         }.start() // 启动线程
-        OkHttpRequestTranslate()
+
 
     }
     //给单词添加翻译

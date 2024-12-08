@@ -43,6 +43,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import java.util.Calendar
 import android.Manifest
+import android.view.View
+import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 class FirstActivity : AppCompatActivity() {
 
@@ -60,8 +64,20 @@ class FirstActivity : AppCompatActivity() {
         val editor=sharedPreferences.edit()
         editor.putBoolean("FA",false)
         editor.apply()
-        val sharedPreferences3 = getSharedPreferences("wordId", Context.MODE_PRIVATE )
+
+        sendRequestWithOkHttp()
+
+        val sharedPreferences3 =getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
+        editor_id.putInt("studiedId",0)
+        editor_id.putInt("well_known",0)
+        editor?.putLong("TodayTime",0)
+        editor_id.putInt("date",0)
+        editor_id.putBoolean("summary",true)
+        editor_id.putInt("goalNumber",3)
+        editor_id.putInt("goalId",3)
+        editor_id.putBoolean("stu",false)
+        editor_id.apply()
 
         setupDailyAlarm()
         var id=sharedPreferences3.getInt("goalId",0)
@@ -206,6 +222,56 @@ class FirstActivity : AppCompatActivity() {
         // 标记请求过权限，以避免重复请求
         val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
         sharedPreferences.edit().putBoolean("exact_alarm_permission_requested", true).apply()
+    }
+    private fun sendRequestWithOkHttp() {
+
+        Thread {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                    .url("https://cdn.jsdelivr.net/gh/lyc8503/baicizhan-word-meaning-API/data/list.json")
+                    .build()
+
+                val response = client.newCall(request).execute()
+                // 使用response.body?.string()获取返回的内容
+                val responseData = response.body?.string()
+
+                val gson= Gson()
+                val wordResponse =gson.fromJson(responseData,WordResponse::class.java)
+
+                runOnUiThread{
+                    Log.d("WordInfo", "Total words: ${wordResponse.total}")
+                    Log.d("WordInfo", "First word in list: ${wordResponse.list[1]}")
+                }
+                // 存储数据到数据库
+                val dbHelper = WordDatabaseHelper(applicationContext)
+
+                // 使用事务来批量插入数据，提高效率
+                val db = dbHelper.writableDatabase
+                /*db.beginTransaction()*/
+
+                try {
+                    // 一次性批量插入所有单词
+                    dbHelper.insertWords(wordResponse.list)
+
+                    /*db.setTransactionSuccessful()*/  // 提交事务
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    /*db.endTransaction()*/  // 结束事务
+                    db.close()
+
+                }
+            } catch (e: Exception) {
+                // 错误处理
+                runOnUiThread {
+                    Toast.makeText(this, "获取数据失败，正在尝试重新获取", Toast.LENGTH_LONG).show()
+                    recreate()
+                }
+            }
+        }.start() // 启动线程
+
+
     }
 
 }

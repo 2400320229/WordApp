@@ -436,6 +436,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
             db.rawQuery(query, null).use { cursor ->
                 if (cursor.moveToFirst()) {
                     do {
+
                         val word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD))
                         wordsList.add(word)
                     } while (cursor.moveToNext())
@@ -449,6 +450,7 @@ class WordDatabaseHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NA
 
         return wordsList
     }
+
     // 根据查询条件搜索单词
     fun searchWords(query: String): MutableList<Word_s> {
         val wordList = mutableListOf<Word_s>()

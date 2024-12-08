@@ -84,6 +84,8 @@ class UserFragment : Fragment() {
         val Exit:Button=view.findViewById(R.id.Exit)
         val claer:Button=view.findViewById(R.id.clear)
         val record:Button=view.findViewById(R.id.record)
+        val learned:Button=view.findViewById(R.id.learned)
+        val dbHelper=WordDatabaseHelper(requireContext())
         bak=view.findViewById(R.id.bak)
         ImageView=view.findViewById(R.id.Image)
         Exit.setOnClickListener{
@@ -98,7 +100,7 @@ class UserFragment : Fragment() {
         bak.setOnClickListener {
 
             val builder=Builder(requireContext())
-            builder.setTitle("触发时光机")
+            builder.setTitle("换背景")
             builder.setMessage("请选择")
             builder.setPositiveButton("原皮"){dialog,which->
 
@@ -172,10 +174,10 @@ class UserFragment : Fragment() {
                 Log.d("before",dbHelper.getBeforeErrorWord().toString())
             }
             builder.setNegativeButton("回到起点") { dialog, which ->
-                val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
 
 
-                val dbHelper=WordDatabaseHelper(requireContext())
+
+
 
                 var num=0
                 while (num<100){
@@ -210,6 +212,7 @@ class UserFragment : Fragment() {
                 Log.d("Delete","delete")
 
 
+                val sharedPreferences3 = requireContext().getSharedPreferences("wordId", Context.MODE_PRIVATE )
                 val editor_id = sharedPreferences3.edit()
                 editor_id.putInt("studiedId",0)
                 editor_id.putInt("well_known",0)
@@ -238,6 +241,12 @@ class UserFragment : Fragment() {
 
 
 
+        }
+        learned.setText("已学单词数：${dbHelper.getWordsLearn().size}")
+
+        learned.setOnClickListener {
+            val intent=Intent(requireContext(),LearnedWordActivity::class.java)
+            startActivity(intent)
         }
 
         return view
@@ -421,6 +430,7 @@ class UserFragment : Fragment() {
             }
         }.start() // 启动线程
     }
+
 
 
 
