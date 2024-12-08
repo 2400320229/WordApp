@@ -69,15 +69,7 @@ class FirstActivity : AppCompatActivity() {
 
         val sharedPreferences3 =getSharedPreferences("wordId", Context.MODE_PRIVATE )
         val editor_id = sharedPreferences3.edit()
-        editor_id.putInt("studiedId",0)
-        editor_id.putInt("well_known",0)
-        editor?.putLong("TodayTime",0)
-        editor_id.putInt("date",0)
-        editor_id.putBoolean("summary",true)
-        editor_id.putInt("goalNumber",3)
-        editor_id.putInt("goalId",3)
-        editor_id.putBoolean("stu",false)
-        editor_id.apply()
+        
 
         setupDailyAlarm()
         var id=sharedPreferences3.getInt("goalId",0)
